@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Authentication</title>
+    <meta name="csrf-token" content="">
+</head>
+<body>
+    <h2>Test Login</h2>
+    <form id="login-form">
+        <div>
+            <label>Username or Email:</label>
+            <input type="text" name="login" value="testuser" required>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" value="password123" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    
+    <h2>Test Registration</h2>
+    <form id="signup-form">
+        <div>
+            <label>Full Name:</label>
+            <input type="text" name="name" value="New User" required>
+        </div>
+        <div>
+            <label>Username:</label>
+            <input type="text" name="username" value="newuser" required>
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" value="newuser@example.com" required>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" value="password123" required>
+        </div>
+        <div>
+            <label>Confirm Password:</label>
+            <input type="password" name="password_confirmation" value="password123" required>
+        </div>
+        <div>
+            <label>Bio:</label>
+            <textarea name="bio">I'm a new user</textarea>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    
+    <h2>Check User Status</h2>
+    <button onclick="checkUser()">Check Current User</button>
+    
+    <h2>Logout</h2>
+    <button onclick="logout()">Logout</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        // Get CSRF token
+        async function getCSRFToken() {
+            try {
+                const response = await fetch('/');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const metaToken = doc.querySelector('meta[name="csrf-token"]');
+                return metaToken ? metaToken.getAttribute('content') : null;
+            } catch (error) {
+                console.error('Error getting CSRF token:', error);
+                return null;
+            }
+        }
+        
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const token = await getCSRFToken();
+            
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `<h3>Login Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<h3>Login Error:</h3><pre>${error.message}</pre>`;
+            }
+        });
+        
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const token = await getCSRFToken();
+            
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `<h3>Registration Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<h3>Registration Error:</h3><pre>${error.message}</pre>`;
+            }
+        });
+        
+        async function checkUser() {
+            const token = await getCSRFToken();
+            
+            try {
+                const response = await fetch('/auth/user', {
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `<h3>User Status:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<h3>User Check Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+        
+        async function logout() {
+            const token = await getCSRFToken();
+            
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `<h3>Logout Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<h3>Logout Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>
