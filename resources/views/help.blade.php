@@ -228,54 +228,36 @@
 					<!-- Contact Form -->
 					<div class="sb-it contact-form-box">
 						<h4 class="sb-title">Send Us a Message</h4>
-						<form class="contact-form" method="post" action="{{ route('contact.send') }}">
-							@csrf
-							@if(session('success'))
-								<div class="alert alert-success">
-									{{ session('success') }}
-								</div>
-							@endif
-							@if(session('error'))
-								<div class="alert alert-danger">
-									{{ session('error') }}
-								</div>
-							@endif
-							@if($errors->any())
-								<div class="alert alert-danger">
-									<ul class="error-list">
-										@foreach($errors->all() as $error)
-											<li>{{ $error }}</li>
-										@endforeach
-									</ul>
-								</div>
-							@endif
+						
+						<!-- Message Display Areas -->
+						<div id="form-messages" style="display: none;">
+							<div id="success-message" class="alert alert-success" style="display: none;"></div>
+							<div id="error-message" class="alert alert-danger" style="display: none;"></div>
+						</div>
+						
+						<form id="contact-form" class="contact-form">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 							<div class="form-group">
 								<label for="contact-name">Your Name *</label>
 								<input type="text" id="contact-name" name="name" class="form-control" placeholder="Enter your full name" required>
+								<div class="field-error" id="name-error" style="color: red; font-size: 12px; margin-top: 5px; display: none;"></div>
 							</div>
 							<div class="form-group">
 								<label for="contact-email">Email Address *</label>
 								<input type="email" id="contact-email" name="email" class="form-control" placeholder="your@email.com" required>
-							</div>
-							<div class="form-group">
-								<label for="contact-subject">Subject *</label>
-								<select id="contact-subject" name="subject" class="form-control" required>
-									<option value="">Select a topic</option>
-									<option value="general">General Inquiry</option>
-									<option value="technical">Technical Support</option>
-									<option value="account">Account Issues</option>
-									<option value="billing">Billing Question</option>
-									<option value="feedback">Feedback & Suggestions</option>
-									<option value="bug">Report a Bug</option>
-									<option value="other">Other</option>
-								</select>
+								<div class="field-error" id="email-error" style="color: red; font-size: 12px; margin-top: 5px; display: none;"></div>
 							</div>
 							<div class="form-group">
 								<label for="contact-message">Message *</label>
 								<textarea id="contact-message" name="message" class="form-control" rows="5" placeholder="Please describe your issue or question in detail..." required></textarea>
+								<div class="field-error" id="message-error" style="color: red; font-size: 12px; margin-top: 5px; display: none;"></div>
 							</div>
 							<div class="form-group">
-								<button type="submit" class="btn btn-primary">Send Message <i class="ion-ios-arrow-forward"></i></button>
+								<button type="submit" id="submit-btn" class="btn btn-primary">
+									<span id="btn-text">Send Message</span>
+									<span id="btn-loading" style="display: none;">Sending...</span>
+									<i class="ion-ios-arrow-forward"></i>
+								</button>
 							</div>
 						</form>
 					</div>
@@ -299,3 +281,122 @@
 	</div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+    const formMessages = document.getElementById('form-messages');
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Clear previous messages and errors
+        clearMessages();
+        
+        // Show loading state
+        setLoadingState(true);
+        
+        // Get form data
+        const formData = new FormData(contactForm);
+        
+        // Get CSRF token from meta tag as fallback
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                         document.querySelector('input[name="_token"]')?.value;
+        
+        // Ensure CSRF token is included
+        if (csrfToken) {
+            formData.set('_token', csrfToken);
+        }
+        
+        // Submit form via fetch
+        fetch('{{ route("contact.store") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setLoadingState(false);
+            
+            if (data.success) {
+                showSuccessMessage(data.message);
+                contactForm.reset();
+            } else {
+                showErrorMessage(data.message);
+                
+                // Show field-specific errors
+                if (data.errors) {
+                    showFieldErrors(data.errors);
+                }
+            }
+        })
+        .catch(error => {
+            setLoadingState(false);
+            showErrorMessage('An unexpected error occurred. Please try again.');
+            console.error('Error:', error);
+        });
+    });
+    
+    function setLoadingState(loading) {
+        if (loading) {
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+        } else {
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+        }
+    }
+    
+    function clearMessages() {
+        formMessages.style.display = 'none';
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        
+        // Clear field errors
+        document.querySelectorAll('.field-error').forEach(error => {
+            error.style.display = 'none';
+            error.textContent = '';
+        });
+    }
+    
+    function showSuccessMessage(message) {
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+        formMessages.style.display = 'block';
+        
+        // Scroll to message
+        formMessages.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function showErrorMessage(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        formMessages.style.display = 'block';
+        
+        // Scroll to message
+        formMessages.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function showFieldErrors(errors) {
+        for (const field in errors) {
+            const errorElement = document.getElementById(field + '-error');
+            if (errorElement) {
+                errorElement.textContent = errors[field][0];
+                errorElement.style.display = 'block';
+            }
+        }
+    }
+});
+</script>
+@endpush
