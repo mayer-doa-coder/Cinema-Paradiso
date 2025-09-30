@@ -2,10 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', function () {
     return view('index_main');  // This should load index_main.blade.php
 })->name('home');
+
+// Movie routes
+Route::get('/moviegrid', [MovieController::class, 'grid'])->name('moviegrid');
+Route::get('/movielist', [MovieController::class, 'list'])->name('movielist');
+Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.search');
+Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
+
+// Help and Contact routes
+Route::get('/help', function () {
+    return view('help');
+})->name('help');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // Authentication routes
 Route::prefix('auth')->group(function () {
@@ -20,6 +34,11 @@ Route::prefix('auth')->group(function () {
 });
 
 // You can add other protected routes here
+Route::middleware('auth')->group(function () {
+    // Add protected movie routes here if needed
+    // Route::post('/movies/{id}/favorite', [MovieController::class, 'favorite'])->name('movies.favorite');
+    // Route::post('/movies/{id}/rate', [MovieController::class, 'rate'])->name('movies.rate');
+});
 Route::middleware('auth')->group(function () {
     // Example protected routes
     // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

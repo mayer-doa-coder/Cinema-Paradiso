@@ -1,114 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" class="no-js">
-<head>
-	<title>Cinema Paradiso</title>
-	<meta charset="UTF-8">
-	<meta name="description" content="">
-	<meta name="keywords" content="">
-	<meta name="author" content="">
-	<link rel="profile" href="#">
+@extends('layouts.app')
 
-    <!--Google Font-->
-    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
-	<!-- Mobile specific meta -->
-	<meta name=viewport content="width=device-width, initial-scale=1">
-	<meta name="format-detection" content="telephone-no">
+@section('title', 'Cinema Paradiso - Help & Support')
 
-	<link rel="stylesheet" href="css/plugins.css">
-	<link rel="stylesheet" href="css/style.css">
-
-</head>
-<body>
-<!--preloading-->
-<div id="preloader">
-    <img class="logo" src="images/cinema_paradiso.png" alt="" width="350" height="150">
-    <div id="status">
-        <span></span>
-        <span></span>
-    </div>
-</div>
-<!--end of preloading-->
-<!--login form popup-->
-<div class="login-wrapper" id="login-content">
-    <div class="login-content">
-        <a href="#" class="close">x</a>
-        <h3>Login</h3>
-        <form method="post" action="login.php">
-        	<div class="row">
-        		 <label for="username">
-                    Username:
-                    <input type="text" name="username" id="username" placeholder="Hugh Jackman" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{8,20}$" required="required" />
-                </label>
-        	</div>
-           
-            <div class="row">
-            	<label for="password">
-                    Password:
-                    <input type="password" name="password" id="password" placeholder="******" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required="required" />
-                </label>
-            </div>
-            <div class="row">
-            	<div class="remember">
-					<div>
-						<input type="checkbox" name="remember" value="Remember me"><span>Remember me</span>
-					</div>
-            		<a href="#">Forget password ?</a>
-            	</div>
-            </div>
-           <div class="row">
-           	 <button type="submit">Login</button>
-           </div>
-        </form>
-        <div class="row">
-        	<p>Or via social</p>
-            <div class="social-btn-2">
-            	<a class="fb" href="#"><i class="ion-social-facebook"></i>Facebook</a>
-            	<a class="tw" href="#"><i class="ion-social-twitter"></i>twitter</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!--end of login form popup-->
-<!--signup form popup-->
-<div class="login-wrapper"  id="signup-content">
-    <div class="login-content">
-        <a href="#" class="close">x</a>
-        <h3>sign up</h3>
-        <form method="post" action="signup.php">
-            <div class="row">
-                 <label for="username-2">
-                    Username:
-                    <input type="text" name="username" id="username-2" placeholder="Hugh Jackman" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{8,20}$" required="required" />
-                </label>
-            </div>
-           
-            <div class="row">
-                <label for="email-2">
-                    your email:
-                    <input type="email" name="email" id="email-2" placeholder="your@email.com" required="required" />
-                </label>
-            </div>
-             <div class="row">
-                <label for="password-2">
-                    Password:
-                    <input type="password" name="password" id="password-2" placeholder="" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required="required" />
-                </label>
-                <p class="password-requirements">Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number or special character.</p>
-            </div>
-             <div class="row">
-                <label for="repassword-2">
-                    re-type Password:
-                    <input type="password" name="password" id="repassword-2" placeholder="" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required="required" />
-                </label>
-            </div>
-           <div class="row">
-             <button type="submit">sign up</button>
-           </div>
-        </form>
-    </div>
-</div>
-<!--end of signup form popup-->
-
+@section('content')
 <!-- BEGIN | Header -->
 <header class="ht-header">
 	<div class="container">
@@ -122,7 +16,7 @@
 							<span></span>
 						</div>
 				    </div>
-				    <a href="index.html"><img class="logo" src="images/cinema_paradiso.png" alt="" width="119" height="58"></a>
+				    <a href="{{ route('home') }}"><img class="logo" src="{{ asset('images/cinema_paradiso.png') }}" alt="" width="119" height="58"></a>
 			    </div>
 				<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav flex-child-menu menu-left">
@@ -134,9 +28,9 @@
 							Home <i class="fa fa-angle-down" aria-hidden="true"></i>
 							</a>
 							<ul class="dropdown-menu level1">
-								<li><a href="index.html">Home 01</a></li>
-								<li><a href="homev2.html">Home 02</a></li>
-								<li><a href="homev3.html">Home 03</a></li>
+								<li><a href="{{ route('home') }}">Home 01</a></li>
+								<li><a href="{{ route('home') }}">Home 02</a></li>
+								<li><a href="{{ route('home') }}">Home 03</a></li>
 							</ul>
 						</li>
 						<li class="dropdown first">
@@ -147,13 +41,13 @@
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" >Movie grid<i class="ion-ios-arrow-forward"></i></a>
 									<ul class="dropdown-menu level2">
-										<li><a href="moviegrid.html">Movie grid</a></li>
-										<li><a href="moviegridfw.html">movie grid full width</a></li>
+										<li><a href="{{ route('moviegrid') }}">Movie grid</a></li>
+										<li><a href="{{ route('moviegrid') }}">movie grid full width</a></li>
 									</ul>
 								</li>			
-								<li><a href="movielist.html">Movie list</a></li>
-								<li><a href="moviesingle.html">Movie single</a></li>
-								<li class="it-last"><a href="seriessingle.html">Series single</a></li>
+								<li><a href="{{ route('movielist') }}">Movie list</a></li>
+								<li><a href="#">Movie single</a></li>
+								<li class="it-last"><a href="#">Series single</a></li>
 							</ul>
 						</li>
 						<li class="dropdown first">
@@ -190,7 +84,7 @@
 						</li>
 					</ul>
 					<ul class="nav navbar-nav flex-child-menu menu-right">               
-						<li><a href="help.html">Help</a></li>
+						<li><a href="{{ route('help') }}">Help</a></li>
 						<li class="loginLink"><a href="#">LOG In</a></li>
 						<li class="btn signupLink"><a href="#">sign up</a></li>
 					</ul>
@@ -199,22 +93,26 @@
 	    
 	    <!-- top search form -->
 	    <div class="top-search">
-	    	<div class="search-dropdown">
-	    		<i class="ion-ios-list-outline"></i>
-		    	<select>
-					<option value="movies">Movies</option>
-					<option value="tvshows">TV Shows</option>
-				</select>
-			</div>
-			<div class="search-input">
-				<input type="text" placeholder="Search for a movie, TV Show that you are looking for">
-				<i class="ion-ios-search"></i>
-			</div>
+	    	<form action="{{ route('movies.search') }}" method="GET">
+		    	<div class="search-dropdown">
+		    		<i class="ion-ios-list-outline"></i>
+			    	<select name="type">
+						<option value="movies">Movies</option>
+						<option value="tvshows">TV Shows</option>
+					</select>
+				</div>
+				<div class="search-input">
+					<input type="text" name="q" placeholder="Search for a movie, TV Show that you are looking for" value="{{ request('q') }}">
+					<button type="submit" style="background: none; border: none; color: inherit;">
+						<i class="ion-ios-search"></i>
+					</button>
+				</div>
+			</form>
 	    </div>
 	</div>
 </header>
 <!-- END | Header -->
-
+ 
 <!-- Help content section -->
 <div class="help-content">
 	<div class="container">
@@ -330,7 +228,27 @@
 					<!-- Contact Form -->
 					<div class="sb-it contact-form-box">
 						<h4 class="sb-title">Send Us a Message</h4>
-						<form class="contact-form" method="post" action="contact.php">
+						<form class="contact-form" method="post" action="{{ route('contact.send') }}">
+							@csrf
+							@if(session('success'))
+								<div class="alert alert-success">
+									{{ session('success') }}
+								</div>
+							@endif
+							@if(session('error'))
+								<div class="alert alert-danger">
+									{{ session('error') }}
+								</div>
+							@endif
+							@if($errors->any())
+								<div class="alert alert-danger">
+									<ul class="error-list">
+										@foreach($errors->all() as $error)
+											<li>{{ $error }}</li>
+										@endforeach
+									</ul>
+								</div>
+							@endif
 							<div class="form-group">
 								<label for="contact-name">Your Name *</label>
 								<input type="text" id="contact-name" name="name" class="form-control" placeholder="Enter your full name" required>
@@ -367,10 +285,10 @@
 						<h4 class="sb-title">Quick Links</h4>
 						<ul class="quick-links">
 							<li><a href="#faq"><i class="ion-help-circled"></i> FAQ</a></li>
-							<li><a href="userprofile.html"><i class="ion-person"></i> My Account</a></li>
-							<li><a href="userfavoritelist.html"><i class="ion-heart"></i> My Watchlist</a></li>
-							<li><a href="userrate.html"><i class="ion-star"></i> My Ratings</a></li>
-							<li><a href="bloglist.html"><i class="ion-document-text"></i> News & Updates</a></li>
+							<li><a href="#"><i class="ion-person"></i> My Account</a></li>
+							<li><a href="#"><i class="ion-heart"></i> My Watchlist</a></li>
+							<li><a href="#"><i class="ion-star"></i> My Ratings</a></li>
+							<li><a href="#"><i class="ion-document-text"></i> News & Updates</a></li>
 							<li><a href="#"><i class="ion-settings"></i> Privacy Policy</a></li>
 							<li><a href="#"><i class="ion-information-circled"></i> Terms of Service</a></li>
 						</ul>
@@ -380,71 +298,4 @@
 		</div>
 	</div>
 </div>
-<!-- End help content section -->
-
-<!-- footer section-->
-<footer class="ht-footer">
-	<div class="container">
-		<div class="flex-parent-ft">
-			<div class="flex-child-ft item1">
-				 <a href="index.html"><img class="logo" src="images/cinema_paradiso.png" alt=""></a>
-				 <p>KUET,Khulna,<br>
-				Bangladesh</p>
-				<p>Call us: <a href="tel:+8801326503869">+8801326503869</a></p>
-			</div>
-			<div class="flex-child-ft item2">
-				<h4>Resources</h4>
-				<ul>
-					<li><a href="#">About</a></li> 
-					<li><a href="#">Blockbuster</a></li>
-					<li><a href="help.html">Contact Us</a></li>
-					<li><a href="#">Forums</a></li>
-					<li><a href="#">Blog</a></li>
-					<li><a href="help.html">Help Center</a></li>
-				</ul>
-			</div>
-			<div class="flex-child-ft item3">
-				<h4>Legal</h4>
-				<ul>
-					<li><a href="#">Terms of Use</a></li> 
-					<li><a href="#">Privacy Policy</a></li>	
-					<li><a href="#">Security</a></li>
-				</ul>
-			</div>
-			<div class="flex-child-ft item4">
-				<h4>Account</h4>
-				<ul>
-					<li><a href="userprofile.html">My Account</a></li> 
-					<li><a href="userfavoritelist.html">Watchlist</a></li>	
-					<li><a href="#">Collections</a></li>
-					<li><a href="help.html">User Guide</a></li>
-				</ul>
-			</div>
-			<div class="flex-child-ft item5">
-				<h4>Newsletter</h4>
-				<p>Subscribe to our newsletter system now <br> to get latest news from us.</p>
-				<form action="#">
-					<input type="text" placeholder="Enter your email...">
-				</form>
-				<a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
-			</div>
-		</div>
-	</div>
-	<div class="ft-copyright">
-		<div class="ft-left">
-			<p>© 2017 Blockbuster. All Rights Reserved. Designed by leehari.</p>
-		</div>
-		<div class="backtotop">
-			<p><a href="#" id="back-to-top">Back to top  <i class="ion-ios-arrow-thin-up"></i></a></p>
-		</div>
-	</div>
-</footer>
-<!-- end of footer section-->
-
-<script src="js/jquery.js"></script>
-<script src="js/plugins.js"></script>
-<script src="js/plugins2.js"></script>
-<script src="js/custom.js"></script>
-
-</body>
-</html>
+@endsection

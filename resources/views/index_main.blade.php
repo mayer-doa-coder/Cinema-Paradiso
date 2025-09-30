@@ -43,11 +43,11 @@
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" >Movie grid<i class="ion-ios-arrow-forward"></i></a>
 									<ul class="dropdown-menu level2">
-										<li><a href="#">Movie grid</a></li>
+										<li><a href="{{ route('moviegrid') }}">Movie grid</a></li>
 										<li><a href="#">movie grid full width</a></li>
 									</ul>
 								</li>			
-								<li><a href="#">Movie list</a></li>
+								<li><a href="{{ route('movielist') }}">Movie list</a></li>
 								<li><a href="#">Movie single</a></li>
 								<li class="it-last"><a href="#">Series single</a></li>
 							</ul>
@@ -86,7 +86,7 @@
 						</li>
 					</ul>
 					<ul class="nav navbar-nav flex-child-menu menu-right">               
-						<li><a href="#">Help</a></li>
+						<li><a href="{{ route('help') }}">Help</a></li>
 						@auth
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
