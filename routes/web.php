@@ -15,6 +15,11 @@ Route::get('/movielist', [MovieController::class, 'list'])->name('movielist');
 Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.search');
 Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 
+// Blog/News routes
+Route::get('/blog', function () {
+    return view('bloggrid');
+})->name('blog');
+
 // Help and Contact routes
 Route::get('/help', function () {
     return view('help');

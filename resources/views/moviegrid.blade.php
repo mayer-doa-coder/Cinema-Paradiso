@@ -24,91 +24,65 @@
 						<li class="hidden">
 							<a href="#page-top"></a>
 						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
-							Home <i class="fa fa-angle-down" aria-hidden="true"></i>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('home') }}">
+							Home
 							</a>
-							<ul class="dropdown-menu level1">
-								<li><a href="{{ route('home') }}">Home 01</a></li>
-								<li><a href="{{ route('home') }}">Home 02</a></li>
-								<li><a href="{{ route('home') }}">Home 03</a></li>
-							</ul>
 						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							movies<i class="fa fa-angle-down" aria-hidden="true"></i>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('moviegrid') }}">
+							Movies
 							</a>
-							<ul class="dropdown-menu level1">
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" >Movie grid<i class="ion-ios-arrow-forward"></i></a>
-									<ul class="dropdown-menu level2">
-										<li><a href="{{ route('moviegrid') }}">Movie grid</a></li>
-										<li><a href="{{ route('moviegrid') }}">movie grid full width</a></li>
-									</ul>
-								</li>			
-								<li><a href="{{ route('movielist') }}">Movie list</a></li>
-								<li><a href="#">Movie single</a></li>
-								<li class="it-last"><a href="#">Series single</a></li>
-							</ul>
 						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							celebrities <i class="fa fa-angle-down" aria-hidden="true"></i>
+						<li class="first">
+							<a class="btn btn-default lv1" href="#">
+							Celebrities
 							</a>
-							<ul class="dropdown-menu level1">
-								<li><a href="celebritygrid01.html">celebrity grid 01</a></li>
-								<li><a href="celebritygrid02.html">celebrity grid 02 </a></li>
-								<li><a href="celebritylist.html">celebrity list</a></li>
-								<li class="it-last"><a href="celebritysingle.html">celebrity single</a></li>
-							</ul>
 						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							news <i class="fa fa-angle-down" aria-hidden="true"></i>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('blog') }}">
+							News
 							</a>
-							<ul class="dropdown-menu level1">
-								<li><a href="bloglist.html">blog List</a></li>
-								<li><a href="bloggrid.html">blog Grid</a></li>
-								<li class="it-last"><a href="blogdetail.html">blog Detail</a></li>
-							</ul>
 						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							community <i class="fa fa-angle-down" aria-hidden="true"></i>
+						<li class="first">
+							<a class="btn btn-default lv1" href="#">
+							Community
 							</a>
-							<ul class="dropdown-menu level1">
-								<li><a href="userfavoritegrid.html">user favorite grid</a></li>
-								<li><a href="userfavoritelist.html">user favorite list</a></li>
-								<li><a href="userprofile.html">user profile</a></li>
-								<li class="it-last"><a href="userrate.html">user rate</a></li>
-							</ul>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav flex-child-menu menu-right">               
 						<li><a href="{{ route('help') }}">Help</a></li>
-						<li class="loginLink"><a href="#">LOG In</a></li>
-						<li class="btn signupLink"><a href="#">sign up</a></li>
+						@auth
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									{{ Auth::user()->name }} <i class="fa fa-angle-down" aria-hidden="true"></i>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a href="#">Profile</a></li>
+									<li><a href="#" onclick="logout()">Logout</a></li>
+								</ul>
+							</li>
+						@else
+							<li class="loginLink"><a href="#">LOG In</a></li>
+							<li class="btn signupLink"><a href="#">sign up</a></li>
+						@endauth
 					</ul>
 				</div>
 	    </nav>
 	    
 	    <!-- top search form -->
 	    <div class="top-search">
-	    	<form action="{{ route('movies.search') }}" method="GET">
-		    	<div class="search-dropdown">
-		    		<i class="ion-ios-list-outline"></i>
-			    	<select name="type">
-						<option value="movies">Movies</option>
-						<option value="tvshows">TV Shows</option>
-					</select>
-				</div>
-				<div class="search-input">
-					<input type="text" name="q" placeholder="Search for a movie, TV Show that you are looking for" value="{{ request('q') }}">
-					<button type="submit" style="background: none; border: none; color: inherit;">
-						<i class="ion-ios-search"></i>
-					</button>
-				</div>
-			</form>
+	    	<div class="search-dropdown">
+	    		<i class="ion-ios-list-outline"></i>
+		    	<select>
+					<option value="movies">Movies</option>
+					<option value="tvshows">TV Shows</option>
+				</select>
+			</div>
+			<div class="search-input">
+				<input type="text" placeholder="Search for a movie, TV Show that you are looking for">
+				<i class="ion-ios-search"></i>
+			</div>
 	    </div>
 	</div>
 </header>
