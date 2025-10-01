@@ -20,6 +20,23 @@ Route::get('/blog', function () {
     return view('bloggrid');
 })->name('blog');
 
+// Celebrity routes
+Route::get('/celebritygrid01', function () {
+    return view('celebritygrid01');
+})->name('celebritygrid01');
+
+Route::get('/celebritygrid02', function () {
+    return view('celebritygrid02');
+})->name('celebritygrid02');
+
+Route::get('/celebritylist', function () {
+    return view('celebritylist');
+})->name('celebritylist');
+
+Route::get('/celebritysingle', function () {
+    return view('celebritysingle');
+})->name('celebritysingle');
+
 // Help and Contact routes
 Route::get('/help', function () {
     return view('help');
