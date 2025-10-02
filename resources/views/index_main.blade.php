@@ -97,6 +97,15 @@
 
 <div class="slider movie-items">
 	<div class="container">
+		<!-- User Experience Taglines Section - Overlaid on slider -->
+		<div class="user-experience-section">
+			<div class="tagline-container">
+				<div class="animated-tagline" id="taglineText">
+					<!-- Dynamic text will be inserted here -->
+				</div>
+			</div>
+		</div>
+		
 		<div class="row">
 	    	<div class="slick-multiItemSlider">
 	    		@if($error)
@@ -1085,6 +1094,48 @@
 
 @push('scripts')
 <script>
+// Animated Taglines
+document.addEventListener('DOMContentLoaded', function() {
+    const taglines = [
+        "Track your <span class='highlight'>watched list</span>",
+        "<span class='highlight'>Save</span> films for later",
+        "Recommend movies to <span class='highlight'>friends</span>",
+        "Discover what to <span class='highlight'>watch next</span>",
+        "Keep your <span class='highlight'>cinema diary</span>",
+        "Follow friends' <span class='highlight'>favorites</span>",
+        "Never forget what you've <span class='highlight'>watched</span>",
+        "Build your personal <span class='highlight'>film collection</span>",
+        "Find and share <span class='highlight'>hidden gems</span>",
+        "Plan your next <span class='highlight'>movie night</span>"
+    ];
+    
+    const taglineElement = document.getElementById('taglineText');
+    let currentIndex = 0;
+    
+    function changeTagline() {
+        // Fade out first
+        taglineElement.style.opacity = '0';
+        taglineElement.style.transform = 'translateY(20px) scale(0.95)';
+        
+        // Change text after fade out completes
+        setTimeout(() => {
+            taglineElement.innerHTML = taglines[currentIndex];
+            currentIndex = (currentIndex + 1) % taglines.length;
+            
+            // Fade in with new text
+            taglineElement.style.opacity = '1';
+            taglineElement.style.transform = 'translateY(0) scale(1)';
+        }, 500); // Wait for fade out
+    }
+    
+    // Set initial tagline
+    taglineElement.innerHTML = taglines[currentIndex];
+    currentIndex = (currentIndex + 1) % taglines.length;
+    
+    // Change tagline every 5 seconds
+    setInterval(changeTagline, 5000);
+});
+
 // Search functionality
 document.addEventListener('DOMContentLoaded', function() {
     const searchIcon = document.getElementById('search-icon');
