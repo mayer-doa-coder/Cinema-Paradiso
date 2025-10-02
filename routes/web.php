@@ -4,16 +4,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('index_main');  // This should load index_main.blade.php
-})->name('home');
+// Home route
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/search', [HomeController::class, 'search'])->name('home.search');
 
 // Movie routes
 Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
 Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.search');
 Route::get('/movies/genre/{genreId}', [MovieController::class, 'byGenre'])->name('movies.genre');
 Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
+
+// TV routes (placeholder for future implementation)
+Route::get('/tv', function () {
+    return redirect()->route('movies.index')->with('info', 'TV shows coming soon!');
+})->name('tv.index');
 
 // AJAX endpoints for movie data
 Route::get('/api/movies/{id}/credits', [MovieController::class, 'getCredits'])->name('api.movies.credits');

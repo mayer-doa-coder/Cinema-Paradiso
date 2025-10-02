@@ -81,14 +81,14 @@
 	    <div class="top-search">
 	    	<div class="search-dropdown">
 	    		<i class="ion-ios-list-outline"></i>
-		    	<select>
+		    	<select id="search-type">
 					<option value="movies">Movies</option>
 					<option value="tvshows">TV Shows</option>
 				</select>
 			</div>
 			<div class="search-input">
-				<input type="text" placeholder="Search for a movie, TV Show that you are looking for">
-				<i class="ion-ios-search"></i>
+				<input type="text" id="search-query" placeholder="Search for a movie, TV Show that you are looking for">
+				<i class="ion-ios-search" id="search-icon" style="cursor: pointer;"></i>
 			</div>
 	    </div>
 	</div>
@@ -99,114 +99,51 @@
 	<div class="container">
 		<div class="row">
 	    	<div class="slick-multiItemSlider">
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="{{ asset('images/uploads/slider1.jpg') }}" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span>
-	    				</div>
-	    				<h6><a href="#">Interstellar</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-				<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="{{ asset('images/uploads/slider2.jpg') }}" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="yell"><a href="#">action</a></span>
-	    				</div>
-	    				<h6><a href="#">The revenant</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="{{ asset('images/uploads/slider3.jpg') }}" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="green"><a href="#">comedy</a></span>
-	    				</div>
-	    				<h6><a href="#">Die hard</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="{{ asset('images/uploads/slider4.jpg') }}" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span> <span class="orange"><a href="#">advanture</a></span>
-	    				</div>
-	    				<h6><a href="#">The walk</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="{{ asset('images/uploads/slider1.jpg') }}" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span>
-	    				</div>
-	    				<h6><a href="#">Interstellar</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-				<div class="movie-item">
-	    			<div class="mv-img">
-	    				<a href="#"><img src="{{ asset('images/uploads/slider2.jpg') }}" alt="" width="285" height="437"></a>
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="yell"><a href="#">action</a></span>
-	    				</div>
-	    				<h6><a href="#">The revenant</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<img src="{{ asset('images/uploads/slider3.jpg') }}" alt="" width="285" height="437">
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="green"><a href="#">comedy</a></span>
-	    				</div>
-	    				<h6><a href="#">Die hard</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<img src="{{ asset('images/uploads/slider4.jpg') }}" alt="" width="285" height="437">
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="blue"><a href="#">Sci-fi</a></span> <span class="orange"><a href="#">advanture</a></span>
-	    				</div>
-	    				<h6><a href="#">The walk</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
-	    		<div class="movie-item">
-	    			<div class="mv-img">
-	    				<img src="{{ asset('images/uploads/slider3.jpg') }}" alt="" width="285" height="437">
-	    			</div>
-	    			<div class="title-in">
-	    				<div class="cate">
-	    					<span class="green"><a href="#">comedy</a></span>
-	    				</div>
-	    				<h6><a href="#">Die hard</a></h6>
-	    				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-	    			</div>
-	    		</div>
+	    		@if($error)
+	    			{{-- Show fallback content when API is unavailable --}}
+	    			<div class="movie-item">
+		    			<div class="mv-img">
+		    				<a href="#"><img src="{{ asset('images/uploads/slider1.jpg') }}" alt="" width="285" height="437"></a>
+		    			</div>
+		    			<div class="title-in">
+		    				<div class="cate">
+		    					<span class="blue"><a href="#">Sci-fi</a></span>
+		    				</div>
+		    				<h6><a href="#">Featured Movies</a></h6>
+		    				<p><i class="ion-android-star"></i><span>8.0</span> /10</p>
+		    			</div>
+		    		</div>
+		    		<div class="movie-item">
+		    			<div class="mv-img">
+		    				<a href="#"><img src="{{ asset('images/uploads/slider2.jpg') }}" alt="" width="285" height="437"></a>
+		    			</div>
+		    			<div class="title-in">
+		    				<div class="cate">
+		    					<span class="yell"><a href="#">Action</a></span>
+		    				</div>
+		    				<h6><a href="#">Coming Soon</a></h6>
+		    				<p><i class="ion-android-star"></i><span>7.5</span> /10</p>
+		    			</div>
+		    		</div>
+	    		@else
+	    			@forelse($trending as $movie)
+	    				@include('partials._movieCard', ['movie' => $movie, 'genres' => $genres])
+	    			@empty
+	    				{{-- Fallback if no trending movies --}}
+	    				<div class="movie-item">
+			    			<div class="mv-img">
+			    				<a href="{{ route('movies.index') }}"><img src="{{ asset('images/uploads/slider1.jpg') }}" alt="" width="285" height="437"></a>
+			    			</div>
+			    			<div class="title-in">
+			    				<div class="cate">
+			    					<span class="blue"><a href="{{ route('movies.index') }}">Movies</a></span>
+			    				</div>
+			    				<h6><a href="{{ route('movies.index') }}">Explore Movies</a></h6>
+			    				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+			    			</div>
+			    		</div>
+	    			@endforelse
+	    		@endif
 	    	</div>
 	    </div>
 	</div>
@@ -216,374 +153,182 @@
 		<div class="row ipad-width">
 			<div class="col-md-8">
 				<div class="title-hd">
-					<h2>in theater</h2>
-					<a href="#" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
+					<h2>Movies</h2>
+					<a href="{{ route('movies.index') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
 				</div>
 				<div class="tabs">
 					<ul class="tab-links">
 						<li class="active"><a href="#tab1">#Popular</a></li>
-						<li><a href="#tab2"> #Coming soon</a></li>
+						<li><a href="#tab2"> #Upcoming</a></li>
 						<li><a href="#tab3">  #Top rated  </a></li>
-						<li><a href="#tab4"> #Most reviewed</a></li>                        
+						<li><a href="#tab4"> #Trending</a></li>                        
 					</ul>
 				    <div class="tab-content">
 				        <div id="tab1" class="tab active">
 				            <div class="row">
 				            	<div class="slick-multiItem">
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item1.jpg') }}" alt="" width="185" height="284">
-					            			</div> 
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
+				            		@if($error)
+				            			{{-- Fallback content when API is unavailable --}}
+				            			<div class="slide-it">
+					            			<div class="movie-item">
+						            			<div class="mv-img">
+						            				<img src="{{ asset('images/uploads/mv-item1.jpg') }}" alt="" width="185" height="284">
+						            			</div>
+						            			<div class="hvr-inner">
+						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
+						            			</div>
+						            			<div class="title-in">
+						            				<h6><a href="{{ route('movies.index') }}">Explore Movies</a></h6>
+						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+						            			</div>
+						            		</div>
 					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item2.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item4.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item5.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item6.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item7.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item8.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
+				            		@else
+				            			@forelse(array_slice($popular, 0, 8) as $movie)
+				            				@include('partials._movieCardSmall', ['movie' => $movie])
+				            			@empty
+				            				<div class="slide-it">
+						            			<div class="movie-item">
+							            			<div class="mv-img">
+							            				<img src="{{ asset('images/uploads/mv-item1.jpg') }}" alt="" width="185" height="284">
+							            			</div>
+							            			<div class="hvr-inner">
+							            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
+							            			</div>
+							            			<div class="title-in">
+							            				<h6><a href="{{ route('movies.index') }}">Popular Movies</a></h6>
+							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+							            			</div>
+							            		</div>
+						            		</div>
+				            			@endforelse
+				            		@endif
 				            	</div>
 				            </div>
 				        </div>
 				        <div id="tab2" class="tab">
 				           <div class="row">
 				            	<div class="slick-multiItem">
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item5.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
+				            		@if($error)
+				            			{{-- Fallback content when API is unavailable --}}
+				            			<div class="slide-it">
+					            			<div class="movie-item">
+						            			<div class="mv-img">
+						            				<img src="{{ asset('images/uploads/mv-item2.jpg') }}" alt="" width="185" height="284">
+						            			</div>
+						            			<div class="hvr-inner">
+						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
+						            			</div>
+						            			<div class="title-in">
+						            				<h6><a href="{{ route('movies.index') }}">Coming Soon</a></h6>
+						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+						            			</div>
+						            		</div>
 					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item6.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item7.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item8.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
+				            		@else
+				            			@forelse(array_slice($upcoming, 0, 8) as $movie)
+				            				@include('partials._movieCardSmall', ['movie' => $movie])
+				            			@empty
+				            				<div class="slide-it">
+						            			<div class="movie-item">
+							            			<div class="mv-img">
+							            				<img src="{{ asset('images/uploads/mv-item2.jpg') }}" alt="" width="185" height="284">
+							            			</div>
+							            			<div class="hvr-inner">
+							            				<a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Browse Upcoming <i class="ion-android-arrow-dropright"></i></a>
+							            			</div>
+							            			<div class="title-in">
+							            				<h6><a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming Movies</a></h6>
+							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+							            			</div>
+							            		</div>
+						            		</div>
+				            			@endforelse
+				            		@endif
 				            	</div>
 				            </div>
 				        </div>
 				        <div id="tab3" class="tab">
 				        	<div class="row">
 				            	<div class="slick-multiItem">
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item1.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
+				            		@if($error)
+				            			{{-- Fallback content when API is unavailable --}}
+				            			<div class="slide-it">
+					            			<div class="movie-item">
+						            			<div class="mv-img">
+						            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
+						            			</div>
+						            			<div class="hvr-inner">
+						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
+						            			</div>
+						            			<div class="title-in">
+						            				<h6><a href="{{ route('movies.index') }}">Top Rated</a></h6>
+						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+						            			</div>
+						            		</div>
 					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item2.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item4.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
+				            		@else
+				            			@forelse(array_slice($topRated, 0, 8) as $movie)
+				            				@include('partials._movieCardSmall', ['movie' => $movie])
+				            			@empty
+				            				<div class="slide-it">
+						            			<div class="movie-item">
+							            			<div class="mv-img">
+							            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
+							            			</div>
+							            			<div class="hvr-inner">
+							            				<a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Browse Top Rated <i class="ion-android-arrow-dropright"></i></a>
+							            			</div>
+							            			<div class="title-in">
+							            				<h6><a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated Movies</a></h6>
+							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+							            			</div>
+							            		</div>
+						            		</div>
+				            			@endforelse
+				            		@endif
 				            	</div>
 				            </div>
 			       	 	</div>
 			       	 	<div id="tab4" class="tab">
 				        	<div class="row">
 				            	<div class="slick-multiItem">
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item5.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
+				            		@if($error)
+				            			{{-- Fallback content when API is unavailable --}}
+				            			<div class="slide-it">
+					            			<div class="movie-item">
+						            			<div class="mv-img">
+						            				<img src="{{ asset('images/uploads/mv-item4.jpg') }}" alt="" width="185" height="284">
+						            			</div>
+						            			<div class="hvr-inner">
+						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
+						            			</div>
+						            			<div class="title-in">
+						            				<h6><a href="{{ route('movies.index') }}">Trending</a></h6>
+						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+						            			</div>
+						            		</div>
 					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item6.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item7.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item8.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
+				            		@else
+				            			@forelse(array_slice($trending, 0, 8) as $movie)
+				            				@include('partials._movieCardSmall', ['movie' => $movie])
+				            			@empty
+				            				<div class="slide-it">
+						            			<div class="movie-item">
+							            			<div class="mv-img">
+							            				<img src="{{ asset('images/uploads/mv-item4.jpg') }}" alt="" width="185" height="284">
+							            			</div>
+							            			<div class="hvr-inner">
+							            				<a href="{{ route('movies.index', ['category' => 'trending']) }}">Browse Trending <i class="ion-android-arrow-dropright"></i></a>
+							            			</div>
+							            			<div class="title-in">
+							            				<h6><a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending Movies</a></h6>
+							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
+							            			</div>
+							            		</div>
+						            		</div>
+				            			@endforelse
+				            		@endif
 				            	</div>
 				            </div>
 			       	 	</div>
@@ -591,7 +336,7 @@
 				</div>
 				<div class="title-hd">
 					<h2>on tv</h2>
-					<a href="#" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
+					<a href="{{ route('tv.index') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
 				</div>
 				<div class="tabs">
 					<ul class="tab-links-2">
@@ -1340,6 +1085,33 @@
 
 @push('scripts')
 <script>
+// Search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchIcon = document.getElementById('search-icon');
+    const searchInput = document.getElementById('search-query');
+    const searchType = document.getElementById('search-type');
+    
+    function performSearch() {
+        const query = searchInput.value.trim();
+        const type = searchType.value;
+        
+        if (query) {
+            const searchUrl = `{{ route('home.search') }}?q=${encodeURIComponent(query)}&type=${type}`;
+            window.location.href = searchUrl;
+        }
+    }
+    
+    // Search on icon click
+    searchIcon.addEventListener('click', performSearch);
+    
+    // Search on Enter key press
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+});
+
 async function logout() {
     try {
         const response = await fetch('/auth/logout', {
