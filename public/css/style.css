@@ -7107,10 +7107,14 @@ p.ceb-single {
   background-color: #00b9ef;
 }
 .slider {
-  background: url('../images/uploads/wallpaperflare.com_wallpaper.jpg') no-repeat;
-  background-position: center;
+  background: url('../images/uploads/superman-blue-hj.jpg') no-repeat;
+  background-position: center center;
   text-align: center;
   background-size: cover;
+  background-attachment: fixed;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  -ms-interpolation-mode: bicubic;
   position: relative;
   padding-top: 700px;
   padding-bottom: 50px;
@@ -8752,6 +8756,30 @@ footer.full-width-ft .ft-copyright {
 	.blog-item p {
 		font-size: 11px;
 	}
+}
+
+/* Clean Movie Poster Cards - Pure poster display */
+/* Remove overlay shadow for clean look */
+.movie-items .movie-item .mv-img:after {
+  display: none;
+}
+
+/* Enhanced poster hover effects */
+.movie-items .movie-item:hover img {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+
+.movie-items .movie-item img {
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Add subtle shadow on hover for depth */
+.movie-items .movie-item:hover .mv-img {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
 }
 
 

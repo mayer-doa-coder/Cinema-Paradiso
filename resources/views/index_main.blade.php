@@ -33,12 +33,12 @@
 						<li class="first">
 							<a class="btn btn-default lv1" href="{{ route('movies.index') }}">
 							Movies
-							<ul class="sub-menu">
+							<!-- <ul class="sub-menu">
 								<li><a href="{{ route('movies.index', ['category' => 'popular']) }}">Popular</a></li>
 								<li><a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated</a></li>
 								<li><a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending</a></li>
 								<li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming</a></li>
-							</ul>
+							</ul> -->
 							</a>
 						</li>
 						<li class="first">
