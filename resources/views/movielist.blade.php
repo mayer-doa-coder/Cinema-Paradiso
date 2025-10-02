@@ -30,8 +30,14 @@
 							</a>
 						</li>
 						<li class="first">
-							<a class="btn btn-default lv1" href="{{ route('moviegrid') }}">
+							<a class="btn btn-default lv1" href="{{ route('movies.index') }}">
 							Movies
+							<ul class="sub-menu">
+								<li><a href="{{ route('movies.index', ['category' => 'popular']) }}">Popular</a></li>
+								<li><a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated</a></li>
+								<li><a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending</a></li>
+								<li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming</a></li>
+							</ul>
 							</a>
 						</li>
 						<li class="first">
@@ -118,8 +124,8 @@
 						<option value="date">Release date Descending</option>
 						<option value="date">Release date Ascending</option>
 					</select>
-					<a href="{{ route('movielist') }}" class="list"><i class="ion-ios-list-outline active"></i></a>
-					<a  href="{{ route('moviegrid') }}" class="grid"><i class="ion-grid"></i></a>
+					<a href="{{ route('movies.index') }}" class="list"><i class="ion-ios-list-outline active"></i></a>
+					<a  href="{{ route('movies.index') }}" class="grid"><i class="ion-grid"></i></a>
 				</div>
 				<div class="movie-item-style-2">
 					<img src="{{ asset('images/uploads/mv1.jpg') }}" alt="">

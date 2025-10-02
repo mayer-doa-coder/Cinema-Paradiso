@@ -10,10 +10,19 @@ Route::get('/', function () {
 })->name('home');
 
 // Movie routes
+Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
+Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.search');
+Route::get('/movies/genre/{genreId}', [MovieController::class, 'byGenre'])->name('movies.genre');
+Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
+
+// AJAX endpoints for movie data
+Route::get('/api/movies/{id}/credits', [MovieController::class, 'getCredits'])->name('api.movies.credits');
+Route::get('/api/movies/{id}/images', [MovieController::class, 'getImages'])->name('api.movies.images');
+Route::get('/api/movies/{id}/videos', [MovieController::class, 'getVideos'])->name('api.movies.videos');
+
+// Legacy movie routes (redirect to new ones)
 Route::get('/moviegrid', [MovieController::class, 'grid'])->name('moviegrid');
 Route::get('/movielist', [MovieController::class, 'list'])->name('movielist');
-Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.search');
-Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 
 // Celebrity routes
 Route::get('/celebrities', function () {

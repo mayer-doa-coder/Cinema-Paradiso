@@ -35,4 +35,21 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | TMDb (The Movie Database) Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for The Movie Database API integration.
+    | Get your API key from: https://www.themoviedb.org/settings/api
+    |
+    */
+    'tmdb' => [
+        'api_key' => env('TMDB_API_KEY', '0aa37805e4fe53b8ef1c48e133acdce6'),
+        'base_url' => env('TMDB_BASE_URL', 'https://api.themoviedb.org/3'),
+        'image_base_url' => env('TMDB_IMAGE_BASE_URL', 'https://image.tmdb.org/t/p'),
+        'cache_duration' => 3600, // Cache for 1 hour
+        'per_page' => 20, // Default results per page
+    ],
+
 ];

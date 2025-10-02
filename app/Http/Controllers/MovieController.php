@@ -3,31 +3,88 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\MovieService;
 
 class MovieController extends Controller
 {
+    protected $movieService;
+
+    public function __construct(MovieService $movieService)
+    {
+        $this->movieService = $movieService;
+    }
+
     /**
-     * Display the movie grid view.
+     * Display the main movies page with popular movies
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function index(Request $request)
+    {
+        $page = $request->get('page', 1);
+        $category = $request->get('category', 'popular');
+        
+        $moviesData = null;
+        $title = 'Popular Movies';
+        
+        switch ($category) {
+            case 'top-rated':
+                $moviesData = $this->movieService->getTopRatedMovies($page);
+                $title = 'Top Rated Movies';
+                break;
+            case 'upcoming':
+                $moviesData = $this->movieService->getUpcomingMovies($page);
+                $title = 'Upcoming Movies';
+                break;
+            case 'trending':
+                $moviesData = $this->movieService->getTrendingMovies($page);
+                $title = 'Trending Movies';
+                break;
+            default:
+                $moviesData = $this->movieService->getPopularMovies($page);
+                break;
+        }
+
+        if (!$moviesData) {
+            return view('movies.index', [
+                'movies' => [],
+                'current_page' => 1,
+                'total_pages' => 1,
+                'title' => $title,
+                'category' => $category,
+                'error' => 'Unable to load movies at the moment. Please try again later.'
+            ]);
+        }
+
+        return view('movies.index', [
+            'movies' => $moviesData['results'] ?? [],
+            'current_page' => $moviesData['page'] ?? 1,
+            'total_pages' => $moviesData['total_pages'] ?? 1,
+            'title' => $title,
+            'category' => $category,
+            'error' => null
+        ]);
+    }
+
+    /**
+     * Display the movie grid view (legacy route)
      *
      * @return \Illuminate\View\View
      */
     public function grid()
     {
-        // In a real application, you would fetch movies from the database
-        // For now, we're returning the static view
-        return view('moviegrid');
+        return redirect()->route('movies.index');
     }
 
     /**
-     * Display the movie list view.
+     * Display the movie list view (legacy route)
      *
      * @return \Illuminate\View\View
      */
     public function list()
     {
-        // In a real application, you would fetch movies from the database
-        // For now, we're returning the static view
-        return view('movielist');
+        return redirect()->route('movies.index');
     }
 
     /**
@@ -38,16 +95,32 @@ class MovieController extends Controller
      */
     public function search(Request $request)
     {
-        // Handle movie search functionality
         $query = $request->get('q', '');
-        $genre = $request->get('genre', '');
-        $rating = $request->get('rating', '');
-        $year_from = $request->get('year_from', '');
-        $year_to = $request->get('year_to', '');
+        $page = $request->get('page', 1);
         
-        // In a real application, you would search the database
-        // For now, return the grid view with search parameters
-        return view('moviegrid', compact('query', 'genre', 'rating', 'year_from', 'year_to'));
+        if (empty($query)) {
+            return redirect()->route('movies.index')->with('error', 'Please enter a search query.');
+        }
+
+        $moviesData = $this->movieService->searchMovies($query, $page);
+        
+        if (!$moviesData) {
+            return view('movies.search', [
+                'movies' => [],
+                'current_page' => 1,
+                'total_pages' => 1,
+                'query' => $query,
+                'error' => 'Unable to search movies at the moment. Please try again later.'
+            ]);
+        }
+
+        return view('movies.search', [
+            'movies' => $moviesData['results'] ?? [],
+            'current_page' => $moviesData['page'] ?? 1,
+            'total_pages' => $moviesData['total_pages'] ?? 1,
+            'query' => $query,
+            'error' => null
+        ]);
     }
 
     /**
@@ -58,8 +131,118 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        // In a real application, you would fetch the movie by ID from database
-        // For now, this is a placeholder
-        return view('moviesingle', compact('id'));
+        $movieDetails = $this->movieService->getMovieDetails($id);
+        
+        if (!$movieDetails) {
+            abort(404, 'Movie not found or unable to load movie details.');
+        }
+
+        // Get additional data
+        $credits = $this->movieService->getMovieCredits($id);
+        $images = $this->movieService->getMovieImages($id);
+        $videos = $this->movieService->getMovieVideos($id);
+
+        return view('movies.show', [
+            'movie' => $movieDetails,
+            'credits' => $credits,
+            'images' => $images,
+            'videos' => $videos,
+            'error' => null
+        ]);
+    }
+
+    /**
+     * Display movies by genre
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $genreId
+     * @return \Illuminate\View\View
+     */
+    public function byGenre(Request $request, $genreId)
+    {
+        $page = $request->get('page', 1);
+        $moviesData = $this->movieService->discoverMoviesByGenre($genreId, $page);
+        $genres = $this->movieService->getGenres();
+        
+        $genreName = 'Movies';
+        if ($genres && isset($genres['genres'])) {
+            foreach ($genres['genres'] as $genre) {
+                if ($genre['id'] == $genreId) {
+                    $genreName = $genre['name'] . ' Movies';
+                    break;
+                }
+            }
+        }
+
+        if (!$moviesData) {
+            return view('movies.genre', [
+                'movies' => [],
+                'current_page' => 1,
+                'total_pages' => 1,
+                'genre_id' => $genreId,
+                'genre_name' => $genreName,
+                'error' => 'Unable to load movies at the moment. Please try again later.'
+            ]);
+        }
+
+        return view('movies.genre', [
+            'movies' => $moviesData['results'] ?? [],
+            'current_page' => $moviesData['page'] ?? 1,
+            'total_pages' => $moviesData['total_pages'] ?? 1,
+            'genre_id' => $genreId,
+            'genre_name' => $genreName,
+            'error' => null
+        ]);
+    }
+
+    /**
+     * Get movie cast and crew (AJAX endpoint)
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCredits($id)
+    {
+        $credits = $this->movieService->getMovieCredits($id);
+        
+        if (!$credits) {
+            return response()->json(['error' => 'Unable to load cast and crew information.'], 500);
+        }
+
+        return response()->json($credits);
+    }
+
+    /**
+     * Get movie images (AJAX endpoint)
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getImages($id)
+    {
+        $images = $this->movieService->getMovieImages($id);
+        
+        if (!$images) {
+            return response()->json(['error' => 'Unable to load movie images.'], 500);
+        }
+
+        return response()->json($images);
+    }
+
+    /**
+     * Get movie videos/trailers (AJAX endpoint)
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getVideos($id)
+    {
+        $videos = $this->movieService->getMovieVideos($id);
+        
+        if (!$videos) {
+            return response()->json(['error' => 'Unable to load movie videos.'], 500);
+        }
+
+        return response()->json($videos);
     }
 }
