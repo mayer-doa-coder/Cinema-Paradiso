@@ -34,7 +34,7 @@
 							</a>
 						</li>
 						<li class="first">
-							<a class="btn btn-default lv1" href="#">
+							<a class="btn btn-default lv1" href="{{ route('celebrities') }}">
 							Celebrities
 							</a>
 						</li>
@@ -44,7 +44,7 @@
 							</a>
 						</li>
 						<li class="first">
-							<a class="btn btn-default lv1" href="#">
+							<a class="btn btn-default lv1" href="{{ route('community') }}">
 							Community
 							</a>
 						</li>

@@ -15,12 +15,11 @@ Route::get('/movielist', [MovieController::class, 'list'])->name('movielist');
 Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.search');
 Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 
-// Blog/News routes
-Route::get('/blog', function () {
-    return view('bloggrid');
-})->name('blog');
-
 // Celebrity routes
+Route::get('/celebrities', function () {
+    return view('celebritygrid01'); // Default celebrity page
+})->name('celebrities');
+
 Route::get('/celebritygrid01', function () {
     return view('celebritygrid01');
 })->name('celebritygrid01');
@@ -36,6 +35,24 @@ Route::get('/celebritylist', function () {
 Route::get('/celebritysingle', function () {
     return view('celebritysingle');
 })->name('celebritysingle');
+
+// Community routes
+Route::get('/community', function () {
+    return view('celebritygrid01'); // Temporary placeholder - create proper community view later
+})->name('community');
+
+// Blog/News routes
+Route::get('/blog', function () {
+    return view('bloggrid');
+})->name('blog');
+
+Route::get('/bloggrid', function () {
+    return view('bloggrid');
+})->name('bloggrid');
+
+Route::get('/blogdetail', function () {
+    return view('blogdetail');
+})->name('blogdetail');
 
 // Help and Contact routes
 Route::get('/help', function () {
