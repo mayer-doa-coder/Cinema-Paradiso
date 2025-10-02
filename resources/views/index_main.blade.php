@@ -167,10 +167,10 @@
 				</div>
 				<div class="tabs">
 					<ul class="tab-links">
-						<li class="active"><a href="#tab1">#Popular</a></li>
-						<li><a href="#tab2"> #Upcoming</a></li>
-						<li><a href="#tab3">  #Top rated  </a></li>
-						<li><a href="#tab4"> #Trending</a></li>                        
+						<li class="active"><a href="#tab1"> Popular</a></li>
+						<li><a href="#tab2"> Upcoming</a></li>
+						<li><a href="#tab3"> Top rated  </a></li>
+						<li><a href="#tab4"> Trending</a></li>                        
 					</ul>
 				    <div class="tab-content">
 				        <div id="tab1" class="tab active">
