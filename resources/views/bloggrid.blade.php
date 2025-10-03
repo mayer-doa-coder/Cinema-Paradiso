@@ -269,7 +269,20 @@ body {
 						</ul>
 					</div>
 					<div class="ads">
-						<img src="images/uploads/ads1.png" alt="">
+						@if(isset($randomWallpaper) && !empty($randomWallpaper['backdrop_url']))
+							<div class="movie-wallpaper" style="position: relative; width: 336px; height: 296px; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+								<img src="{{ $randomWallpaper['backdrop_url'] }}" alt="{{ $randomWallpaper['title'] ?? 'Movie Wallpaper' }}" 
+									 style="width: 100%; height: 100%; object-fit: cover;">
+								<div class="wallpaper-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 15px;">
+									<h5 style="margin: 0; font-size: 14px; font-weight: bold;">{{ $randomWallpaper['title'] ?? 'Featured Movie' }}</h5>
+									@if(!empty($randomWallpaper['overview']))
+										<p style="margin: 5px 0 0; font-size: 11px; opacity: 0.9;">{{ $randomWallpaper['overview'] }}</p>
+									@endif
+								</div>
+							</div>
+						@else
+							<img src="{{ asset('images/uploads/ads1.png') }}" alt="">
+						@endif
 					</div>
 				</div>
 			</div>

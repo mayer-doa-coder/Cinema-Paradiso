@@ -30,6 +30,9 @@ class HomeController extends Controller
             $topRatedMovies = $this->movieService->getTopRatedMovies(1);
             $genres = $this->movieService->getGenres();
 
+            // Get random movie wallpapers
+            $randomWallpapers = $this->getRandomMovieWallpapers();
+
             // Prepare data for the view
             $data = [
                 'trending' => $this->prepareMoviesData($trendingMovies),
@@ -37,6 +40,7 @@ class HomeController extends Controller
                 'upcoming' => $this->prepareMoviesData($upcomingMovies),
                 'topRated' => $this->prepareMoviesData($topRatedMovies),
                 'genres' => $genres['genres'] ?? [],
+                'randomWallpaper' => $randomWallpapers,
                 'error' => null
             ];
 
@@ -57,25 +61,113 @@ class HomeController extends Controller
                 'topRated' => [],
                 'genres' => [],
                 'featuredMovie' => null,
+                'randomWallpaper' => $this->getFallbackWallpaper(),
                 'error' => 'Unable to load movie data at the moment. Please try again later.'
             ]);
         }
     }
 
-    /**
-     * Prepare movie data for the view
+        /**
+     * Prepare movies data for display, extracting required fields
      *
-     * @param array|null $apiResponse
+     * @param array $moviesResponse
      * @return array
      */
-    private function prepareMoviesData($apiResponse)
+    private function prepareMoviesData($moviesResponse)
     {
-        if (!$apiResponse || !isset($apiResponse['results'])) {
+        if (!isset($moviesResponse['results']) || !is_array($moviesResponse['results'])) {
             return [];
         }
 
-        // Return first 12 movies for homepage display
-        return array_slice($apiResponse['results'], 0, 12);
+        return array_map(function ($movie) {
+            return [
+                'id' => $movie['id'] ?? null,
+                'title' => $movie['title'] ?? 'Unknown Title',
+                'poster_path' => $movie['poster_path'] ?? null,
+                'backdrop_path' => $movie['backdrop_path'] ?? null,
+                'overview' => $movie['overview'] ?? '',
+                'release_date' => $movie['release_date'] ?? '',
+                'vote_average' => $movie['vote_average'] ?? 0,
+                'genre_ids' => $movie['genre_ids'] ?? [],
+                'poster_url' => $movie['poster_path'] 
+                    ? "https://image.tmdb.org/t/p/w500" . $movie['poster_path'] 
+                    : null,
+                'backdrop_url' => $movie['backdrop_path'] 
+                    ? "https://image.tmdb.org/t/p/w1280" . $movie['backdrop_path'] 
+                    : null,
+            ];
+        }, $moviesResponse['results']);
+    }
+
+    /**
+     * Get random movie wallpapers from different categories
+     *
+     * @return array
+     */
+    private function getRandomMovieWallpapers()
+    {
+        try {
+            // Get movies from different categories to ensure variety
+            $categories = [
+                $this->movieService->getPopularMovies(1),
+                $this->movieService->getTrendingMovies(1),
+                $this->movieService->getTopRatedMovies(1),
+                $this->movieService->getUpcomingMovies(1)
+            ];
+
+            $allWallpapers = [];
+
+            // Collect all movies with backdrop images
+            foreach ($categories as $category) {
+                if (isset($category['results'])) {
+                    foreach ($category['results'] as $movie) {
+                        if (!empty($movie['backdrop_path'])) {
+                            $allWallpapers[] = [
+                                'id' => $movie['id'],
+                                'title' => $movie['title'],
+                                'backdrop_path' => $movie['backdrop_path'],
+                                'backdrop_url' => "https://image.tmdb.org/t/p/w780" . $movie['backdrop_path'],
+                                'overview' => substr($movie['overview'] ?? '', 0, 100) . '...'
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Remove duplicates based on movie ID
+            $uniqueWallpapers = [];
+            $seenIds = [];
+            foreach ($allWallpapers as $wallpaper) {
+                if (!in_array($wallpaper['id'], $seenIds)) {
+                    $uniqueWallpapers[] = $wallpaper;
+                    $seenIds[] = $wallpaper['id'];
+                }
+            }
+
+            // Shuffle and return a random selection
+            shuffle($uniqueWallpapers);
+            return array_slice($uniqueWallpapers, 0, 1)[0] ?? $this->getFallbackWallpaper();
+
+        } catch (\Exception $e) {
+            Log::error('Error getting random wallpapers: ' . $e->getMessage());
+            return $this->getFallbackWallpaper();
+        }
+    }
+
+    /**
+     * Get fallback wallpaper when API fails
+     *
+     * @return array
+     */
+    private function getFallbackWallpaper()
+    {
+        return [
+            'id' => null,
+            'title' => 'Cinema Paradiso',
+            'backdrop_path' => null,
+            'backdrop_url' => asset('images/cinema_paradiso.png'),
+            'overview' => 'Welcome to Cinema Paradiso - Your gateway to the world of movies.'
+        ];
     }
 
     /**

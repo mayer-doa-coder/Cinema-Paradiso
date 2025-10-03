@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CelebrityController;
+use App\Http\Controllers\BlogController;
 
 // Home route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -31,13 +33,9 @@ Route::get('/moviegrid', [MovieController::class, 'grid'])->name('moviegrid');
 Route::get('/movielist', [MovieController::class, 'list'])->name('movielist');
 
 // Celebrity routes
-Route::get('/celebrities', function () {
-    return view('celebritygrid01'); // Default celebrity page
-})->name('celebrities');
+Route::get('/celebrities', [CelebrityController::class, 'index'])->name('celebrities');
 
-Route::get('/celebritygrid01', function () {
-    return view('celebritygrid01');
-})->name('celebritygrid01');
+Route::get('/celebritygrid01', [CelebrityController::class, 'index'])->name('celebritygrid01');
 
 Route::get('/celebritygrid02', function () {
     return view('celebritygrid02');
@@ -57,17 +55,11 @@ Route::get('/community', function () {
 })->name('community');
 
 // Blog/News routes
-Route::get('/blog', function () {
-    return view('bloggrid');
-})->name('blog');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 
-Route::get('/bloggrid', function () {
-    return view('bloggrid');
-})->name('bloggrid');
+Route::get('/bloggrid', [BlogController::class, 'index'])->name('bloggrid');
 
-Route::get('/blogdetail', function () {
-    return view('blogdetail');
-})->name('blogdetail');
+Route::get('/blogdetail', [BlogController::class, 'detail'])->name('blogdetail');
 
 // Help and Contact routes
 Route::get('/help', function () {
