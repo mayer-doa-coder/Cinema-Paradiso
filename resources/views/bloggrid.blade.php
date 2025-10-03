@@ -2,6 +2,19 @@
 
 @section('title', 'Cinema Paradiso - News & Blog')
 
+@push('styles')
+<style>
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.ht-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+</style>
+@endpush
+
 @section('content')
 
 <!-- BEGIN | Header -->
@@ -32,12 +45,6 @@
 						<li class="first">
 							<a class="btn btn-default lv1" href="{{ route('movies.index') }}">
 							Movies
-							<ul class="sub-menu">
-								<li><a href="{{ route('movies.index', ['category' => 'popular']) }}">Popular</a></li>
-								<li><a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated</a></li>
-								<li><a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending</a></li>
-								<li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming</a></li>
-							</ul>
 							</a>
 						</li>
 						<li class="first">
@@ -80,14 +87,14 @@
 	    <div class="top-search">
 	    	<div class="search-dropdown">
 	    		<i class="ion-ios-list-outline"></i>
-		    	<select>
+		    	<select id="search-type">
 					<option value="movies">Movies</option>
 					<option value="tvshows">TV Shows</option>
 				</select>
 			</div>
 			<div class="search-input">
-				<input type="text" placeholder="Search for a movie, TV Show that you are looking for">
-				<i class="ion-ios-search"></i>
+				<input type="text" id="search-query" placeholder="Search for a movie, TV Show that you are looking for">
+				<i class="ion-ios-search" id="search-icon" style="cursor: pointer;"></i>
 			</div>
 	    </div>
 	</div>
@@ -324,4 +331,45 @@
 		</div>
 		<div class="backtotop">
 			<p><a href="#" id="back-to-top">Back to top  <i class="ion-ios-arrow-thin-up"></i></a></p>
+@endsection
+
+@section('scripts')
+<script>
+// Search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchIcon = document.getElementById('search-icon');
+    const searchInput = document.getElementById('search-query');
+    const searchType = document.getElementById('search-type');
+    
+    function performSearch() {
+        const query = searchInput.value.trim();
+        const type = searchType.value;
+        
+        if (query) {
+            if (type === 'movies') {
+                const searchUrl = `{{ route('movies.search') }}?q=${encodeURIComponent(query)}`;
+                window.location.href = searchUrl;
+            } else {
+                // For TV shows, redirect to home search
+                const searchUrl = `{{ route('home.search') }}?q=${encodeURIComponent(query)}&type=${type}`;
+                window.location.href = searchUrl;
+            }
+        }
+    }
+    
+    // Search on icon click
+    if (searchIcon) {
+        searchIcon.addEventListener('click', performSearch);
+    }
+    
+    // Search on Enter key press
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+});
+</script>
 @endsection

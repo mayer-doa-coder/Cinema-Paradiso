@@ -2,7 +2,110 @@
 
 @section('title', $title)
 
+@push('styles')
+<style>
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.ht-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+</style>
+@endpush
+
 @section('content')
+<!-- BEGIN | Header -->
+<header class="ht-header">
+	<div class="container">
+		<nav class="navbar navbar-default navbar-custom">
+				<div class="navbar-header logo">
+				    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					    <span class="sr-only">Toggle navigation</span>
+					    <div id="nav-icon1">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+				    </div>
+				    <a href="{{ route('home') }}"><img class="logo" src="{{ asset('images/cinema_paradiso.png') }}" alt="" width="119" height="58"></a>
+			    </div>
+				<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav flex-child-menu menu-left">
+						<li class="hidden">
+							<a href="#page-top"></a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('home') }}">
+							Home
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('movies.index') }}">
+							Movies
+							<!-- <ul class="sub-menu">
+								<li><a href="{{ route('movies.index', ['category' => 'popular']) }}">Popular</a></li>
+								<li><a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated</a></li>
+								<li><a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending</a></li>
+								<li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming</a></li>
+							</ul> -->
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('celebrities') }}">
+							Celebrities
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('blog') }}">
+							News
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('community') }}">
+							Community
+							</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav flex-child-menu menu-right">               
+						<li><a href="{{ route('help') }}">Help</a></li>
+						@auth
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									{{ Auth::user()->name }} <i class="fa fa-angle-down" aria-hidden="true"></i>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a href="#">Profile</a></li>
+									<li><a href="#" onclick="logout()">Logout</a></li>
+								</ul>
+							</li>
+						@else
+							<li class="loginLink"><a href="#">LOG In</a></li>
+							<li class="btn signupLink"><a href="#">sign up</a></li>
+						@endauth
+					</ul>
+				</div>
+	    </nav>
+	    
+	    <!-- top search form -->
+	    <div class="top-search">
+	    	<div class="search-dropdown">
+	    		<i class="ion-ios-list-outline"></i>
+		    	<select id="search-type">
+					<option value="movies">Movies</option>
+					<option value="tvshows">TV Shows</option>
+				</select>
+			</div>
+			<div class="search-input">
+				<input type="text" id="search-query" placeholder="Search for a movie, TV Show that you are looking for">
+				<i class="ion-ios-search" id="search-icon" style="cursor: pointer;"></i>
+			</div>
+	    </div>
+	</div>
+</header>
+<!-- END | Header -->
+
 <div class="hero hero3">
     <div class="container">
         <div class="row">
@@ -38,6 +141,49 @@
                         <span><a href="{{ route('movies.index', ['category' => 'upcoming']) }}" 
                             class="{{ $category == 'upcoming' ? 'active' : '' }}">Upcoming</a></span>
                     </div>
+                </div>
+
+                <!-- Advanced Filters Section -->
+                <div class="topbar-filter" style="margin-top: 20px; border-top: 1px solid #405266; padding-top: 20px;">
+                    <form method="GET" action="{{ route('movies.index') }}" id="filter-form">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6">
+                                <label>Browse by Genre:</label>
+                                <select name="genre" class="form-control" style="background: #020d18; color: #abb7c4; border: 1px solid #405266; padding: 8px;">
+                                    <option value="">All Genres</option>
+                                    @foreach($genres as $genre)
+                                        <option value="{{ $genre['id'] }}" {{ $selectedGenre == $genre['id'] ? 'selected' : '' }}>
+                                            {{ $genre['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <label>Browse by Year:</label>
+                                <select name="year" class="form-control" style="background: #020d18; color: #abb7c4; border: 1px solid #405266; padding: 8px;">
+                                    <option value="">All Years</option>
+                                    @for($y = date('Y') + 1; $y >= 1980; $y--)
+                                        <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>{{ $y }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <label>Minimum Rating:</label>
+                                <select name="rating" class="form-control" style="background: #020d18; color: #abb7c4; border: 1px solid #405266; padding: 8px;">
+                                    <option value="">All Ratings</option>
+                                    <option value="9" {{ $selectedRating == 9 ? 'selected' : '' }}>9+ Outstanding</option>
+                                    <option value="8" {{ $selectedRating == 8 ? 'selected' : '' }}>8+ Excellent</option>
+                                    <option value="7" {{ $selectedRating == 7 ? 'selected' : '' }}>7+ Great</option>
+                                    <option value="6" {{ $selectedRating == 6 ? 'selected' : '' }}>6+ Good</option>
+                                    <option value="5" {{ $selectedRating == 5 ? 'selected' : '' }}>5+ Average</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-sm-6" style="padding-top: 22px;">
+                                <button type="submit" class="btn btn-default" style="background: #dd003f; color: white; padding: 10px 20px; border: none; border-radius: 3px;">Apply Filters</button>
+                                <a href="{{ route('movies.index') }}" class="btn btn-default" style="background: #405266; color: white; padding: 10px 20px; margin-left: 5px; display: inline-block; text-decoration: none; border-radius: 3px;">Clear</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 @if($error)
@@ -79,8 +225,17 @@
                     @if($total_pages > 1)
                         <div class="topbar-filter">
                             <div class="pagination2">
+                                @php
+                                    $paginationParams = array_filter([
+                                        'category' => $category,
+                                        'genre' => $selectedGenre,
+                                        'year' => $selectedYear,
+                                        'rating' => $selectedRating,
+                                    ]);
+                                @endphp
+                                
                                 @if($current_page > 1)
-                                    <span><a href="{{ route('movies.index', ['category' => $category, 'page' => $current_page - 1]) }}">
+                                    <span><a href="{{ route('movies.index', array_merge($paginationParams, ['page' => $current_page - 1])) }}">
                                         <i class="ion-arrow-left-b"></i></a></span>
                                 @endif
 
@@ -90,12 +245,12 @@
                                 @endphp
 
                                 @for($i = $start; $i <= $end; $i++)
-                                    <span><a href="{{ route('movies.index', ['category' => $category, 'page' => $i]) }}" 
+                                    <span><a href="{{ route('movies.index', array_merge($paginationParams, ['page' => $i])) }}" 
                                         class="{{ $i == $current_page ? 'active' : '' }}">{{ $i }}</a></span>
                                 @endfor
 
                                 @if($current_page < $total_pages)
-                                    <span><a href="{{ route('movies.index', ['category' => $category, 'page' => $current_page + 1]) }}">
+                                    <span><a href="{{ route('movies.index', array_merge($paginationParams, ['page' => $current_page + 1])) }}">
                                         <i class="ion-arrow-right-b"></i></a></span>
                                 @endif
                             </div>
@@ -171,9 +326,46 @@
 
 @section('scripts')
 <script>
-    // Add any movie-specific JavaScript here
-    $(document).ready(function() {
-        // Initialize any movie grid functionality
-    });
+// Search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchIcon = document.getElementById('search-icon');
+    const searchInput = document.getElementById('search-query');
+    const searchType = document.getElementById('search-type');
+    
+    function performSearch() {
+        const query = searchInput.value.trim();
+        const type = searchType.value;
+        
+        if (query) {
+            if (type === 'movies') {
+                const searchUrl = `{{ route('movies.search') }}?q=${encodeURIComponent(query)}`;
+                window.location.href = searchUrl;
+            } else {
+                // For TV shows, redirect to home search
+                const searchUrl = `{{ route('home.search') }}?q=${encodeURIComponent(query)}&type=${type}`;
+                window.location.href = searchUrl;
+            }
+        }
+    }
+    
+    // Search on icon click
+    if (searchIcon) {
+        searchIcon.addEventListener('click', performSearch);
+    }
+    
+    // Search on Enter key press
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+});
+
+// Add any movie-specific JavaScript here
+$(document).ready(function() {
+    // Initialize any movie grid functionality
+});
 </script>
 @endsection

@@ -245,5 +245,8 @@ async function checkAuthStatus() {
 document.addEventListener('DOMContentLoaded', checkAuthStatus);
 </script>
 
+@yield('scripts')
+@stack('scripts')
+
 </body>
 </html>

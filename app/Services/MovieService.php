@@ -339,6 +339,52 @@ class MovieService
     }
 
     /**
+     * Discover movies with filters
+     */
+    public function discoverMovies($filters = [], $page = 1)
+    {
+        $cacheKey = "tmdb_discover_" . md5(json_encode($filters)) . "_page_{$page}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($filters, $page) {
+            try {
+                $params = [
+                    'api_key' => $this->apiKey,
+                    'page' => $page,
+                    'sort_by' => $filters['sort_by'] ?? 'popularity.desc',
+                ];
+
+                // Add genre filter
+                if (!empty($filters['genre'])) {
+                    $params['with_genres'] = $filters['genre'];
+                }
+
+                // Add year filter
+                if (!empty($filters['year'])) {
+                    $params['primary_release_year'] = $filters['year'];
+                }
+
+                // Add rating filter (minimum vote average)
+                if (!empty($filters['rating'])) {
+                    $params['vote_average.gte'] = $filters['rating'];
+                    $params['vote_count.gte'] = 100; // Ensure movies have enough votes
+                }
+
+                $response = Http::get("{$this->baseUrl}/discover/movie", $params);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
      * Format runtime (minutes) to hours and minutes
      */
     public function formatRuntime($minutes)

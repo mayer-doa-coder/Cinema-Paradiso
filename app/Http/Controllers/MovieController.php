@@ -25,25 +25,44 @@ class MovieController extends Controller
         $page = $request->get('page', 1);
         $category = $request->get('category', 'popular');
         
+        // Get filter parameters
+        $genre = $request->get('genre');
+        $year = $request->get('year');
+        $rating = $request->get('rating');
+        $sortBy = $request->get('sort_by', 'popularity.desc');
+        
         $moviesData = null;
         $title = 'Popular Movies';
         
-        switch ($category) {
-            case 'top-rated':
-                $moviesData = $this->movieService->getTopRatedMovies($page);
-                $title = 'Top Rated Movies';
-                break;
-            case 'upcoming':
-                $moviesData = $this->movieService->getUpcomingMovies($page);
-                $title = 'Upcoming Movies';
-                break;
-            case 'trending':
-                $moviesData = $this->movieService->getTrendingMovies($page);
-                $title = 'Trending Movies';
-                break;
-            default:
-                $moviesData = $this->movieService->getPopularMovies($page);
-                break;
+        // If filters are applied, use discover endpoint
+        if ($genre || $year || $rating) {
+            $filters = [
+                'genre' => $genre,
+                'year' => $year,
+                'rating' => $rating,
+                'sort_by' => $sortBy,
+            ];
+            $moviesData = $this->movieService->discoverMovies($filters, $page);
+            $title = 'Filtered Movies';
+        } else {
+            // Otherwise use category-based endpoints
+            switch ($category) {
+                case 'top-rated':
+                    $moviesData = $this->movieService->getTopRatedMovies($page);
+                    $title = 'Top Rated Movies';
+                    break;
+                case 'upcoming':
+                    $moviesData = $this->movieService->getUpcomingMovies($page);
+                    $title = 'Upcoming Movies';
+                    break;
+                case 'trending':
+                    $moviesData = $this->movieService->getTrendingMovies($page);
+                    $title = 'Trending Movies';
+                    break;
+                default:
+                    $moviesData = $this->movieService->getPopularMovies($page);
+                    break;
+            }
         }
 
         if (!$moviesData) {
@@ -53,9 +72,17 @@ class MovieController extends Controller
                 'total_pages' => 1,
                 'title' => $title,
                 'category' => $category,
+                'genres' => [],
+                'selectedGenre' => $genre,
+                'selectedYear' => $year,
+                'selectedRating' => $rating,
                 'error' => 'Unable to load movies at the moment. Please try again later.'
             ]);
         }
+
+        // Get genres for filter dropdown
+        $genresData = $this->movieService->getGenres();
+        $genres = $genresData['genres'] ?? [];
 
         return view('movies.index', [
             'movies' => $moviesData['results'] ?? [],
@@ -63,6 +90,10 @@ class MovieController extends Controller
             'total_pages' => $moviesData['total_pages'] ?? 1,
             'title' => $title,
             'category' => $category,
+            'genres' => $genres,
+            'selectedGenre' => $genre,
+            'selectedYear' => $year,
+            'selectedRating' => $rating,
             'error' => null
         ]);
     }
@@ -70,7 +101,7 @@ class MovieController extends Controller
     /**
      * Display the movie grid view (legacy route)
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function grid()
     {
@@ -80,7 +111,7 @@ class MovieController extends Controller
     /**
      * Display the movie list view (legacy route)
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function list()
     {
@@ -91,7 +122,7 @@ class MovieController extends Controller
      * Display the movie search results.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function search(Request $request)
     {
