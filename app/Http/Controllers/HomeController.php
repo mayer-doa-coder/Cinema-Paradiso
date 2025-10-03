@@ -30,6 +30,9 @@ class HomeController extends Controller
             $topRatedMovies = $this->movieService->getTopRatedMovies(1);
             $genres = $this->movieService->getGenres();
 
+            // Get in theater trailers
+            $inTheaterTrailers = $this->movieService->getInTheaterTrailers(6);
+
             // Get random movie wallpapers
             $randomWallpapers = $this->getRandomMovieWallpapers();
 
@@ -41,6 +44,7 @@ class HomeController extends Controller
                 'topRated' => $this->prepareMoviesData($topRatedMovies),
                 'genres' => $genres['genres'] ?? [],
                 'randomWallpaper' => $randomWallpapers,
+                'inTheaterTrailers' => $inTheaterTrailers,
                 'error' => null
             ];
 

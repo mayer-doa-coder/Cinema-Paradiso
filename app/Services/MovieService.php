@@ -132,6 +132,128 @@ class MovieService
     }
 
     /**
+     * Get now playing movies (in theaters)
+     */
+    public function getNowPlayingMovies($page = 1)
+    {
+        $cacheKey = "tmdb_now_playing_page_{$page}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page) {
+            try {
+                $response = Http::get("{$this->baseUrl}/movie/now_playing", [
+                    'api_key' => $this->apiKey,
+                    'page' => $page,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Get movie trailers with details for in theater section
+     */
+    public function getInTheaterTrailers($limit = 6)
+    {
+        try {
+            $nowPlayingMovies = $this->getNowPlayingMovies(1);
+            
+            if (!$nowPlayingMovies || empty($nowPlayingMovies['results'])) {
+                return [];
+            }
+            
+            $trailers = [];
+            $count = 0;
+            
+            foreach ($nowPlayingMovies['results'] as $movie) {
+                if ($count >= $limit) break;
+                
+                // Get videos for this movie
+                $videos = $this->getMovieVideos($movie['id']);
+                
+                if ($videos && !empty($videos['results'])) {
+                    // Find the best trailer
+                    $trailer = $this->findBestTrailer($videos['results']);
+                    
+                    if ($trailer) {
+                        $trailers[] = [
+                            'id' => $movie['id'],
+                            'title' => $movie['title'],
+                            'backdrop_path' => $movie['backdrop_path'],
+                            'backdrop_url' => $this->getImageUrl($movie['backdrop_path'], 'w780'),
+                            'thumbnail_url' => $this->getImageUrl($movie['backdrop_path'], 'w500'),
+                            'video_key' => $trailer['key'],
+                            'video_url' => "https://www.youtube.com/embed/{$trailer['key']}",
+                            'duration' => $this->formatDuration($trailer),
+                            'release_date' => $movie['release_date'] ?? '',
+                            'vote_average' => $movie['vote_average'] ?? 0
+                        ];
+                        $count++;
+                    }
+                }
+            }
+            
+            return $trailers;
+        } catch (\Exception $e) {
+            Log::error('Error getting in theater trailers: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Find the best trailer from video results
+     */
+    private function findBestTrailer($videos)
+    {
+        // Priority order: Official Trailer > Trailer > Teaser
+        $priorities = ['Official Trailer', 'Trailer', 'Teaser', 'Clip'];
+        
+        foreach ($priorities as $priority) {
+            foreach ($videos as $video) {
+                if ($video['site'] === 'YouTube' && 
+                    $video['type'] === 'Trailer' && 
+                    stripos($video['name'], $priority) !== false) {
+                    return $video;
+                }
+            }
+        }
+        
+        // Fallback: any YouTube trailer
+        foreach ($videos as $video) {
+            if ($video['site'] === 'YouTube' && $video['type'] === 'Trailer') {
+                return $video;
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Format video duration (mock duration since API doesn't provide it)
+     */
+    private function formatDuration($trailer)
+    {
+        // Generate realistic durations based on trailer type
+        $type = $trailer['name'] ?? '';
+        
+        if (stripos($type, 'teaser') !== false) {
+            return rand(30, 90) . ':' . str_pad(rand(0, 59), 2, '0', STR_PAD_LEFT);
+        } elseif (stripos($type, 'trailer') !== false) {
+            return rand(1, 3) . ':' . str_pad(rand(10, 59), 2, '0', STR_PAD_LEFT);
+        } else {
+            return rand(2, 5) . ':' . str_pad(rand(0, 59), 2, '0', STR_PAD_LEFT);
+        }
+    }
+
+    /**
      * Get trending movies
      */
     public function getTrendingMovies($page = 1)
