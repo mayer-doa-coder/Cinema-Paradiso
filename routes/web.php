@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CelebrityController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommunityController;
 
 // Home route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -50,9 +51,9 @@ Route::get('/celebritysingle', function () {
 })->name('celebritysingle');
 
 // Community routes
-Route::get('/community', function () {
-    return view('celebritygrid01'); // Temporary placeholder - create proper community view later
-})->name('community');
+Route::get('/community', [CommunityController::class, 'index'])->name('community');
+Route::get('/community/search', [CommunityController::class, 'search'])->name('community.search');
+Route::get('/community/{username}', [CommunityController::class, 'profile'])->name('community.profile');
 
 // Blog/News routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
