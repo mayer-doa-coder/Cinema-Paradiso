@@ -3,6 +3,95 @@
 @section('title', $user->name . ' - Community Profile')
 
 @section('content')
+<!-- BEGIN | Header -->
+<header class="ht-header">
+    <div class="container">
+        <nav class="navbar navbar-default navbar-custom">
+                <div class="navbar-header logo">
+                    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <div id="nav-icon1">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <a href="{{ route('home') }}"><img class="logo" src="{{ asset('images/cinema_paradiso.png') }}" alt="" width="119" height="58"></a>
+                </div>
+                <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav flex-child-menu menu-left">
+                        <li class="hidden">
+                            <a href="#page-top"></a>
+                        </li>
+                        <li class="first">
+                            <a class="btn btn-default lv1" href="{{ route('home') }}">
+                            Home
+                            </a>
+                        </li>
+                        <li class="first">
+                            <a class="btn btn-default lv1" href="{{ route('movies.index') }}">
+                            Movies
+                            <!-- <ul class="sub-menu">
+                                <li><a href="{{ route('movies.index', ['category' => 'popular']) }}">Popular</a></li>
+                                <li><a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated</a></li>
+                                <li><a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending</a></li>
+                                <li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming</a></li>
+                            </ul> -->
+                            </a>
+                        </li>
+                        <li class="first">
+                            <a class="btn btn-default lv1" href="{{ route('celebrities') }}">
+                            Celebrities
+                            </a>
+                        </li>
+                        <li class="first">
+                            <a class="btn btn-default lv1" href="{{ route('blog') }}">
+                            News
+                            </a>
+                        </li>
+                        <li class="first active">
+                            <a class="btn btn-default lv1" href="{{ route('community') }}">
+                            Community
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav flex-child-menu menu-right">               
+                        <li><a href="{{ route('help') }}">Help</a></li>
+                        @auth
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    {{ Auth::user()->name }} <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Profile</a></li>
+                                    <li><a href="#" onclick="logout()">Logout</a></li>
+                                </ul>
+                            </li>
+                        @else
+                            <li class="loginLink"><a href="#">LOG In</a></li>
+                            <li class="btn signupLink"><a href="#">sign up</a></li>
+                        @endauth
+                    </ul>
+                </div>
+        </nav>
+        
+        <!-- top search form -->
+        <div class="top-search">
+            <div class="search-dropdown">
+                <i class="ion-ios-list-outline"></i>
+                <select id="search-type">
+                    <option value="movies">Movies</option>
+                    <option value="tvshows">TV Shows</option>
+                </select>
+            </div>
+            <div class="search-input">
+                <input type="text" id="search-query" placeholder="Search for a movie, TV Show that you are looking for">
+                <i class="ion-ios-search" id="search-icon" style="cursor: pointer;"></i>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- END | Header -->
 
 <div class="hero mv-single-hero">
     <div class="container">
@@ -658,4 +747,58 @@
     }
 }
 </style>
+
+@push('scripts')
+<script>
+// Search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchIcon = document.getElementById('search-icon');
+    const searchInput = document.getElementById('search-query');
+    const searchType = document.getElementById('search-type');
+    
+    function performSearch() {
+        const query = searchInput.value.trim();
+        const type = searchType.value;
+        
+        if (query) {
+            const searchUrl = `{{ route('home.search') }}?q=${encodeURIComponent(query)}&type=${type}`;
+            window.location.href = searchUrl;
+        }
+    }
+    
+    // Search on icon click
+    searchIcon.addEventListener('click', performSearch);
+    
+    // Search on Enter key press
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+});
+
+async function logout() {
+    try {
+        const response = await fetch('/auth/logout', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Logout successful!');
+            window.location.reload();
+        } else {
+            alert('Logout failed');
+        }
+    } catch (error) {
+        alert('An error occurred during logout');
+    }
+}
+</script>
+@endpush
+
 @endsection

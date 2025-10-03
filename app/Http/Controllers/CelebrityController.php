@@ -20,13 +20,51 @@ class CelebrityController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $page = $request->get('page', 1);
+            $sort = $request->get('sort', 'popularity');
+            $search = $request->get('search');
+
+            // Get celebrities data
+            if ($search) {
+                $celebritiesData = $this->movieService->searchPeople($search, $page);
+            } else {
+                $celebritiesData = $this->movieService->getPopularPeople($page);
+            }
+
+            $celebrities = [];
+            $totalResults = 0;
+            $totalPages = 1;
+
+            if ($celebritiesData) {
+                $totalResults = $celebritiesData['total_results'] ?? 0;
+                $totalPages = $celebritiesData['total_pages'] ?? 1;
+
+                foreach ($celebritiesData['results'] ?? [] as $person) {
+                    $celebrities[] = [
+                        'id' => $person['id'],
+                        'name' => $person['name'],
+                        'profile_path' => $person['profile_path'],
+                        'profile_url' => $this->movieService->getPersonImageUrl($person['profile_path'], 'w185'),
+                        'known_for_department' => $this->movieService->getFormattedDepartment($person['known_for_department'] ?? 'Acting'),
+                        'popularity' => $person['popularity'] ?? 0,
+                        'known_for' => array_slice($person['known_for'] ?? [], 0, 3), // Top 3 known movies
+                    ];
+                }
+            }
+
             // Get random movie wallpaper
             $randomWallpaper = $this->getRandomMovieWallpapers();
 
-            return view('celebritygrid01', [
+            return view('celebrities.index', [
+                'celebrities' => $celebrities,
+                'currentPage' => $page,
+                'totalPages' => $totalPages,
+                'totalResults' => $totalResults,
+                'currentSort' => $sort,
+                'searchQuery' => $search,
                 'randomWallpaper' => $randomWallpaper,
                 'error' => null
             ]);
@@ -34,10 +72,79 @@ class CelebrityController extends Controller
         } catch (\Exception $e) {
             Log::error('CelebrityController@index error: ' . $e->getMessage());
 
-            return view('celebritygrid01', [
+            return view('celebrities.index', [
+                'celebrities' => [],
+                'currentPage' => 1,
+                'totalPages' => 1,
+                'totalResults' => 0,
+                'currentSort' => 'popularity',
+                'searchQuery' => '',
                 'randomWallpaper' => $this->getFallbackWallpaper(),
-                'error' => 'Unable to load some content at the moment.'
+                'error' => 'Unable to load celebrities at the moment.'
             ]);
+        }
+    }
+
+    /**
+     * Show individual celebrity profile
+     *
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function show($id)
+    {
+        try {
+            $celebrityDetails = $this->movieService->getPersonDetails($id);
+            $movieCredits = $this->movieService->getPersonMovieCredits($id);
+
+            if (!$celebrityDetails) {
+                abort(404, 'Celebrity not found');
+            }
+
+            // Process celebrity data
+            $celebrity = [
+                'id' => $celebrityDetails['id'],
+                'name' => $celebrityDetails['name'],
+                'biography' => $celebrityDetails['biography'] ?? '',
+                'birthday' => $celebrityDetails['birthday'] ?? null,
+                'place_of_birth' => $celebrityDetails['place_of_birth'] ?? '',
+                'profile_path' => $celebrityDetails['profile_path'],
+                'profile_url' => $this->movieService->getPersonImageUrl($celebrityDetails['profile_path'], 'w300'),
+                'known_for_department' => $this->movieService->getFormattedDepartment($celebrityDetails['known_for_department'] ?? 'Acting'),
+                'popularity' => $celebrityDetails['popularity'] ?? 0,
+                'homepage' => $celebrityDetails['homepage'] ?? null,
+            ];
+
+            // Process movie credits
+            $movies = [];
+            if ($movieCredits && isset($movieCredits['cast'])) {
+                foreach (array_slice($movieCredits['cast'], 0, 20) as $movie) {
+                    if (!empty($movie['poster_path'])) {
+                        $movies[] = [
+                            'id' => $movie['id'],
+                            'title' => $movie['title'],
+                            'character' => $movie['character'] ?? '',
+                            'release_date' => $movie['release_date'] ?? '',
+                            'poster_path' => $movie['poster_path'],
+                            'poster_url' => $this->movieService->getImageUrl($movie['poster_path'], 'w300'),
+                            'vote_average' => $movie['vote_average'] ?? 0,
+                        ];
+                    }
+                }
+            }
+
+            $randomWallpaper = $this->getRandomMovieWallpapers();
+
+            return view('celebrities.show', [
+                'celebrity' => $celebrity,
+                'movies' => $movies,
+                'randomWallpaper' => $randomWallpaper,
+                'error' => null
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('CelebrityController@show error: ' . $e->getMessage());
+            abort(404, 'Celebrity not found');
         }
     }
 

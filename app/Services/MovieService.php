@@ -420,4 +420,145 @@ class MovieService
         
         return round($voteAverage / 2, 1); // Convert from 10-point to 5-point scale
     }
+
+    /**
+     * Get popular celebrities/people
+     */
+    public function getPopularPeople($page = 1)
+    {
+        $cacheKey = "tmdb_popular_people_page_{$page}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page) {
+            try {
+                $response = Http::get("{$this->baseUrl}/person/popular", [
+                    'api_key' => $this->apiKey,
+                    'page' => $page,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Search for people/celebrities
+     */
+    public function searchPeople($query, $page = 1)
+    {
+        $cacheKey = "tmdb_search_people_{$query}_page_{$page}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($query, $page) {
+            try {
+                $response = Http::get("{$this->baseUrl}/search/person", [
+                    'api_key' => $this->apiKey,
+                    'query' => $query,
+                    'page' => $page,
+                    'include_adult' => false,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Get person details by ID
+     */
+    public function getPersonDetails($personId)
+    {
+        $cacheKey = "tmdb_person_{$personId}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration * 24, function () use ($personId) {
+            try {
+                $response = Http::get("{$this->baseUrl}/person/{$personId}", [
+                    'api_key' => $this->apiKey,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Get person's movie credits
+     */
+    public function getPersonMovieCredits($personId)
+    {
+        $cacheKey = "tmdb_person_movies_{$personId}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration * 24, function () use ($personId) {
+            try {
+                $response = Http::get("{$this->baseUrl}/person/{$personId}/movie_credits", [
+                    'api_key' => $this->apiKey,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Format person profile image URL
+     */
+    public function getPersonImageUrl($profilePath, $size = 'w185')
+    {
+        if (!$profilePath) {
+            return asset('images/uploads/default-avatar.jpg'); // Fallback image
+        }
+        
+        return "https://image.tmdb.org/t/p/{$size}{$profilePath}";
+    }
+
+    /**
+     * Get person's known for department formatted
+     */
+    public function getFormattedDepartment($department)
+    {
+        $departments = [
+            'Acting' => 'Actor',
+            'Directing' => 'Director',
+            'Writing' => 'Writer',
+            'Production' => 'Producer',
+            'Sound' => 'Sound Engineer',
+            'Camera' => 'Cinematographer',
+            'Editing' => 'Editor',
+            'Art' => 'Art Director',
+            'Costume & Make-Up' => 'Costume Designer',
+            'Visual Effects' => 'VFX Artist',
+        ];
+
+        return $departments[$department] ?? $department;
+    }
 }

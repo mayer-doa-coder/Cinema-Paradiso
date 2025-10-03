@@ -35,6 +35,7 @@ Route::get('/movielist', [MovieController::class, 'list'])->name('movielist');
 
 // Celebrity routes
 Route::get('/celebrities', [CelebrityController::class, 'index'])->name('celebrities');
+Route::get('/celebrities/{id}', [CelebrityController::class, 'show'])->name('celebrities.show');
 
 Route::get('/celebritygrid01', [CelebrityController::class, 'index'])->name('celebritygrid01');
 
