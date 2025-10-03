@@ -3,6 +3,52 @@
 @section('title', 'Community - Cinema Paradiso')
 
 @section('content')
+
+@push('styles')
+<style>
+/* Remove white border/outline from navigation buttons */
+header .navbar-default .navbar-nav li a,
+header .navbar-default .navbar-nav li.btn a,
+header .navbar-default .navbar-nav li a:focus,
+header .navbar-default .navbar-nav li a:active,
+header .navbar-default .navbar-nav li.btn a:focus,
+header .navbar-default .navbar-nav li.btn a:active {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+/* Specific fix for sign up button */
+header .navbar-default .navbar-nav li.btn a {
+    background-color: #ec6eab !important;
+}
+
+/* Maintain hover effects */
+header .navbar-default .navbar-nav li a:hover {
+    color: #e9d736 !important;
+}
+
+header .navbar-default .navbar-nav li.btn a:hover {
+    background-color: #d55a98 !important;
+}
+
+/* Remove focus ring from all buttons and links */
+*:focus {
+    outline: none !important;
+}
+
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+</style>
+@endpush
+
 <!-- BEGIN | Header -->
 <header class="ht-header">
     <div class="container">
