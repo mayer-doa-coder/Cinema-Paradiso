@@ -58,6 +58,8 @@ Route::get('/community/{username}', [CommunityController::class, 'profile'])->na
 
 // Blog/News routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/search', [BlogController::class, 'search'])->name('blog.search');
+Route::get('/blog/clear-cache', [BlogController::class, 'clearCache'])->name('blog.clear-cache');
 
 Route::get('/bloggrid', [BlogController::class, 'index'])->name('bloggrid');
 

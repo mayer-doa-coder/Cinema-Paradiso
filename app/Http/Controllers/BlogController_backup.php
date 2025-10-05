@@ -4,8 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Services\MovieService;
-use App\Services\NewsService;
+use App\Services\MovieService;                'randomWallpaper' => [$this->getFallbackWallpaper()],
+                'error' => null
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('BlogController@search error: ' . $e->getMessage());
+            
+            return redirect()->route('blog')->with('error', 'Search functionality is temporarily unavailable.');
+        }Services\NewsService;
 
 class BlogController extends Controller
 {
@@ -101,7 +108,7 @@ class BlogController extends Controller
                 'articleUrl' => null,
                 'articleTitle' => 'Article Not Found',
                 'relatedArticles' => collect(),
-                'randomWallpaper' => [$this->getFallbackWallpaper()],
+                'randomWallpaper' => $this->getFallbackWallpaper(),
                 'error' => 'Unable to load article content at the moment.'
             ]);
         }
@@ -220,7 +227,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Get fallback wallpaper when API calls fail
+     * Get fallback wallpaper when API fails
      *
      * @return array
      */
