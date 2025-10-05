@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\MovieService;
+use App\Services\TVShowService;
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
     protected $movieService;
+    protected $tvShowService;
 
-    public function __construct(MovieService $movieService)
+    public function __construct(MovieService $movieService, TVShowService $tvShowService)
     {
         $this->movieService = $movieService;
+        $this->tvShowService = $tvShowService;
     }
 
     /**
@@ -30,6 +33,12 @@ class HomeController extends Controller
             $topRatedMovies = $this->movieService->getTopRatedMovies(1);
             $genres = $this->movieService->getGenres();
 
+            // Fetch TV shows data
+            $popularTVShows = $this->tvShowService->getPopularTVShows(1);
+            $topRatedTVShows = $this->tvShowService->getTopRatedTVShows(1);
+            $airingTodayTVShows = $this->tvShowService->getAiringTodayTVShows(1);
+            $onAirTVShows = $this->tvShowService->getOnTheAirTVShows(1);
+
             // Get in theater trailers
             $inTheaterTrailers = $this->movieService->getInTheaterTrailers(6);
 
@@ -45,6 +54,11 @@ class HomeController extends Controller
                 'genres' => $genres['genres'] ?? [],
                 'randomWallpaper' => $randomWallpapers,
                 'inTheaterTrailers' => $inTheaterTrailers,
+                // TV Shows data with correct variable names for the homepage
+                'popularTVShows' => $this->tvShowService->prepareTVShowsData($popularTVShows),
+                'topRatedTVShows' => $this->tvShowService->prepareTVShowsData($topRatedTVShows),
+                'airingTodayTVShows' => $this->tvShowService->prepareTVShowsData($airingTodayTVShows),
+                'onTheAirTVShows' => $this->tvShowService->prepareTVShowsData($onAirTVShows),
                 'error' => null
             ];
 
@@ -66,6 +80,11 @@ class HomeController extends Controller
                 'genres' => [],
                 'featuredMovie' => null,
                 'randomWallpaper' => $this->getFallbackWallpaper(),
+                // TV Shows fallback data
+                'popularTVShows' => [],
+                'topRatedTVShows' => [],
+                'airingTodayTVShows' => [],
+                'onTheAirTVShows' => [],
                 'error' => 'Unable to load movie data at the moment. Please try again later.'
             ]);
         }

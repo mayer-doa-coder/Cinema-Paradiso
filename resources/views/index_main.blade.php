@@ -394,439 +394,157 @@ textarea:focus {
 				</div>
 				<div class="tabs">
 					<ul class="tab-links-2">
-						<li><a href="#tab21">#Popular</a></li>
-						<li class="active"><a href="#tab22"> #Coming soon</a></li>
+						<li class="active"><a href="#tab21">#Popular</a></li>
+						<li><a href="#tab22"> #Airing Today</a></li>
 						<li><a href="#tab23">  #Top rated  </a></li>
-						<li><a href="#tab24"> #Most reviewed</a></li>                        
+						<li><a href="#tab24"> #On The Air</a></li>                        
 					</ul>
 				    <div class="tab-content">
-				        <div id="tab21" class="tab">
+				        <div id="tab21" class="tab active">
 				            <div class="row">
 				            	<div class="slick-multiItem">
+				            		@forelse($popularTVShows ?? [] as $show)
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item1.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
+					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item2.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
+				            		@empty
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="#">No TV Shows</a></h6>
+					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item4.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
+				            		@endforelse
 				            	</div>
 				            </div>
 				        </div>
-				        <div id="tab22" class="tab active">
+				        <div id="tab22" class="tab">
 				           <div class="row">
 				            	<div class="slick-multiItem">
+				            		@forelse($airingTodayTVShows ?? [] as $show)
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item5.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
+					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item6.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
+				            		@empty
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item7.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="#">No TV Shows</a></h6>
+					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item8.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item1.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item2.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item4.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item5.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item6.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
+				            		@endforelse
 				            	</div>
 				            </div>
 				        </div>
 				        <div id="tab23" class="tab">
 				        	<div class="row">
 				            	<div class="slick-multiItem">
+				            		@forelse($topRatedTVShows ?? [] as $show)
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item1.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
+					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item2.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
+				            		@empty
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="#">No TV Shows</a></h6>
+					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item4.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item5.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item6.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item7.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item8.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
+				            		@endforelse
 				            	</div>
 				            </div>
 			       	 	</div>
 			       	 	 <div id="tab24" class="tab">
 				        	<div class="row">
 				            	<div class="slick-multiItem">
+				            		@forelse($onTheAirTVShows ?? [] as $show)
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item5.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Interstellar</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
+					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-									<div class="slide-it">
-										<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item6.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The revenant</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-									</div>
+				            		@empty
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item7.jpg') }}" alt="" width="185" height="284">
+					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
 					            			</div>
 					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
 					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
+					            				<h6><a href="#">No TV Shows</a></h6>
+					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item8.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">The walk</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
-				            		<div class="slide-it">
-				            			<div class="movie-item">
-					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/mv-item3.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a  href="#"> Read more <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">Die hard</a></h6>
-					            				<p><i class="ion-android-star"></i><span>7.4</span> /10</p>
-					            			</div>
-					            		</div>
-				            		</div>
+				            		@endforelse
 				            	</div>
 				            </div>
 			       	 	</div>

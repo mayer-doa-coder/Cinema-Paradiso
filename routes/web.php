@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\TVShowController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CelebrityController;
@@ -19,10 +20,17 @@ Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.s
 Route::get('/movies/genre/{genreId}', [MovieController::class, 'byGenre'])->name('movies.genre');
 Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 
-// TV routes (placeholder for future implementation)
-Route::get('/tv', function () {
-    return redirect()->route('movies.index')->with('info', 'TV shows coming soon!');
-})->name('tv.index');
+// TV Show routes
+Route::get('/tv', [TVShowController::class, 'index'])->name('tv.index');
+Route::get('/tv/search', [TVShowController::class, 'search'])->name('tv.search');
+Route::get('/tv/genre/{genreId}', [TVShowController::class, 'byGenre'])->name('tv.genre');
+Route::get('/tv/{id}', [TVShowController::class, 'show'])->name('tv.show');
+Route::get('/tv/{id}/season/{seasonNumber}', [TVShowController::class, 'season'])->name('tv.season');
+
+// AJAX endpoints for TV show data
+Route::get('/api/tv/{id}/credits', [TVShowController::class, 'getCredits'])->name('api.tv.credits');
+Route::get('/api/tv/{id}/images', [TVShowController::class, 'getImages'])->name('api.tv.images');
+Route::get('/api/tv/{id}/videos', [TVShowController::class, 'getVideos'])->name('api.tv.videos');
 
 // AJAX endpoints for movie data
 Route::get('/api/movies/{id}/credits', [MovieController::class, 'getCredits'])->name('api.movies.credits');
