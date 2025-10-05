@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\MovieService;
 use App\Services\TVShowService;
+use App\Services\NewsService;
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
     protected $movieService;
     protected $tvShowService;
+    protected $newsService;
 
-    public function __construct(MovieService $movieService, TVShowService $tvShowService)
+    public function __construct(MovieService $movieService, TVShowService $tvShowService, NewsService $newsService)
     {
         $this->movieService = $movieService;
         $this->tvShowService = $tvShowService;
+        $this->newsService = $newsService;
     }
 
     /**
@@ -45,6 +48,10 @@ class HomeController extends Controller
             // Get random movie wallpapers
             $randomWallpapers = $this->getRandomMovieWallpapers();
 
+            // Get latest news for the news section (cached hourly)
+            $newsResponse = $this->newsService->getMovieNews(1, 10);
+            $latestNews = collect($newsResponse['articles'] ?? [])->toArray();
+
             // Prepare data for the view
             $data = [
                 'trending' => $this->prepareMoviesData($trendingMovies),
@@ -54,6 +61,7 @@ class HomeController extends Controller
                 'genres' => $genres['genres'] ?? [],
                 'randomWallpaper' => $randomWallpapers,
                 'inTheaterTrailers' => $inTheaterTrailers,
+                'latestNews' => $latestNews,
                 // TV Shows data with correct variable names for the homepage
                 'popularTVShows' => $this->tvShowService->prepareTVShowsData($popularTVShows),
                 'topRatedTVShows' => $this->tvShowService->prepareTVShowsData($topRatedTVShows),
@@ -80,6 +88,7 @@ class HomeController extends Controller
                 'genres' => [],
                 'featuredMovie' => null,
                 'randomWallpaper' => $this->getFallbackWallpaper(),
+                'latestNews' => [],
                 // TV Shows fallback data
                 'popularTVShows' => [],
                 'topRatedTVShows' => [],

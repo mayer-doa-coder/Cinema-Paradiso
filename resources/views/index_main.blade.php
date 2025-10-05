@@ -22,7 +22,44 @@ header .navbar-default .navbar-nav li.btn a {
     background-color: #ec6eab !important;
 }
 
-/* Maintain hover effects */
+/* Maintai				        <div id="tab33" class="tab">
+				        	<div class="row">
+							@if(isset($latestNews) && count($latestNews) > 2)
+								@php $celebNews = array_slice($latestNews, 2, 1); @endphp
+								@foreach($celebNews as $news)
+								<div class="blog-item-style-1">
+									@if(isset($news['image_url']) && $news['image_url'])
+									<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'Celebrity News' }}" width="170" height="250" style="object-fit: cover;">
+									@else
+									<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+									@endif
+									<div class="blog-it-infor">
+										<h3>
+											@if(isset($news['url']))
+											<a href="{{ $news['url'] }}" target="_blank">{{ $news['title'] ?? 'Latest Celebrity News' }}</a>
+											@else
+											<a href="#">{{ $news['title'] ?? 'Latest Celebrity News' }}</a>
+											@endif
+										</h3>
+										<span class="time">
+											{{ isset($news['published_at']) ? \Carbon\Carbon::parse($news['published_at'])->diffForHumans() : (isset($news['pubDate']) ? \Carbon\Carbon::parse($news['pubDate'])->diffForHumans() : '13 hours ago') }}
+										</span>
+										<p>{{ Str::limit($news['description'] ?? $news['summary'] ?? 'Follow the latest celebrity news, red carpet events, and exclusive interviews with Hollywood stars. Get insider access to entertainment industry personalities and their upcoming projects.', 200) }}</p>
+									</div>
+								</div>
+								@endforeach
+							@else
+							<div class="blog-item-style-1">
+								<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+								<div class="blog-it-infor">
+									<h3><a href="#">Celebrity Spotlight</a></h3>
+									<span class="time">13 hours ago</span>
+									<p>Exclusive: <span>Hollywood Stars</span> continue to captivate audiences with their latest projects and red carpet appearances. Follow the latest celebrity interviews, behind-the-scenes moments, and entertainment industry insights.</p>
+								</div>
+							</div>
+							@endif
+						</div>
+				</div>cts */
 header .navbar-default .navbar-nav li a:hover {
     color: #e9d736 !important;
 }
@@ -693,38 +730,116 @@ textarea:focus {
 				    <div class="tab-content">
 				        <div id="tab31" class="tab active">
 				            <div class="row">
-				            	<div class="blog-item-style-1">
-				            		<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
-				            		<div class="blog-it-infor">
-				            			<h3><a href="#">Brie Larson to play first female white house candidate Victoria Woodull in Amazon film</a></h3>
-				            			<span class="time">13 hours ago</span>
-				            			<p>Exclusive: <span>Amazon Studios </span>has acquired Victoria Woodhull, with Oscar winning Room star <span>Brie Larson</span> polsed to produce, and play the first female candidate for the presidency of the United States. Amazon bought it in a pitch package deal. <span> Ben Kopit</span>, who wrote the Warner Bros film <span>Libertine</span> that has...</p>
-				            		</div>
-				            	</div>
-				            </div>
-				        </div>
+							@if(isset($latestNews) && !empty($latestNews))
+								@php $movieNews = array_slice($latestNews, 0, 1); @endphp
+								@foreach($movieNews as $news)
+								<div class="blog-item-style-1">
+									@if(isset($news['image_url']) && $news['image_url'])
+									<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'Movie News' }}" width="170" height="250" style="object-fit: cover;">
+									@else
+									<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+									@endif
+									<div class="blog-it-infor">
+										<h3>
+											@if(isset($news['url']))
+											<a href="{{ $news['url'] }}" target="_blank">{{ $news['title'] ?? 'Latest Movie News' }}</a>
+											@else
+											<a href="#">{{ $news['title'] ?? 'Latest Movie News' }}</a>
+											@endif
+										</h3>
+										<span class="time">
+											{{ isset($news['published_at']) ? \Carbon\Carbon::parse($news['published_at'])->diffForHumans() : (isset($news['pubDate']) ? \Carbon\Carbon::parse($news['pubDate'])->diffForHumans() : '13 hours ago') }}
+										</span>
+										<p>{{ Str::limit($news['description'] ?? $news['summary'] ?? 'Exclusive entertainment news from the movie industry. Stay updated with the latest releases, celebrity interviews, and behind-the-scenes content from Hollywood and beyond.', 200) }}</p>
+									</div>
+								</div>
+								@endforeach
+							@else
+							<div class="blog-item-style-1">
+								<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+								<div class="blog-it-infor">
+									<h3><a href="#">Latest Movie Industry Updates</a></h3>
+									<span class="time">13 hours ago</span>
+									<p>Exclusive: <span>Movie Studios</span> continue to bring exciting new releases to theaters. Stay tuned for the latest updates on upcoming blockbusters, indie films, and behind-the-scenes content from your favorite productions.</p>
+								</div>
+							</div>
+							@endif
+						</div>
+					</div>
 				        <div id="tab32" class="tab">
 				           <div class="row">
-				            	<div class="blog-item-style-1">
-				            		<img src="{{ asset('images/uploads/blog-it2.jpg') }}" alt="" width="170" height="250">
-				            		<div class="blog-it-infor">
-				            			<h3><a href="#">Tab 2</a></h3>
-				            			<span class="time">13 hours ago</span>
-				            			<p>Exclusive: <span>Amazon Studios </span>has acquired Victoria Woodhull, with Oscar winning Room star <span>Brie Larson</span> polsed to produce, and play the first female candidate for the presidency of the United States. Amazon bought it in a pitch package deal. <span> Ben Kopit</span>, who wrote the Warner Bros film <span>Libertine</span> that has...</p>
-				            		</div>
-				            	</div>
-				            </div>
-				        </div>
+							@if(isset($latestNews) && count($latestNews) > 1)
+								@php $tvNews = array_slice($latestNews, 1, 1); @endphp
+								@foreach($tvNews as $news)
+								<div class="blog-item-style-1">
+									@if(isset($news['image_url']) && $news['image_url'])
+									<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'TV Shows News' }}" width="170" height="250" style="object-fit: cover;">
+									@else
+									<img src="{{ asset('images/uploads/blog-it2.jpg') }}" alt="" width="170" height="250">
+									@endif
+									<div class="blog-it-infor">
+										<h3>
+											@if(isset($news['url']))
+											<a href="{{ $news['url'] }}" target="_blank">{{ $news['title'] ?? 'Latest TV Shows News' }}</a>
+											@else
+											<a href="#">{{ $news['title'] ?? 'Latest TV Shows News' }}</a>
+											@endif
+										</h3>
+										<span class="time">
+											{{ isset($news['published_at']) ? \Carbon\Carbon::parse($news['published_at'])->diffForHumans() : (isset($news['pubDate']) ? \Carbon\Carbon::parse($news['pubDate'])->diffForHumans() : '13 hours ago') }}
+										</span>
+										<p>{{ Str::limit($news['description'] ?? $news['summary'] ?? 'Discover the latest TV shows, streaming series, and television industry news. From Netflix originals to network premieres, stay informed about the evolving world of television entertainment.', 200) }}</p>
+									</div>
+								</div>
+								@endforeach
+							@else
+							<div class="blog-item-style-1">
+								<img src="{{ asset('images/uploads/blog-it2.jpg') }}" alt="" width="170" height="250">
+								<div class="blog-it-infor">
+									<h3><a href="#">TV Shows & Streaming Updates</a></h3>
+									<span class="time">13 hours ago</span>
+									<p>Exclusive: <span>Streaming Platforms</span> continue to revolutionize television with new series and innovative content. Stay updated with the latest premieres, renewals, and exclusive behind-the-scenes coverage from your favorite shows.</p>
+								</div>
+							</div>
+							@endif
+						</div>
+				</div>
 				        <div id="tab33" class="tab">
 				        	<div class="row">
-				            	<div class="blog-item-style-1">
-				            		<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
-				            		<div class="blog-it-infor">
-				            			<h3><a href="#">Tab 3</a></h3>
-				            			<span class="time">13 hours ago</span>
-				            			<p>Exclusive: <span>Amazon Studios </span>has acquired Victoria Woodhull, with Oscar winning Room star <span>Brie Larson</span> polsed to produce, and play the first female candidate for the presidency of the United States. Amazon bought it in a pitch package deal. <span> Ben Kopit</span>, who wrote the Warner Bros film <span>Libertine</span> that has...</p>
-				            		</div>
-				            	</div>
+								@if(isset($latestNews) && count($latestNews) > 2)
+									@php $celebNews = array_slice($latestNews, 2, 1); @endphp
+									@foreach($celebNews as $news)
+									<div class="blog-item-style-1">
+										@if(isset($news['image_url']) && $news['image_url'])
+										<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'Celebrity News' }}" width="170" height="250" style="object-fit: cover;">
+										@else
+										<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+										@endif
+										<div class="blog-it-infor">
+											<h3>
+												@if(isset($news['url']))
+												<a href="{{ $news['url'] }}" target="_blank">{{ $news['title'] ?? 'Latest Celebrity News' }}</a>
+												@else
+												<a href="#">{{ $news['title'] ?? 'Latest Celebrity News' }}</a>
+												@endif
+											</h3>
+											<span class="time">
+												{{ isset($news['published_at']) ? \Carbon\Carbon::parse($news['published_at'])->diffForHumans() : (isset($news['pubDate']) ? \Carbon\Carbon::parse($news['pubDate'])->diffForHumans() : '13 hours ago') }}
+											</span>
+											<p>{{ Str::limit($news['description'] ?? $news['summary'] ?? 'Follow the latest celebrity news, red carpet events, and exclusive interviews with Hollywood stars. Get insider access to entertainment industry personalities and their upcoming projects.', 200) }}</p>
+										</div>
+									</div>
+									@endforeach
+								@else
+								<div class="blog-item-style-1">
+									<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+									<div class="blog-it-infor">
+										<h3><a href="#">Celebrity Spotlight</a></h3>
+										<span class="time">13 hours ago</span>
+										<p>Exclusive: <span>Hollywood Stars</span> continue to captivate audiences with their latest projects and red carpet appearances. Follow the latest celebrity interviews, behind-the-scenes moments, and entertainment industry insights.</p>
+									</div>
+								</div>
+								@endif
 				            </div>
 			       	 	</div>
 				    </div>
@@ -732,8 +847,61 @@ textarea:focus {
 				<div class="morenew">
 					<div class="title-hd">
 						<h3>More news on Blockbuster</h3>
-						<a href="#" class="viewall">See all Movies news<i class="ion-ios-arrow-right"></i></a>
+						<a href="{{ route('blog') }}" class="viewall">See all Movies news<i class="ion-ios-arrow-right"></i></a>
 					</div>
+					<div class="more-items">
+						<div class="left">
+							@if(isset($latestNews) && count($latestNews) > 3)
+								@foreach(array_slice($latestNews, 3, 2) as $news)
+								<div class="more-it">
+									<h6>
+										@if(isset($news['url']) && $news['url'])
+										<a href="{{ $news['url'] }}" target="_blank">{{ Str::limit($news['title'] ?? 'Entertainment News Update', 75) }}</a>
+										@else
+										<a href="{{ route('blog') }}">{{ Str::limit($news['title'] ?? 'Entertainment News Update', 75) }}</a>
+										@endif
+									</h6>
+									<span class="time">{{ isset($news['published_at']) ? \Carbon\Carbon::parse($news['published_at'])->diffForHumans() : (isset($news['pubDate']) ? \Carbon\Carbon::parse($news['pubDate'])->diffForHumans() : '13 hours ago') }}</span>
+								</div>
+								@endforeach
+							@else
+							<div class="more-it">
+								<h6><a href="{{ route('blog') }}">Latest Entertainment Industry Updates</a></h6>
+								<span class="time">13 hours ago</span>
+							</div>
+							<div class="more-it">
+								<h6><a href="{{ route('blog') }}">Behind-the-Scenes Cinema News</a></h6>
+								<span class="time">Recently</span>
+							</div>
+							@endif
+						</div>
+						<div class="right">
+							@if(isset($latestNews) && count($latestNews) > 5)
+								@foreach(array_slice($latestNews, 5, 2) as $news)
+								<div class="more-it">
+									<h6>
+										@if(isset($news['url']) && $news['url'])
+										<a href="{{ $news['url'] }}" target="_blank">{{ Str::limit($news['title'] ?? 'Movie Industry News', 75) }}</a>
+										@else
+										<a href="{{ route('blog') }}">{{ Str::limit($news['title'] ?? 'Movie Industry News', 75) }}</a>
+										@endif
+									</h6>
+									<span class="time">{{ isset($news['published_at']) ? \Carbon\Carbon::parse($news['published_at'])->diffForHumans() : (isset($news['pubDate']) ? \Carbon\Carbon::parse($news['pubDate'])->diffForHumans() : '13 hours ago') }}</span>
+								</div>
+								@endforeach
+							@else
+							<div class="more-it">
+								<h6><a href="{{ route('blog') }}">Hollywood Production News</a></h6>
+								<span class="time">13 hours ago</span>
+							</div>
+							<div class="more-it">
+								<h6><a href="{{ route('blog') }}">Celebrity Project Announcements</a></h6>
+								<span class="time">Recently</span>
+							</div>
+							@endif
+						</div>
+					</div>
+				</div>
 					<div class="more-items">
 						<div class="left">
 							<div class="more-it">
