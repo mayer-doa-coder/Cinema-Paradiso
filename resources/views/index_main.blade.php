@@ -196,24 +196,10 @@ textarea:focus {
 		    			<div class="mv-img">
 		    				<a href="#"><img src="{{ asset('images/uploads/slider1.jpg') }}" alt="" width="285" height="437"></a>
 		    			</div>
-		    			<div class="title-in">
-		    				<div class="cate">
-		    					<span class="blue"><a href="#">Sci-fi</a></span>
-		    				</div>
-		    				<h6><a href="#">Featured Movies</a></h6>
-		    				<p><i class="ion-android-star"></i><span>8.0</span> /10</p>
-		    			</div>
 		    		</div>
 		    		<div class="movie-item">
 		    			<div class="mv-img">
 		    				<a href="#"><img src="{{ asset('images/uploads/slider2.jpg') }}" alt="" width="285" height="437"></a>
-		    			</div>
-		    			<div class="title-in">
-		    				<div class="cate">
-		    					<span class="yell"><a href="#">Action</a></span>
-		    				</div>
-		    				<h6><a href="#">Coming Soon</a></h6>
-		    				<p><i class="ion-android-star"></i><span>7.5</span> /10</p>
 		    			</div>
 		    		</div>
 	    		@else
@@ -224,13 +210,6 @@ textarea:focus {
 	    				<div class="movie-item">
 			    			<div class="mv-img">
 			    				<a href="{{ route('movies.index') }}"><img src="{{ asset('images/uploads/slider1.jpg') }}" alt="" width="285" height="437"></a>
-			    			</div>
-			    			<div class="title-in">
-			    				<div class="cate">
-			    					<span class="blue"><a href="{{ route('movies.index') }}">Movies</a></span>
-			    				</div>
-			    				<h6><a href="{{ route('movies.index') }}">Explore Movies</a></h6>
-			    				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 			    			</div>
 			    		</div>
 	    			@endforelse
@@ -268,10 +247,6 @@ textarea:focus {
 						            			<div class="hvr-inner">
 						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
 						            			</div>
-						            			<div class="title-in">
-						            				<h6><a href="{{ route('movies.index') }}">Explore Movies</a></h6>
-						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
-						            			</div>
 						            		</div>
 					            		</div>
 				            		@else
@@ -285,10 +260,6 @@ textarea:focus {
 							            			</div>
 							            			<div class="hvr-inner">
 							            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
-							            			</div>
-							            			<div class="title-in">
-							            				<h6><a href="{{ route('movies.index') }}">Popular Movies</a></h6>
-							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 							            			</div>
 							            		</div>
 						            		</div>
@@ -310,10 +281,6 @@ textarea:focus {
 						            			<div class="hvr-inner">
 						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
 						            			</div>
-						            			<div class="title-in">
-						            				<h6><a href="{{ route('movies.index') }}">Coming Soon</a></h6>
-						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
-						            			</div>
 						            		</div>
 					            		</div>
 				            		@else
@@ -327,10 +294,6 @@ textarea:focus {
 							            			</div>
 							            			<div class="hvr-inner">
 							            				<a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Browse Upcoming <i class="ion-android-arrow-dropright"></i></a>
-							            			</div>
-							            			<div class="title-in">
-							            				<h6><a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming Movies</a></h6>
-							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 							            			</div>
 							            		</div>
 						            		</div>
@@ -352,10 +315,6 @@ textarea:focus {
 						            			<div class="hvr-inner">
 						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
 						            			</div>
-						            			<div class="title-in">
-						            				<h6><a href="{{ route('movies.index') }}">Top Rated</a></h6>
-						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
-						            			</div>
 						            		</div>
 					            		</div>
 				            		@else
@@ -369,10 +328,6 @@ textarea:focus {
 							            			</div>
 							            			<div class="hvr-inner">
 							            				<a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Browse Top Rated <i class="ion-android-arrow-dropright"></i></a>
-							            			</div>
-							            			<div class="title-in">
-							            				<h6><a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated Movies</a></h6>
-							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 							            			</div>
 							            		</div>
 						            		</div>
@@ -394,10 +349,6 @@ textarea:focus {
 						            			<div class="hvr-inner">
 						            				<a href="{{ route('movies.index') }}">Browse Movies <i class="ion-android-arrow-dropright"></i></a>
 						            			</div>
-						            			<div class="title-in">
-						            				<h6><a href="{{ route('movies.index') }}">Trending</a></h6>
-						            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
-						            			</div>
 						            		</div>
 					            		</div>
 				            		@else
@@ -411,10 +362,6 @@ textarea:focus {
 							            			</div>
 							            			<div class="hvr-inner">
 							            				<a href="{{ route('movies.index', ['category' => 'trending']) }}">Browse Trending <i class="ion-android-arrow-dropright"></i></a>
-							            			</div>
-							            			<div class="title-in">
-							            				<h6><a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending Movies</a></h6>
-							            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 							            			</div>
 							            		</div>
 						            		</div>
@@ -449,10 +396,6 @@ textarea:focus {
 					            			<div class="hvr-inner">
 					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
-					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
-					            			</div>
 					            		</div>
 				            		</div>
 				            		@empty
@@ -463,10 +406,6 @@ textarea:focus {
 					            			</div>
 					            			<div class="hvr-inner">
 					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">No TV Shows</a></h6>
-					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -486,10 +425,6 @@ textarea:focus {
 					            			<div class="hvr-inner">
 					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
-					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
-					            			</div>
 					            		</div>
 				            		</div>
 				            		@empty
@@ -500,10 +435,6 @@ textarea:focus {
 					            			</div>
 					            			<div class="hvr-inner">
 					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">No TV Shows</a></h6>
-					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -523,10 +454,6 @@ textarea:focus {
 					            			<div class="hvr-inner">
 					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
-					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
-					            			</div>
 					            		</div>
 				            		</div>
 				            		@empty
@@ -537,10 +464,6 @@ textarea:focus {
 					            			</div>
 					            			<div class="hvr-inner">
 					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">No TV Shows</a></h6>
-					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -560,10 +483,6 @@ textarea:focus {
 					            			<div class="hvr-inner">
 					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
 					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'] ?? 'TV Show', 20) }}</a></h6>
-					            				<p><i class="ion-android-star"></i><span>{{ number_format($show['vote_average'] ?? 0, 1) }}</span> /10</p>
-					            			</div>
 					            		</div>
 				            		</div>
 				            		@empty
@@ -574,10 +493,6 @@ textarea:focus {
 					            			</div>
 					            			<div class="hvr-inner">
 					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
-					            			</div>
-					            			<div class="title-in">
-					            				<h6><a href="#">No TV Shows</a></h6>
-					            				<p><i class="ion-android-star"></i><span>--</span> /10</p>
 					            			</div>
 					            		</div>
 				            		</div>
