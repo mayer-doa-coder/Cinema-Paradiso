@@ -178,11 +178,52 @@ class MovieController extends Controller
         $images = $this->movieService->getMovieImages($id);
         $videos = $this->movieService->getMovieVideos($id);
 
+        // Get high-resolution backdrop/scene image for hero section (prioritize actual movie scenes)
+        $heroBackdrop = null;
+        
+        // First, try to get a high-quality backdrop from the images collection (actual movie scenes)
+        if ($images && isset($images['backdrops']) && !empty($images['backdrops'])) {
+            // Filter and sort backdrops to get the best quality movie scene
+            $backdrops = collect($images['backdrops'])
+                ->filter(function($backdrop) {
+                    // Prioritize landscape oriented images (movie scenes are typically widescreen)
+                    // Also ensure minimum quality thresholds
+                    return $backdrop['width'] >= 1280 && 
+                           $backdrop['height'] >= 720 &&
+                           ($backdrop['width'] / $backdrop['height']) >= 1.5;
+                })
+                ->sortByDesc(function($backdrop) {
+                    // Heavily weight by vote average (user-selected best scenes) and resolution
+                    return (($backdrop['vote_average'] ?? 0) * 10) + ($backdrop['width'] / 1000);
+                });
+            
+            if ($backdrops->isNotEmpty()) {
+                $bestBackdrop = $backdrops->first();
+                $heroBackdrop = $this->movieService->getImageUrl($bestBackdrop['file_path'], 'original');
+                
+                // Debug log to confirm we're using a scene, not a poster
+                Log::info("Using movie scene backdrop for hero: {$bestBackdrop['file_path']}, Resolution: {$bestBackdrop['width']}x{$bestBackdrop['height']}, Rating: " . ($bestBackdrop['vote_average'] ?? 'N/A'));
+            }
+        }
+        
+        // Fallback to main movie backdrop (also a scene, not poster) if no collection scenes available
+        // NOTE: backdrop_path is always a movie scene, never a poster
+        if (!$heroBackdrop && isset($movieDetails['backdrop_path'])) {
+            $heroBackdrop = $this->movieService->getImageUrl($movieDetails['backdrop_path'], 'original');
+            Log::info("Using main movie backdrop as fallback: {$movieDetails['backdrop_path']}");
+        }
+        
+        // Last resort: use a default hero image (never use poster_path for hero section)
+        if (!$heroBackdrop) {
+            Log::warning("No movie scene available for movie ID: {$id}, using default hero background");
+        }
+
         return view('movies.show', [
             'movie' => $movieDetails,
             'credits' => $credits,
             'images' => $images,
             'videos' => $videos,
+            'heroBackdrop' => $heroBackdrop,
             'error' => null
         ]);
     }

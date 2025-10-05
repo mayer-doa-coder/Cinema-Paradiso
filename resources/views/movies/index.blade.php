@@ -196,8 +196,10 @@ body {
                     <div class="flex-wrap-movielist">
                         @foreach($movies as $movie)
                             <div class="movie-item-style-2 movie-item-style-1">
-                                <img src="{{ app('App\Services\MovieService')->getImageUrl($movie['poster_path'] ?? null) }}" 
-                                     alt="{{ $movie['title'] ?? 'Movie Poster' }}">
+                                <a href="{{ route('movies.show', $movie['id']) }}">
+                                    <img src="{{ app('App\Services\MovieService')->getImageUrl($movie['poster_path'] ?? null) }}" 
+                                         alt="{{ $movie['title'] ?? 'Movie Poster' }}">
+                                </a>
                                 <div class="hvr-inner">
                                     <a href="{{ route('movies.show', $movie['id']) }}">Read more <i class="ion-android-arrow-dropright"></i></a>
                                 </div>

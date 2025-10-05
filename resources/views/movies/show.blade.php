@@ -2,18 +2,154 @@
 
 @section('title', $movie['title'] ?? 'Movie Details')
 
+@push('styles')
+<style>
+/* Dynamic Movie Hero Section */
+.movie-hero {
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
+    -ms-interpolation-mode: bicubic;
+    position: relative;
+    height: 70vh;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.movie-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+}
+
+.movie-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.movie-hero .hero-content {
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(2px);
+}
+
+.movie-hero h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    color: white;
+}
+
+.movie-hero .hero-meta {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+    color: white;
+}
+
+.movie-hero .breadcumb {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.movie-hero .breadcumb li {
+    font-size: 1rem;
+    color: white;
+}
+
+.movie-hero .breadcumb a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.movie-hero .breadcumb a:hover {
+    opacity: 1;
+}
+
+/* Scene Photos Gallery */
+.scene-photo-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.scene-photo-link:hover img {
+    transform: scale(1.05);
+}
+
+.scene-photo-item img {
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .movie-hero {
+        height: 50vh;
+        min-height: 400px;
+    }
+    
+    .movie-hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .movie-hero .hero-meta {
+        font-size: 1rem;
+    }
+}
+</style>
+@endpush
+
 @section('content')
-<div class="hero hero3">
+<div class="movie-hero" style="background-image: url('{{ $heroBackdrop ?? asset('images/uploads/hero-bg.jpg') }}');">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <!-- hero content -->
-                <div class="hero-ct">
+                <div class="hero-content">
                     <h1>{{ $movie['title'] ?? 'Movie Details' }}</h1>
+                    @if(isset($movie['release_date']) || isset($movie['runtime']))
+                        <div class="hero-meta">
+                            @if(isset($movie['release_date']))
+                                {{ date('Y', strtotime($movie['release_date'])) }}
+                            @endif
+                            @if(isset($movie['runtime']) && $movie['runtime'])
+                                @if(isset($movie['release_date'])) • @endif
+                                {{ $movie['runtime'] }} min
+                            @endif
+                        </div>
+                    @endif
                     <ul class="breadcumb">
                         <li class="active"><a href="{{ route('home') }}">Home</a></li>
-                        <li><span class="ion-ios-arrow-right"></span><a href="{{ route('movies.index') }}">Movies</a></li>
-                        <li><span class="ion-ios-arrow-right"></span>{{ $movie['title'] ?? 'Movie Details' }}</li>
+                        <li><span class="ion-ios-arrow-right"></span></li>
+                        <li><a href="{{ route('movies.index') }}">Movies</a></li>
+                        <li><span class="ion-ios-arrow-right"></span></li>
+                        <li>{{ $movie['title'] ?? 'Movie Details' }}</li>
                     </ul>
                 </div>
             </div>
@@ -99,6 +235,7 @@
                                 <li class="active"><a href="#overview">Overview</a></li>
                                 <li><a href="#reviews">Reviews</a></li>
                                 <li><a href="#cast">Cast & Crew</a></li>
+                                <li><a href="#photos">Scene Photos</a></li>
                                 <li><a href="#media">Media</a></li>
                             </ul>
                             
@@ -241,6 +378,45 @@
                                         @endif
                                     @else
                                         <p>Cast and crew information not available.</p>
+                                    @endif
+                                </div>
+
+                                <div id="photos" class="tab">
+                                    @if($images && isset($images['backdrops']) && count($images['backdrops']) > 0)
+                                        <div class="title-hd-sm">
+                                            <h4>Scene Photos & Backdrops</h4>
+                                            <p class="subtitle">High-quality images from the movie</p>
+                                        </div>
+                                        <div class="row">
+                                            @foreach(array_slice($images['backdrops'], 0, 12) as $backdrop)
+                                                <div class="col-md-4 col-sm-6 col-xs-12" style="margin-bottom: 20px;">
+                                                    <div class="scene-photo-item">
+                                                        <a href="{{ app('App\Services\MovieService')->getImageUrl($backdrop['file_path'], 'original') }}" 
+                                                           target="_blank" class="scene-photo-link">
+                                                            <img src="{{ app('App\Services\MovieService')->getImageUrl($backdrop['file_path'], 'w500') }}" 
+                                                                 alt="Scene from {{ $movie['title'] ?? 'Movie' }}"
+                                                                 style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); transition: transform 0.3s ease;">
+                                                        </a>
+                                                        <div class="scene-photo-info" style="margin-top: 10px; text-align: center;">
+                                                            <small style="color: #abb7c4;">
+                                                                {{ $backdrop['width'] }}x{{ $backdrop['height'] }}
+                                                                @if(isset($backdrop['vote_average']) && $backdrop['vote_average'] > 0)
+                                                                    • ⭐ {{ number_format($backdrop['vote_average'], 1) }}
+                                                                @endif
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        
+                                        @if(count($images['backdrops']) > 12)
+                                            <div class="text-center" style="margin-top: 20px;">
+                                                <p style="color: #abb7c4;">Showing 12 of {{ count($images['backdrops']) }} available photos</p>
+                                            </div>
+                                        @endif
+                                    @else
+                                        <p>No scene photos available for this movie.</p>
                                     @endif
                                 </div>
 
