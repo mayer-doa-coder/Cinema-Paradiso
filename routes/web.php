@@ -45,6 +45,10 @@ Route::get('/movielist', [MovieController::class, 'list'])->name('movielist');
 Route::get('/celebrities', [CelebrityController::class, 'index'])->name('celebrities');
 Route::get('/celebrities/{id}', [CelebrityController::class, 'show'])->name('celebrities.show');
 
+// Data management routes (for admin/development)
+Route::get('/admin/preload-data', [CelebrityController::class, 'preloadData'])->name('admin.preload');
+Route::get('/admin/data-stats', [CelebrityController::class, 'getDataStats'])->name('admin.stats');
+
 Route::get('/celebritygrid01', [CelebrityController::class, 'index'])->name('celebritygrid01');
 
 Route::get('/celebritygrid02', function () {

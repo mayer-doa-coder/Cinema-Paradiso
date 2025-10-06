@@ -26,48 +26,46 @@ class CelebrityController extends Controller
             $page = $request->get('page', 1);
             $sort = $request->get('sort', 'popularity');
             $search = $request->get('search');
+            $letter = $request->get('letter'); // For alphabetical pagination
+            $subPage = $request->get('subpage', 1); // For sub-pagination within a letter
 
             // Get celebrities data
             if ($search) {
                 $celebritiesData = $this->movieService->searchPeople($search, $page);
+                $celebrities = $this->processCelebritiesData($celebritiesData);
+                
+                return view('celebrities.index', [
+                    'celebrities' => $celebrities,
+                    'currentPage' => $page,
+                    'totalPages' => $celebritiesData['total_pages'] ?? 1,
+                    'totalResults' => $celebritiesData['total_results'] ?? 0,
+                    'currentSort' => $sort,
+                    'searchQuery' => $search,
+                    'randomWallpaper' => $this->getRandomMovieWallpapers(),
+                    'error' => null,
+                    'isAlphabetical' => false
+                ]);
+            }
+
+            if ($sort === 'name') {
+                return $this->handleAlphabeticalPagination($letter, $subPage, $sort);
             } else {
+                // Standard popularity-based pagination
                 $celebritiesData = $this->movieService->getPopularPeople($page);
+                $celebrities = $this->processCelebritiesData($celebritiesData);
+
+                return view('celebrities.index', [
+                    'celebrities' => $celebrities,
+                    'currentPage' => $page,
+                    'totalPages' => $celebritiesData['total_pages'] ?? 1,
+                    'totalResults' => $celebritiesData['total_results'] ?? 0,
+                    'currentSort' => $sort,
+                    'searchQuery' => $search,
+                    'randomWallpaper' => $this->getRandomMovieWallpapers(),
+                    'error' => null,
+                    'isAlphabetical' => false
+                ]);
             }
-
-            $celebrities = [];
-            $totalResults = 0;
-            $totalPages = 1;
-
-            if ($celebritiesData) {
-                $totalResults = $celebritiesData['total_results'] ?? 0;
-                $totalPages = $celebritiesData['total_pages'] ?? 1;
-
-                foreach ($celebritiesData['results'] ?? [] as $person) {
-                    $celebrities[] = [
-                        'id' => $person['id'],
-                        'name' => $person['name'],
-                        'profile_path' => $person['profile_path'],
-                        'profile_url' => $this->movieService->getPersonImageUrl($person['profile_path'], 'w185'),
-                        'known_for_department' => $this->movieService->getFormattedDepartment($person['known_for_department'] ?? 'Acting'),
-                        'popularity' => $person['popularity'] ?? 0,
-                        'known_for' => array_slice($person['known_for'] ?? [], 0, 3), // Top 3 known movies
-                    ];
-                }
-            }
-
-            // Get random movie wallpaper
-            $randomWallpaper = $this->getRandomMovieWallpapers();
-
-            return view('celebrities.index', [
-                'celebrities' => $celebrities,
-                'currentPage' => $page,
-                'totalPages' => $totalPages,
-                'totalResults' => $totalResults,
-                'currentSort' => $sort,
-                'searchQuery' => $search,
-                'randomWallpaper' => $randomWallpaper,
-                'error' => null
-            ]);
 
         } catch (\Exception $e) {
             Log::error('CelebrityController@index error: ' . $e->getMessage());
@@ -80,8 +78,218 @@ class CelebrityController extends Controller
                 'currentSort' => 'popularity',
                 'searchQuery' => '',
                 'randomWallpaper' => $this->getFallbackWallpaper(),
-                'error' => 'Unable to load celebrities at the moment.'
+                'error' => 'Unable to load celebrities at the moment.',
+                'isAlphabetical' => false
             ]);
+        }
+    }
+
+    /**
+     * Handle alphabetical pagination system
+     */
+    private function handleAlphabeticalPagination($letter, $subPage, $sort)
+    {
+        // If no letter specified, default to 'A'
+        if (!$letter) {
+            $letter = 'A';
+            $subPage = 1;
+        }
+
+        // Get all celebrities for the specified letter
+        $allCelebritiesForLetter = $this->getCelebritiesByLetter($letter);
+        
+        // Pagination settings - smaller pages for faster loading
+        $itemsPerPage = 16; // Reduced from 20 to 16 (4x4 grid)
+        $totalCelebritiesForLetter = count($allCelebritiesForLetter);
+        $totalSubPages = max(1, ceil($totalCelebritiesForLetter / $itemsPerPage));
+        
+        // Get celebrities for current sub-page
+        $offset = ($subPage - 1) * $itemsPerPage;
+        $celebrities = array_slice($allCelebritiesForLetter, $offset, $itemsPerPage);
+
+        // Get available letters (letters that have celebrities)
+        $availableLetters = $this->getAvailableLetters();
+
+        return view('celebrities.index', [
+            'celebrities' => $celebrities,
+            'currentPage' => $subPage,
+            'totalPages' => $totalSubPages,
+            'totalResults' => $totalCelebritiesForLetter,
+            'currentSort' => $sort,
+            'searchQuery' => '',
+            'randomWallpaper' => $this->getRandomMovieWallpapers(),
+            'error' => null,
+            'isAlphabetical' => true,
+            'currentLetter' => $letter,
+            'currentSubPage' => $subPage,
+            'availableLetters' => $availableLetters,
+            'totalSubPages' => $totalSubPages
+        ]);
+    }
+
+    /**
+     * Get celebrities that start with a specific letter
+     */
+    private function getCelebritiesByLetter($letter)
+    {
+        // Use the optimized service method for better performance
+        return $this->processCelebritiesFromRawData(
+            $this->movieService->getCelebritiesByLetterFast($letter, 60)
+        );
+    }
+
+    /**
+     * Get list of available letters that have celebrities
+     */
+    private function getAvailableLetters()
+    {
+        // Use the optimized service method for better performance
+        return $this->movieService->getAvailableLettersFast();
+    }
+
+    /**
+     * Process celebrities data from raw TMDB data
+     */
+    private function processCelebritiesFromRawData($rawCelebrities)
+    {
+        $celebrities = [];
+        
+        foreach ($rawCelebrities as $person) {
+            $celebrities[] = [
+                'id' => $person['id'],
+                'name' => $person['name'],
+                'profile_path' => $person['profile_path'],
+                'profile_url' => $this->movieService->getPersonImageUrl($person['profile_path'], 'w185'),
+                'known_for_department' => $this->movieService->getFormattedDepartment($person['known_for_department'] ?? 'Acting'),
+                'popularity' => $person['popularity'] ?? 0,
+                'known_for' => array_slice($person['known_for'] ?? [], 0, 3),
+            ];
+        }
+        
+        return $celebrities;
+    }
+
+
+
+    /**
+     * Process celebrities data into standardized format
+     */
+    private function processCelebritiesData($celebritiesData)
+    {
+        $celebrities = [];
+        
+        if ($celebritiesData && isset($celebritiesData['results'])) {
+            foreach ($celebritiesData['results'] as $person) {
+                $celebrities[] = [
+                    'id' => $person['id'],
+                    'name' => $person['name'],
+                    'profile_path' => $person['profile_path'],
+                    'profile_url' => $this->movieService->getPersonImageUrl($person['profile_path'], 'w185'),
+                    'known_for_department' => $this->movieService->getFormattedDepartment($person['known_for_department'] ?? 'Acting'),
+                    'popularity' => $person['popularity'] ?? 0,
+                    'known_for' => array_slice($person['known_for'] ?? [], 0, 3),
+                ];
+            }
+        }
+        
+        return $celebrities;
+    }
+
+    /**
+     * Preload comprehensive celebrity data for better performance
+     * This method can be called to populate cache with comprehensive data
+     */
+    public function preloadData()
+    {
+        try {
+            Log::info('Starting comprehensive celebrity data preload...');
+            
+            // Get comprehensive people data and group by letters
+            $peopleByLetter = $this->movieService->getPeopleByFirstLetter(200); // Fetch up to 200 pages
+            
+            $totalPeople = 0;
+            foreach ($peopleByLetter as $letter => $people) {
+                $totalPeople += count($people);
+                Log::info("Letter {$letter}: " . count($people) . " celebrities");
+            }
+            
+            Log::info("Total celebrities preloaded: {$totalPeople}");
+            
+            return response()->json([
+                'success' => true,
+                'message' => "Preloaded {$totalPeople} celebrities across all letters",
+                'data' => array_map('count', $peopleByLetter)
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error preloading celebrity data: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error preloading data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get statistics about available data
+     */
+    public function getDataStats()
+    {
+        try {
+            $stats = [];
+            
+            // Check celebrity data across first few pages
+            for ($page = 1; $page <= 10; $page++) {
+                $celebritiesData = $this->movieService->getPopularPeople($page);
+                if ($celebritiesData) {
+                    $stats['total_celebrity_pages'] = $celebritiesData['total_pages'] ?? 0;
+                    $stats['total_celebrities'] = $celebritiesData['total_results'] ?? 0;
+                    break;
+                }
+            }
+            
+            // Check movie data
+            $movieCategories = ['popular', 'top-rated', 'upcoming', 'trending'];
+            $stats['movies'] = [];
+            
+            foreach ($movieCategories as $category) {
+                $movieData = null;
+                switch ($category) {
+                    case 'top-rated':
+                        $movieData = $this->movieService->getTopRatedMovies(1);
+                        break;
+                    case 'upcoming':
+                        $movieData = $this->movieService->getUpcomingMovies(1);
+                        break;
+                    case 'trending':
+                        $movieData = $this->movieService->getTrendingMovies(1);
+                        break;
+                    default:
+                        $movieData = $this->movieService->getPopularMovies(1);
+                        break;
+                }
+                
+                if ($movieData) {
+                    $stats['movies'][$category] = [
+                        'total_pages' => $movieData['total_pages'] ?? 0,
+                        'total_results' => $movieData['total_results'] ?? 0
+                    ];
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'stats' => $stats
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error getting data stats: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error getting stats: ' . $e->getMessage()
+            ], 500);
         }
     }
 

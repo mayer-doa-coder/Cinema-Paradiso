@@ -544,15 +544,15 @@ class MovieService
     }
 
     /**
-     * Get popular celebrities/people
+     * Get popular celebrities/people with optimized caching
      */
     public function getPopularPeople($page = 1)
     {
         $cacheKey = "tmdb_popular_people_page_{$page}";
         
-        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page) {
+        return Cache::remember($cacheKey, $this->cacheDuration * 2, function () use ($page) { // Extended cache time
             try {
-                $response = Http::get("{$this->baseUrl}/person/popular", [
+                $response = Http::timeout(30)->get("{$this->baseUrl}/person/popular", [ // Added timeout
                     'api_key' => $this->apiKey,
                     'page' => $page,
                 ]);
@@ -682,5 +682,266 @@ class MovieService
         ];
 
         return $departments[$department] ?? $department;
+    }
+
+    /**
+     * Get comprehensive movie data by fetching multiple pages
+     * Useful for getting more complete datasets for filtering/sorting
+     */
+    public function getComprehensiveMovies($category = 'popular', $maxPages = 20)
+    {
+        $allMovies = [];
+        $totalResults = 0;
+        $totalPages = 1;
+
+        for ($page = 1; $page <= $maxPages; $page++) {
+            $movieData = null;
+            
+            switch ($category) {
+                case 'top-rated':
+                    $movieData = $this->getTopRatedMovies($page);
+                    break;
+                case 'upcoming':
+                    $movieData = $this->getUpcomingMovies($page);
+                    break;
+                case 'trending':
+                    $movieData = $this->getTrendingMovies($page);
+                    break;
+                default:
+                    $movieData = $this->getPopularMovies($page);
+                    break;
+            }
+
+            if (!$movieData || !isset($movieData['results'])) {
+                break;
+            }
+
+            $allMovies = array_merge($allMovies, $movieData['results']);
+            $totalResults = $movieData['total_results'] ?? 0;
+            $totalPages = $movieData['total_pages'] ?? 1;
+
+            // Break if we've reached the actual total pages
+            if ($page >= $totalPages) {
+                break;
+            }
+        }
+
+        return [
+            'results' => $allMovies,
+            'total_results' => count($allMovies),
+            'total_pages' => ceil(count($allMovies) / 20), // Assuming 20 movies per page for display
+            'comprehensive' => true
+        ];
+    }
+
+    /**
+     * Get movies by initial letter (for alphabetical browsing)
+     */
+    public function getMoviesByLetter($letter, $maxMovies = 500)
+    {
+        $allMovies = [];
+        
+        // Fetch from multiple categories to get diverse movie selection
+        $categories = ['popular', 'top-rated', 'upcoming', 'trending'];
+        
+        foreach ($categories as $category) {
+            for ($page = 1; $page <= 50; $page++) { // Check more pages
+                $movieData = null;
+                
+                switch ($category) {
+                    case 'top-rated':
+                        $movieData = $this->getTopRatedMovies($page);
+                        break;
+                    case 'upcoming':
+                        $movieData = $this->getUpcomingMovies($page);
+                        break;
+                    case 'trending':
+                        $movieData = $this->getTrendingMovies($page);
+                        break;
+                    default:
+                        $movieData = $this->getPopularMovies($page);
+                        break;
+                }
+
+                if (!$movieData || !isset($movieData['results'])) {
+                    break;
+                }
+
+                foreach ($movieData['results'] as $movie) {
+                    if (strtoupper(substr($movie['title'], 0, 1)) === strtoupper($letter)) {
+                        $allMovies[] = $movie;
+                    }
+                }
+
+                // Stop if we have enough movies for this letter
+                if (count($allMovies) >= $maxMovies) {
+                    break 2; // Break out of both loops
+                }
+            }
+        }
+
+        // Remove duplicates based on movie ID
+        $uniqueMovies = [];
+        $seenIds = [];
+        foreach ($allMovies as $movie) {
+            if (!in_array($movie['id'], $seenIds)) {
+                $uniqueMovies[] = $movie;
+                $seenIds[] = $movie['id'];
+            }
+        }
+
+        // Sort alphabetically
+        usort($uniqueMovies, function($a, $b) {
+            return strcmp($a['title'], $b['title']);
+        });
+
+        return $uniqueMovies;
+    }
+
+    /**
+     * Get comprehensive celebrity/people data by fetching multiple pages
+     */
+    public function getComprehensivePeople($maxPages = 100)
+    {
+        $allPeople = [];
+        $totalResults = 0;
+        $totalPages = 1;
+
+        for ($page = 1; $page <= $maxPages; $page++) {
+            $peopleData = $this->getPopularPeople($page);
+            
+            if (!$peopleData || !isset($peopleData['results'])) {
+                break;
+            }
+
+            $allPeople = array_merge($allPeople, $peopleData['results']);
+            $totalResults = $peopleData['total_results'] ?? 0;
+            $totalPages = $peopleData['total_pages'] ?? 1;
+
+            // Break if we've reached the actual total pages
+            if ($page >= $totalPages) {
+                break;
+            }
+        }
+
+        return [
+            'results' => $allPeople,
+            'total_results' => count($allPeople),
+            'total_pages' => ceil(count($allPeople) / 20), // Assuming 20 people per page for display
+            'comprehensive' => true
+        ];
+    }
+
+    /**
+     * Get all available people grouped by first letter
+     */
+    public function getPeopleByFirstLetter($maxPages = 100)
+    {
+        $peopleByLetter = [];
+        $alphabet = range('A', 'Z');
+        
+        // Initialize array for each letter
+        foreach ($alphabet as $letter) {
+            $peopleByLetter[$letter] = [];
+        }
+
+        for ($page = 1; $page <= $maxPages; $page++) {
+            $peopleData = $this->getPopularPeople($page);
+            
+            if (!$peopleData || !isset($peopleData['results'])) {
+                break;
+            }
+
+            foreach ($peopleData['results'] as $person) {
+                $firstLetter = strtoupper(substr($person['name'], 0, 1));
+                if (in_array($firstLetter, $alphabet)) {
+                    $peopleByLetter[$firstLetter][] = $person;
+                }
+            }
+        }
+
+        // Sort each letter group alphabetically
+        foreach ($peopleByLetter as $letter => $people) {
+            usort($peopleByLetter[$letter], function($a, $b) {
+                return strcmp($a['name'], $b['name']);
+            });
+        }
+
+        return $peopleByLetter;
+    }
+
+    /**
+     * Get celebrities by letter with optimized caching
+     * This method is optimized for speed
+     */
+    public function getCelebritiesByLetterFast($letter, $maxResults = 60)
+    {
+        $cacheKey = "celebrities_by_letter_{$letter}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration * 3, function () use ($letter, $maxResults) {
+            $celebrities = [];
+            
+            // Only fetch first few pages for speed
+            for ($page = 1; $page <= 8; $page++) {
+                $peopleData = $this->getPopularPeople($page);
+                
+                if (!$peopleData || !isset($peopleData['results'])) {
+                    break;
+                }
+
+                foreach ($peopleData['results'] as $person) {
+                    if (strtoupper(substr($person['name'], 0, 1)) === strtoupper($letter)) {
+                        $celebrities[] = $person;
+                        
+                        // Stop when we have enough
+                        if (count($celebrities) >= $maxResults) {
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            // Sort alphabetically
+            usort($celebrities, function($a, $b) {
+                return strcmp($a['name'], $b['name']);
+            });
+
+            return $celebrities;
+        });
+    }
+
+    /**
+     * Get available letters with caching
+     */
+    public function getAvailableLettersFast()
+    {
+        $cacheKey = "available_letters_fast";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration * 6, function () {
+            $letters = [];
+            $alphabet = range('A', 'Z');
+            
+            // Only check first few pages for speed
+            for ($page = 1; $page <= 3; $page++) {
+                $peopleData = $this->getPopularPeople($page);
+                
+                if (!$peopleData || !isset($peopleData['results'])) {
+                    break;
+                }
+
+                foreach ($peopleData['results'] as $person) {
+                    $firstLetter = strtoupper(substr($person['name'], 0, 1));
+                    if (in_array($firstLetter, $alphabet) && !in_array($firstLetter, $letters)) {
+                        $letters[] = $firstLetter;
+                    }
+                }
+            }
+
+            // Ensure all letters are available
+            $letters = array_unique(array_merge($letters, $alphabet));
+            sort($letters);
+            
+            return $letters;
+        });
     }
 }
