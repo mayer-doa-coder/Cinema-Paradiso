@@ -19,6 +19,14 @@ header .navbar-default .navbar-nav li.btn a:active {
     background-color: transparent !important;
 }
 
+/* Fix active celebrities link to maintain normal color */
+header .navbar-default .navbar-nav li.active a,
+header .navbar-default .navbar-nav li.active a:focus,
+header .navbar-default .navbar-nav li.active a:active {
+    color: #abb7c4 !important;
+    background-color: transparent !important;
+}
+
 /* Specific fix for sign up button */
 header .navbar-default .navbar-nav li.btn a {
     background-color: #ec6eab !important;
@@ -189,15 +197,6 @@ textarea:focus {
                             <div class="ceb-infor">
                                 <h2><a href="{{ route('celebrities.show', $celebrity['id']) }}">{{ $celebrity['name'] }}</a></h2>
                                 <span>{{ strtolower($celebrity['known_for_department']) }}</span>
-                                @if(!empty($celebrity['known_for']))
-                                    <div class="known-for">
-                                        <small>Known for: 
-                                        @foreach(array_slice($celebrity['known_for'], 0, 2) as $index => $movie)
-                                            {{ $movie['title'] ?? $movie['name'] ?? '' }}@if($index < 1 && count($celebrity['known_for']) > 1), @endif
-                                        @endforeach
-                                        </small>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     @empty
@@ -296,18 +295,17 @@ textarea:focus {
 
 <style>
 .celebrity-avatar-container {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto 15px;
+    width: 120px;
+    background-color: #020d18;
+    height: 120px;
+    margin: 0 auto 20px;
     position: relative;
     overflow: hidden;
     border-radius: 50%;
-    border: 3px solid #ddd;
     transition: all 0.3s ease;
 }
 
 .celebrity-avatar-container:hover {
-    border-color: #dcf836;
     transform: scale(1.05);
 }
 
@@ -320,29 +318,25 @@ textarea:focus {
 
 .ceb-item {
     text-align: center;
-    margin-bottom: 30px;
-    padding: 20px;
-    background: #1e1e1e;
-    border-radius: 8px;
     transition: all 0.3s ease;
     display: inline-block;
-    width: calc(33.333% - 20px);
-    margin-right: 30px;
-    margin-bottom: 30px;
+    width: 19%;
     vertical-align: top;
+    box-sizing: border-box;
 }
 
-.ceb-item:nth-child(3n) {
+.ceb-item:nth-child(4n) {
     margin-right: 0;
 }
 
 .ceb-item:hover {
     background: #2a2a2a;
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
 .ceb-infor h2 {
-    margin: 10px 0 5px;
+    margin: 15px 0 8px;
     font-size: 18px;
 }
 
@@ -359,21 +353,14 @@ textarea:focus {
     color: #999;
     font-size: 14px;
     text-transform: capitalize;
-}
-
-.known-for {
-    margin-top: 8px;
-}
-
-.known-for small {
-    color: #ccc;
-    font-size: 12px;
-    line-height: 1.4;
+    display: block;
+    margin-bottom: 10px;
 }
 
 .celebrity-items {
     display: block;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
+    padding: 0;
 }
 
 .search-info {
@@ -518,18 +505,65 @@ textarea:focus {
     font-size: 12px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .ceb-item {
-        width: calc(50% - 15px);
-        margin-right: 15px;
+        width: calc(33.333% - 27px);
+        margin-right: 40px;
+    }
+    
+    .ceb-item:nth-child(4n) {
+        margin-right: 40px;
     }
     
     .ceb-item:nth-child(3n) {
-        margin-right: 15px;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .ceb-item {
+        width: calc(50% - 20px);
+        margin-right: 40px;
+        margin-bottom: 35px;
+    }
+    
+    .ceb-item:nth-child(4n) {
+        margin-right: 40px;
+    }
+    
+    .ceb-item:nth-child(3n) {
+        margin-right: 40px;
     }
     
     .ceb-item:nth-child(2n) {
         margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .ceb-item {
+        width: calc(50% - 15px);
+        margin-right: 30px;
+        margin-bottom: 30px;
+        padding: 20px 10px;
+    }
+    
+    .ceb-item:nth-child(4n) {
+        margin-right: 30px;
+    }
+    
+    .ceb-item:nth-child(3n) {
+        margin-right: 30px;
+    }
+    
+    .ceb-item:nth-child(2n) {
+        margin-right: 0;
+    }
+    
+    .celebrity-avatar-container {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 15px;
     }
     
     .topbar-filter {
@@ -551,8 +585,8 @@ textarea:focus {
     }
     
     .celebrity-avatar-container {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
     }
 }
 </style>

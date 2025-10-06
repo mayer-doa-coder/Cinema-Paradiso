@@ -3186,7 +3186,7 @@ button.close {
 .navbar-header,
 .navbar-collapse,
 .modal-footer {
-  *zoom: 1;
+  zoom: 1;
 }
 .clearfix:before,
 .clearfix:after,
@@ -3939,7 +3939,7 @@ textarea {
 /* III. COMPONENT
 ***********************/
 .row {
-  *zoom: 1;
+  zoom: 1;
 }
 .row:before,
 .row:after {
@@ -5690,7 +5690,7 @@ ul {
   content: '';
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
+  /* background-color: rgba(0, 0, 0, 0.75); */
 }
 /*movie single hero*/
 .mv-single-hero {
@@ -6635,7 +6635,7 @@ ul {
 }
 .celebrity-items .ceb-item h2 a {
   font-family: TiemposTextWeb, Georgia, serif, ColorEmoji;
-  font-size: 24px;
+  font-size: 15px;
   color: #ffffff;
   font-weight: 700;
   text-transform: none;
