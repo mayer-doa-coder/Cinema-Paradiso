@@ -127,61 +127,81 @@ body {
     <div class="container">
         <div class="row ipad-width2">
             <div class="col-md-8 col-sm-12 col-xs-12">
-                <!-- Movie Categories Navigation -->
-                <div class="topbar-filter">
-                    <p>Found <span>{{ count($movies) }} movies</span> in total</p>
-                    <label>Category:</label>
-                    <div class="pagination2">
-                        <span><a href="{{ route('movies.index', ['category' => 'popular']) }}" 
-                            class="{{ $category == 'popular' ? 'active' : '' }}">Popular</a></span>
-                        <span><a href="{{ route('movies.index', ['category' => 'top-rated']) }}" 
-                            class="{{ $category == 'top-rated' ? 'active' : '' }}">Top Rated</a></span>
-                        <span><a href="{{ route('movies.index', ['category' => 'trending']) }}" 
-                            class="{{ $category == 'trending' ? 'active' : '' }}">Trending</a></span>
-                        <span><a href="{{ route('movies.index', ['category' => 'upcoming']) }}" 
-                            class="{{ $category == 'upcoming' ? 'active' : '' }}">Upcoming</a></span>
+                <!-- Modern Filter Bar -->
+                <div class="modern-filter-bar" style="background: #0f1419; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <div class="filter-header" style="margin-bottom: 15px; color: #abb7c4; font-size: 14px;">
+                        Found <span style="color: #dd003f; font-weight: bold;">{{ count($movies) }} movies</span> in total
                     </div>
-                </div>
-
-                <!-- Advanced Filters Section -->
-                <div class="topbar-filter" style="margin-top: 20px; border-top: 1px solid #405266; padding-top: 20px;">
+                    
                     <form method="GET" action="{{ route('movies.index') }}" id="filter-form">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                <label>Browse by Genre:</label>
-                                <select name="genre" class="form-control" style="background: #020d18; color: #abb7c4; border: 1px solid #405266; padding: 8px;">
-                                    <option value="">All Genres</option>
-                                    @foreach($genres as $genre)
-                                        <option value="{{ $genre['id'] }}" {{ $selectedGenre == $genre['id'] ? 'selected' : '' }}>
-                                            {{ $genre['name'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                        <div class="filter-controls" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between;">
+                            <div class="filter-buttons" style="display: flex; flex-wrap: wrap; gap: 15px; flex: 1;">
+                                <!-- Year Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="year-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ $selectedYear ? $selectedYear : 'YEAR' }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="year-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; max-height: 250px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('movies.index', array_merge(request()->except('year'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedYear ? 'background: #dd003f; color: white;' : '' }}">All Years</a>
+                                        @for($y = date('Y') + 1; $y >= 1980; $y--)
+                                            <a href="{{ route('movies.index', array_merge(request()->except('page'), ['year' => $y])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedYear == $y ? 'background: #dd003f; color: white;' : '' }}">{{ $y }}</a>
+                                        @endfor
+                                    </div>
+                                </div>
+
+                                <!-- Rating Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="rating-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ $selectedRating ? $selectedRating.'+' : 'RATING' }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="rating-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('movies.index', array_merge(request()->except('rating'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedRating ? 'background: #dd003f; color: white;' : '' }}">All Ratings</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 9])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 9 ? 'background: #dd003f; color: white;' : '' }}">9+ Outstanding</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 8])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 8 ? 'background: #dd003f; color: white;' : '' }}">8+ Excellent</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 7])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 7 ? 'background: #dd003f; color: white;' : '' }}">7+ Great</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 6])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 6 ? 'background: #dd003f; color: white;' : '' }}">6+ Good</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 5])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 5 ? 'background: #dd003f; color: white;' : '' }}">5+ Average</a>
+                                    </div>
+                                </div>
+
+                                <!-- Popular Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="popular-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ ucfirst(str_replace('-', ' ', $category)) ?: 'POPULAR' }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="popular-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('movies.index', array_merge(request()->except(['category', 'page']))) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$category ? 'background: #dd003f; color: white;' : '' }}">All Movies</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'popular'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'popular' ? 'background: #dd003f; color: white;' : '' }}">Popular</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'top-rated'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'top-rated' ? 'background: #dd003f; color: white;' : '' }}">Top Rated</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'trending'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'trending' ? 'background: #dd003f; color: white;' : '' }}">Trending</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'upcoming'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'upcoming' ? 'background: #dd003f; color: white;' : '' }}">Upcoming</a>
+                                    </div>
+                                </div>
+
+                                <!-- Genre Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="genre-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ $selectedGenre ? collect($genres)->firstWhere('id', $selectedGenre)['name'] ?? 'GENRE' : 'GENRE' }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="genre-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; max-height: 250px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('movies.index', array_merge(request()->except('genre'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedGenre ? 'background: #dd003f; color: white;' : '' }}">All Genres</a>
+                                        @foreach($genres as $genre)
+                                            <a href="{{ route('movies.index', array_merge(request()->except('page'), ['genre' => $genre['id']])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedGenre == $genre['id'] ? 'background: #dd003f; color: white;' : '' }}">{{ $genre['name'] }}</a>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-3 col-sm-6">
-                                <label>Browse by Year:</label>
-                                <select name="year" class="form-control" style="background: #020d18; color: #abb7c4; border: 1px solid #405266; padding: 8px;">
-                                    <option value="">All Years</option>
-                                    @for($y = date('Y') + 1; $y >= 1980; $y--)
-                                        <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>{{ $y }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <label>Minimum Rating:</label>
-                                <select name="rating" class="form-control" style="background: #020d18; color: #abb7c4; border: 1px solid #405266; padding: 8px;">
-                                    <option value="">All Ratings</option>
-                                    <option value="9" {{ $selectedRating == 9 ? 'selected' : '' }}>9+ Outstanding</option>
-                                    <option value="8" {{ $selectedRating == 8 ? 'selected' : '' }}>8+ Excellent</option>
-                                    <option value="7" {{ $selectedRating == 7 ? 'selected' : '' }}>7+ Great</option>
-                                    <option value="6" {{ $selectedRating == 6 ? 'selected' : '' }}>6+ Good</option>
-                                    <option value="5" {{ $selectedRating == 5 ? 'selected' : '' }}>5+ Average</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 col-sm-6" style="padding-top: 22px;">
-                                <button type="submit" class="btn btn-default" style="background: #dd003f; color: white; padding: 10px 20px; border: none; border-radius: 3px;">Apply Filters</button>
-                                <a href="{{ route('movies.index') }}" class="btn btn-default" style="background: #405266; color: white; padding: 10px 20px; margin-left: 5px; display: inline-block; text-decoration: none; border-radius: 3px;">Clear</a>
-                            </div>
+
+                            <!-- Clear All Button -->
+                            @if(request()->hasAny(['genre', 'year', 'rating', 'category']))
+                                <div class="filter-clear" style="margin-left: auto;">
+                                    <a href="{{ route('movies.index') }}" style="background: #dd003f; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; font-size: 14px; transition: all 0.3s ease;">Clear All</a>
+                                </div>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -340,15 +360,133 @@ body {
 @endsection
 
 @section('scripts')
+<style>
+/* Filter dropdown responsive styles */
+@media (max-width: 768px) {
+    .filter-controls {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .filter-buttons {
+        justify-content: center !important;
+        margin-bottom: 15px;
+    }
+    .filter-search {
+        justify-content: center !important;
+    }
+    .search-input-wrapper input {
+        width: 200px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-buttons {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .filter-dropdown {
+        width: 100% !important;
+        max-width: 250px;
+    }
+    .filter-btn {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
+}
+
+/* Hover effects */
+.filter-btn:hover {
+    background: #020d18 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.dropdown-item:hover {
+    background: #dd003f !important;
+    color: white !important;
+}
+
+.search-input-wrapper input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(221, 0, 63, 0.3);
+}
+
+/* Dropdown animations */
+.dropdown-content.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+.filter-btn.active .ion-ios-arrow-down {
+    transform: rotate(180deg);
+}
+</style>
+
 <script>
-// Search functionality
+// Filter dropdown functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle dropdown toggles
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const dropdownContents = document.querySelectorAll('.dropdown-content');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const targetId = this.getAttribute('data-target');
+            const targetDropdown = document.getElementById(targetId);
+            const isActive = this.classList.contains('active');
+            
+            // Close all dropdowns
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            dropdownContents.forEach(dropdown => dropdown.classList.remove('show'));
+            
+            // Toggle current dropdown
+            if (!isActive && targetDropdown) {
+                this.classList.add('active');
+                targetDropdown.classList.add('show');
+            }
+        });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.filter-dropdown')) {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            dropdownContents.forEach(dropdown => dropdown.classList.remove('show'));
+        }
+    });
+    
+    // Handle search input focus effects
+    const searchInput = document.querySelector('.search-input-wrapper input');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.02)';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+        });
+        
+        // Handle Enter key for search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.closest('form').submit();
+            }
+        });
+    }
+    
+    // Legacy search functionality for header search
     const searchIcon = document.getElementById('search-icon');
-    const searchInput = document.getElementById('search-query');
+    const headerSearchInput = document.getElementById('search-query');
     const searchType = document.getElementById('search-type');
     
-    function performSearch() {
-        const query = searchInput.value.trim();
+    function performHeaderSearch() {
+        if (!headerSearchInput || !searchType) return;
+        
+        const query = headerSearchInput.value.trim();
         const type = searchType.value;
         
         if (query) {
@@ -365,22 +503,35 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Search on icon click
     if (searchIcon) {
-        searchIcon.addEventListener('click', performSearch);
+        searchIcon.addEventListener('click', performHeaderSearch);
     }
     
-    // Search on Enter key press
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
+    // Search on Enter key press for header search
+    if (headerSearchInput) {
+        headerSearchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                performSearch();
+                performHeaderSearch();
             }
         });
     }
+    
+    // Smooth animations for filter buttons
+    filterButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
 });
 
-// Add any movie-specific JavaScript here
+// Initialize movie grid functionality
 $(document).ready(function() {
-    // Initialize any movie grid functionality
+    // Add any additional movie-specific functionality here
 });
 </script>
 @endsection
