@@ -115,6 +115,17 @@ body {
 </header>
 <!-- END | Header -->
 
+<!-- Top Search Form for TV Shows -->
+<div class="hero hero3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                @include('partials._search')
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="hero common-hero">
 	<div class="container">
 		<div class="row">

@@ -14,6 +14,9 @@ use App\Http\Controllers\CommunityController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('home.search');
 
+// Universal search route for all sections
+Route::get('/universal-search', [HomeController::class, 'search'])->name('universal.search');
+
 // Movie routes
 Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
 Route::get('/movies/search', [MovieController::class, 'search'])->name('movies.search');

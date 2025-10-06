@@ -203,7 +203,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Handle movie search from homepage
+     * Handle search from homepage and other sections
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -218,11 +218,12 @@ class HomeController extends Controller
         }
 
         // Redirect to appropriate search page based on type
-        if ($type === 'movies') {
-            return redirect()->route('movies.search', ['q' => $query]);
+        switch ($type) {
+            case 'tvshows':
+                return redirect()->route('tv.search', ['q' => $query]);
+            case 'movies':
+            default:
+                return redirect()->route('movies.search', ['q' => $query]);
         }
-
-        // For now, redirect to movies search for all types
-        return redirect()->route('movies.search', ['q' => $query]);
     }
 }

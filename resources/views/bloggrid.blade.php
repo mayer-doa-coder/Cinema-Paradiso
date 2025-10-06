@@ -165,9 +165,7 @@ body {
 								<i class="fa fa-search" aria-hidden="true"></i>
 							</a>
 							<div class="top-search">
-								<form>
-									<input type="text" placeholder="Search for a movie, TV Show or celebrity that you are looking for">
-								</form>
+								@include('partials._search')
 							</div>
 						</li>
 					</ul>

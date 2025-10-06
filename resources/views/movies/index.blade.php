@@ -88,20 +88,7 @@ body {
 				</div>
 	    </nav>
 	    
-	    <!-- top search form -->
-	    <div class="top-search">
-	    	<div class="search-dropdown">
-	    		<i class="ion-ios-list-outline"></i>
-		    	<select id="search-type">
-					<option value="movies">Movies</option>
-					<option value="tvshows">TV Shows</option>
-				</select>
-			</div>
-			<div class="search-input">
-				<input type="text" id="search-query" placeholder="Search for a movie, TV Show that you are looking for">
-				<i class="ion-ios-search" id="search-icon" style="cursor: pointer;"></i>
-			</div>
-	    </div>
+	    @include('partials._search')
 	</div>
 </header>
 <!-- END | Header -->
