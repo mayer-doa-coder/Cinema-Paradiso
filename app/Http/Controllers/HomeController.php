@@ -214,29 +214,87 @@ class HomeController extends Controller
     private function getSpotlightCelebrities()
     {
         try {
-            // Get popular people from TMDB API (first page)
-            $peopleData = $this->movieService->getPopularPeople(1);
+            // Curated list of most popular celebrities from 2010s with their TMDB IDs
+            $popular2010sCelebrities = [
+                1892,   // Matt Damon
+                6193,   // Leonardo DiCaprio
+                2231,   // Samuel L. Jackson
+                3894,   // Christian Bale
+                1245,   // Scarlett Johansson
+                6968,   // Hugh Jackman
+                10980,  // Daniel Craig
+                3223,   // Robert Downey Jr.
+                10859,  // Ryan Gosling
+                5472,   // Sandra Bullock
+                1204,   // Julia Roberts
+                8784,   // Daniel Radcliffe
+                3061,   // Ewan McGregor
+                2888,   // Will Smith
+                4724,   // Kevin Costner
+                8891,   // John Travolta
+                2963,   // Nicolas Cage
+                1461,   // George Clooney
+                139,    // Jamie Foxx
+                2231,   // Samuel L. Jackson
+                1892,   // Matt Damon
+                62,     // Bruce Willis
+                2524,   // Tom Hardy
+                73421,  // Joaquin Phoenix
+                287,    // Brad Pitt
+                6384,   // Keanu Reeves
+                500,    // Tom Cruise
+                31,     // Tom Hanks
+                1158,   // Al Pacino
+                380,    // Robert De Niro
+                5081,   // Emily Blunt
+                72129,  // Jennifer Lawrence
+                1813,   // Anne Hathaway
+                524,    // Natalie Portman
+                5064,   // Meryl Streep
+                5293,   // Willem Dafoe
+            ];
+
+            // Shuffle and select 4 random celebrities from the curated list
+            shuffle($popular2010sCelebrities);
+            $selectedIds = array_slice($popular2010sCelebrities, 0, 4);
+
+            $spotlightCelebrities = [];
             
-            if (!$peopleData || !isset($peopleData['results'])) {
-                return [];
+            foreach ($selectedIds as $personId) {
+                try {
+                    // Get person details from TMDB
+                    $personData = $this->movieService->getPersonDetails($personId);
+                    
+                    if ($personData && !empty($personData['name'])) {
+                        $spotlightCelebrities[] = [
+                            'id' => $personData['id'],
+                            'name' => $personData['name'],
+                            'profile_path' => $personData['profile_path'],
+                            'profile_url' => $this->movieService->getPersonImageUrl($personData['profile_path'], 'w185'),
+                            'known_for_department' => $this->formatDepartment($personData['known_for_department'] ?? 'Acting'),
+                            'popularity' => $personData['popularity'] ?? 0,
+                        ];
+                    }
+                } catch (\Exception $e) {
+                    // Continue to next celebrity if one fails
+                    Log::warning('Failed to fetch celebrity ' . $personId . ': ' . $e->getMessage());
+                    continue;
+                }
             }
 
-            // Get first 4 celebrities for spotlight
-            $celebrities = array_slice($peopleData['results'], 0, 4);
-            
-            $spotlightCelebrities = [];
-            foreach ($celebrities as $person) {
+            // If we don't have enough celebrities, fill with fallback
+            while (count($spotlightCelebrities) < 4) {
                 $spotlightCelebrities[] = [
-                    'id' => $person['id'],
-                    'name' => $person['name'],
-                    'profile_path' => $person['profile_path'],
-                    'profile_url' => $this->movieService->getPersonImageUrl($person['profile_path'], 'w185'),
-                    'known_for_department' => $this->formatDepartment($person['known_for_department'] ?? 'Acting'),
-                    'popularity' => $person['popularity'] ?? 0,
+                    'id' => 0,
+                    'name' => 'Hollywood Star',
+                    'profile_path' => null,
+                    'profile_url' => asset('images/uploads/ava1.jpg'),
+                    'known_for_department' => 'Actor',
+                    'popularity' => 0,
                 ];
             }
             
-            return $spotlightCelebrities;
+            return array_slice($spotlightCelebrities, 0, 4);
             
         } catch (\Exception $e) {
             Log::error('Error fetching spotlight celebrities: ' . $e->getMessage());
