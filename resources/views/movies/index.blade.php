@@ -117,7 +117,7 @@ body {
                 <!-- Modern Filter Bar -->
                 <div class="modern-filter-bar" style="background: #0f1419; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                     <div class="filter-header" style="margin-bottom: 15px; color: #abb7c4; font-size: 14px;">
-                        Found <span style="color: #dd003f; font-weight: bold;">{{ count($movies) }} movies</span> in total
+                        Found <span style="color: #ec6eab; font-weight: bold;">{{ count($movies) }} movies</span> in total
                     </div>
                     
                     <form method="GET" action="{{ route('movies.index') }}" id="filter-form">
@@ -130,9 +130,9 @@ body {
                                         <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
                                     </button>
                                     <div id="year-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; max-height: 250px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
-                                        <a href="{{ route('movies.index', array_merge(request()->except('year'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedYear ? 'background: #dd003f; color: white;' : '' }}">All Years</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('year'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedYear ? 'background: #ec6eab; color: white;' : '' }}">All Years</a>
                                         @for($y = date('Y') + 1; $y >= 1980; $y--)
-                                            <a href="{{ route('movies.index', array_merge(request()->except('page'), ['year' => $y])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedYear == $y ? 'background: #dd003f; color: white;' : '' }}">{{ $y }}</a>
+                                            <a href="{{ route('movies.index', array_merge(request()->except('page'), ['year' => $y])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedYear == $y ? 'background: #ec6eab; color: white;' : '' }}">{{ $y }}</a>
                                         @endfor
                                     </div>
                                 </div>
@@ -144,12 +144,12 @@ body {
                                         <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
                                     </button>
                                     <div id="rating-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
-                                        <a href="{{ route('movies.index', array_merge(request()->except('rating'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedRating ? 'background: #dd003f; color: white;' : '' }}">All Ratings</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 9])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 9 ? 'background: #dd003f; color: white;' : '' }}">9+ Outstanding</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 8])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 8 ? 'background: #dd003f; color: white;' : '' }}">8+ Excellent</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 7])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 7 ? 'background: #dd003f; color: white;' : '' }}">7+ Great</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 6])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 6 ? 'background: #dd003f; color: white;' : '' }}">6+ Good</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 5])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 5 ? 'background: #dd003f; color: white;' : '' }}">5+ Average</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('rating'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedRating ? 'background: #ec6eab; color: white;' : '' }}">All Ratings</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 9])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 9 ? 'background: #ec6eab; color: white;' : '' }}">9+ Outstanding</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 8])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 8 ? 'background: #ec6eab; color: white;' : '' }}">8+ Excellent</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 7])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 7 ? 'background: #ec6eab; color: white;' : '' }}">7+ Great</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 6])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 6 ? 'background: #ec6eab; color: white;' : '' }}">6+ Good</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['rating' => 5])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedRating == 5 ? 'background: #ec6eab; color: white;' : '' }}">5+ Average</a>
                                     </div>
                                 </div>
 
@@ -160,11 +160,11 @@ body {
                                         <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
                                     </button>
                                     <div id="popular-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
-                                        <a href="{{ route('movies.index', array_merge(request()->except(['category', 'page']))) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$category ? 'background: #dd003f; color: white;' : '' }}">All Movies</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'popular'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'popular' ? 'background: #dd003f; color: white;' : '' }}">Popular</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'top-rated'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'top-rated' ? 'background: #dd003f; color: white;' : '' }}">Top Rated</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'trending'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'trending' ? 'background: #dd003f; color: white;' : '' }}">Trending</a>
-                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'upcoming'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'upcoming' ? 'background: #dd003f; color: white;' : '' }}">Upcoming</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except(['category', 'page']))) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$category ? 'background: #ec6eab; color: white;' : '' }}">All Movies</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'popular'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'popular' ? 'background: #ec6eab; color: white;' : '' }}">Popular</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'top-rated'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'top-rated' ? 'background: #ec6eab; color: white;' : '' }}">Top Rated</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'trending'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'trending' ? 'background: #ec6eab; color: white;' : '' }}">Trending</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('page'), ['category' => 'upcoming'])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $category == 'upcoming' ? 'background: #ec6eab; color: white;' : '' }}">Upcoming</a>
                                     </div>
                                 </div>
 
@@ -175,9 +175,9 @@ body {
                                         <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
                                     </button>
                                     <div id="genre-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; max-height: 250px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
-                                        <a href="{{ route('movies.index', array_merge(request()->except('genre'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedGenre ? 'background: #dd003f; color: white;' : '' }}">All Genres</a>
+                                        <a href="{{ route('movies.index', array_merge(request()->except('genre'), ['page' => 1])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ !$selectedGenre ? 'background: #ec6eab; color: white;' : '' }}">All Genres</a>
                                         @foreach($genres as $genre)
-                                            <a href="{{ route('movies.index', array_merge(request()->except('page'), ['genre' => $genre['id']])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedGenre == $genre['id'] ? 'background: #dd003f; color: white;' : '' }}">{{ $genre['name'] }}</a>
+                                            <a href="{{ route('movies.index', array_merge(request()->except('page'), ['genre' => $genre['id']])) }}" class="dropdown-item" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease; {{ $selectedGenre == $genre['id'] ? 'background: #ec6eab; color: white;' : '' }}">{{ $genre['name'] }}</a>
                                         @endforeach
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@ body {
                             <!-- Clear All Button -->
                             @if(request()->hasAny(['genre', 'year', 'rating', 'category']))
                                 <div class="filter-clear" style="margin-left: auto;">
-                                    <a href="{{ route('movies.index') }}" style="background: #dd003f; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; font-size: 14px; transition: all 0.3s ease;">Clear All</a>
+                                    <a href="{{ route('movies.index') }}" style="background: #ec6eab; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; font-size: 14px; transition: all 0.3s ease;">Clear All</a>
                                 </div>
                             @endif
                         </div>
@@ -207,9 +207,6 @@ body {
                                     <img src="{{ app('App\Services\MovieService')->getImageUrl($movie['poster_path'] ?? null) }}" 
                                          alt="{{ $movie['title'] ?? 'Movie Poster' }}">
                                 </a>
-                                <div class="hvr-inner">
-                                    <a href="{{ route('movies.show', $movie['id']) }}">Read more <i class="ion-android-arrow-dropright"></i></a>
-                                </div>
                                 <div class="mv-item-infor">
                                     <h6><a href="{{ route('movies.show', $movie['id']) }}">{{ $movie['title'] ?? 'Untitled' }}</a></h6>
                                     <p class="rate">
@@ -389,7 +386,7 @@ body {
 }
 
 .dropdown-item:hover {
-    background: #dd003f !important;
+    background: #ec6eab !important;
     color: white !important;
 }
 
