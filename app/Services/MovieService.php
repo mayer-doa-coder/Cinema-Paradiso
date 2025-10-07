@@ -176,6 +176,22 @@ class MovieService
             foreach ($nowPlayingMovies['results'] as $movie) {
                 if ($count >= $limit) break;
                 
+                // Skip movies with problematic titles or content
+                $title = strtolower($movie['title'] ?? '');
+                $excludedTitles = ['demon slayer', 'primitive war', 'kimetsu no yaiba'];
+                
+                $shouldSkip = false;
+                foreach ($excludedTitles as $excluded) {
+                    if (stripos($title, $excluded) !== false) {
+                        $shouldSkip = true;
+                        break;
+                    }
+                }
+                
+                if ($shouldSkip) {
+                    continue;
+                }
+                
                 // Get videos for this movie
                 $videos = $this->getMovieVideos($movie['id']);
                 
@@ -188,7 +204,7 @@ class MovieService
                             'id' => $movie['id'],
                             'title' => $movie['title'],
                             'backdrop_path' => $movie['backdrop_path'],
-                            'backdrop_url' => $this->getImageUrl($movie['backdrop_path'], 'w780'),
+                            'backdrop_url' => $this->getImageUrl($movie['backdrop_path'], 'w500'),
                             'thumbnail_url' => $this->getImageUrl($movie['backdrop_path'], 'w500'),
                             'video_key' => $trailer['key'],
                             'video_url' => "https://www.youtube.com/embed/{$trailer['key']}",

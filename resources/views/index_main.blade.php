@@ -95,6 +95,7 @@ textarea:focus {
     transform: scale(1.05) !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
 }
+
 </style>
 @endpush
 
@@ -582,7 +583,10 @@ textarea:focus {
 								<iframe class="item-video" src="" data-src="https://www.youtube.com/embed/1Q8fG0TtVAY"></iframe>
 							</div>
 							<div>
-								<iframe class="item-video" src="" data-src="https://www.youtube.com/embed/w0qQkSuWOS8"></iframe>
+								<iframe class="item-video" src="" data-src="https://www.youtube.com/embed/8ugaeA-nMTc"></iframe>
+							</div>
+							<div>
+								<iframe class="item-video" src="" data-src="https://www.youtube.com/embed/dW1BIid8Osg"></iframe>
 							</div>
 						@endif
 					</div>
@@ -603,20 +607,29 @@ textarea:focus {
 							{{-- Fallback content --}}
 							<div class="item">
 								<div class="trailer-img">
-									<img src="{{ asset('images/uploads/trailer7.jpg') }}" alt="Wonder Woman" width="350" height="200">
+									<img src="{{ asset('images/uploads/trailer5.jpg') }}" alt="Avengers: Endgame" width="350" height="200">
 								</div>
 								<div class="trailer-infor">
-									<h4 class="desc">Wonder Woman</h4>
-									<p>2:30</p>
+									<h4 class="desc">Avengers: Endgame</h4>
+									<p>2:29</p>
 								</div>
 							</div>
 							<div class="item">
 								<div class="trailer-img">
-									<img src="{{ asset('images/uploads/trailer2.jpg') }}" alt="Oblivion" width="350" height="200">
+									<img src="{{ asset('images/uploads/trailer6.jpg') }}" alt="Black Widow" width="350" height="200">
 								</div>
 								<div class="trailer-infor">
-									<h4 class="desc">Oblivion: Official Teaser Trailer</h4>
-									<p>2:37</p>
+									<h4 class="desc">Black Widow: Official Trailer</h4>
+									<p>2:32</p>
+								</div>
+							</div>
+							<div class="item">
+								<div class="trailer-img">
+									<img src="{{ asset('images/uploads/trailer3.png') }}" alt="Spider-Man: No Way Home" width="350" height="200">
+								</div>
+								<div class="trailer-infor">
+									<h4 class="desc">Spider-Man: No Way Home</h4>
+									<p>2:45</p>
 								</div>
 							</div>
 						@endif
