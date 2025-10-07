@@ -379,10 +379,10 @@ textarea:focus {
 				</div>
 				<div class="tabs">
 					<ul class="tab-links-2">
-						<li class="active"><a href="#tab21">#Popular</a></li>
-						<li><a href="#tab22"> #Airing Today</a></li>
-						<li><a href="#tab23">  #Top rated  </a></li>
-						<li><a href="#tab24"> #On The Air</a></li>                        
+						<li class="active"><a href="#tab21">Popular</a></li>
+						<li><a href="#tab22"> Airing Today</a></li>
+						<li><a href="#tab23"> Top rated  </a></li>
+						<li><a href="#tab24"> On The Air</a></li>                        
 					</ul>
 				    <div class="tab-content">
 				        <div id="tab21" class="tab active">
