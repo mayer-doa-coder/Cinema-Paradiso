@@ -844,6 +844,69 @@ textarea:focus {
 							<p class="contact-note">We'd love to hear your feedback and suggestions!</p>
 						</div>					
 					</div>
+					
+					<!-- Famous Movie Quote -->
+					<div style="margin: 40px 0; padding: 20px; text-align: center;">
+						@php
+							$movieQuotes = [
+								'Frankly, my dear, I don\'t give a damn. — Gone with the Wind (1939)',
+								'I\'m gonna make him an offer he can\'t refuse. — The Godfather (1972)',
+								'You don\'t understand! I coulda had class. I coulda been a contender… — On the Waterfront (1954)',
+								'Here\'s looking at you, kid. — Casablanca (1942)',
+								'Go ahead, make my day. — Sudden Impact (1983)',
+								'May the Force be with you. — Star Wars (1977)',
+								'You talking to me? — Taxi Driver (1976)',
+								'E.T. phone home. — E.T. the Extra-Terrestrial (1982)',
+								'There\'s no place like home. — The Wizard of Oz (1939)',
+								'I\'ll be back. — The Terminator (1984)',
+								'You\'re gonna need a bigger boat. — Jaws (1975)',
+								'Here\'s Johnny! — The Shining (1980)',
+								'I\'m the king of the world! — Titanic (1997)',
+								'Show me the money! — Jerry Maguire (1996)',
+								'I\'ll have what she\'s having. — When Harry Met Sally... (1989)',
+								'You can\'t handle the truth! — A Few Good Men (1992)',
+								'Life is like a box of chocolates. You never know what you\'re gonna get. — Forrest Gump (1994)',
+								'I see dead people. — The Sixth Sense (1999)',
+								'Why so serious? — The Dark Knight (2008)',
+								'To infinity and beyond! — Toy Story (1995)',
+								'Bond. James Bond. — Dr. No (1962)',
+								'Keep your friends close, but your enemies closer. — The Godfather Part II (1974)',
+								'Say \'hello\' to my little friend! — Scarface (1983)',
+								'Hasta la vista, baby. — Terminator 2: Judgment Day (1991)',
+								'I\'m walkin\' here! — Midnight Cowboy (1969)',
+								'They may take our lives, but they\'ll never take our freedom! — Braveheart (1995)',
+								'You had me at \'hello\'. — Jerry Maguire (1996)',
+								'Rosebud. — Citizen Kane (1941)',
+								'The stuff that dreams are made of. — The Maltese Falcon (1941)',
+								'After all, tomorrow is another day! — Gone with the Wind (1939)',
+								'Keep the change, ya filthy animal. — Home Alone (1990)',
+								'I\'m as mad as hell, and I\'m not going to take this anymore! — Network (1976)',
+								'Of all the gin joints in all the towns in all the world, she walks into mine. — Casablanca (1942)',
+								'They\'re here! — Poltergeist (1982)',
+								'Nobody puts Baby in a corner. — Dirty Dancing (1987)',
+								'I feel the need — the need for speed! — Top Gun (1986)',
+								'Carpe diem. Seize the day, boys. — Dead Poets Society (1989)',
+								'I\'m just a girl, standing in front of a boy, asking him to love her. — Notting Hill (1999)',
+								'As if! — Clueless (1995)',
+								'Shaken, not stirred. — Goldfinger (1964)',
+								'My precious. — The Lord of the Rings: The Two Towers (2002)',
+								'You shall not pass! — The Lord of the Rings: The Fellowship of the Ring (2001)',
+								'The first rule of Fight Club is: you do not talk about Fight Club. — Fight Club (1999)',
+								'Life, uh, finds a way. — Jurassic Park (1993)',
+								'I am Spartacus! — Spartacus (1960)',
+								'The horror! The horror! — Apocalypse Now (1979)',
+								'Wax on, wax off. — The Karate Kid (1984)',
+								'You complete me. — Jerry Maguire (1996)',
+								'I\'m not bad. I\'m just drawn that way. — Who Framed Roger Rabbit (1988)',
+								'Roads? Where we\'re going, we don\'t need roads. — Back to the Future (1985)'
+							];
+							$randomQuote = collect($movieQuotes)->random(1)->first();
+						@endphp
+						
+						<p style="font-size: 20px; font-weight: bold; color: #ffffff; margin: 30px 0; line-height: 5.0; padding: 15px;">
+							{!! nl2br(e($randomQuote)) !!}
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
