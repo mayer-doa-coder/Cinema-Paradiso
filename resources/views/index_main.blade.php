@@ -28,10 +28,10 @@ header .navbar-default .navbar-nav li.btn a {
 								@php $celebNews = array_slice($latestNews, 2, 1); @endphp
 								@foreach($celebNews as $news)
 								<div class="blog-item-style-1">
-									@if(isset($news['image_url']) && $news['image_url'])
-									<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'Celebrity News' }}" width="170" height="250" style="object-fit: cover;">
+									@if(isset($news['image']) && $news['image'])
+									<img src="{{ $news['image'] }}" alt="{{ $news['title'] ?? 'Celebrity News' }}" width="170" height="250" style="object-fit: cover;">
 									@else
-									<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+									<img src="{{ asset('images/uploads/ceb1.jpg') }}" alt="Celebrity News" width="170" height="250">
 									@endif
 									<div class="blog-it-infor">
 										<h3>
@@ -644,9 +644,6 @@ textarea:focus {
 	<div class="container">
 		<div class="row ipad-width">
 			<div class="col-md-8">
-				<div class="ads">
-					<img src="{{ asset('images/uploads/ads2.png') }}" alt="" width="728" height="106">
-				</div>
 				<div class="title-hd">
 					<h2>Latest news</h2>
 				</div>
@@ -663,10 +660,10 @@ textarea:focus {
 								@php $movieNews = array_slice($latestNews, 0, 1); @endphp
 								@foreach($movieNews as $news)
 								<div class="blog-item-style-1">
-									@if(isset($news['image_url']) && $news['image_url'])
-									<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'Movie News' }}" width="170" height="250" style="object-fit: cover;">
+									@if(isset($news['image']) && $news['image'])
+									<img src="{{ $news['image'] }}" alt="{{ $news['title'] ?? 'Movie News' }}" width="170" height="250" style="object-fit: cover;">
 									@else
-									<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+									<img src="{{ asset('images/uploads/mv1.jpg') }}" alt="Movie News Fallback" width="170" height="250" style="object-fit: cover;">
 									@endif
 									<div class="blog-it-infor">
 										<h3>
@@ -685,7 +682,7 @@ textarea:focus {
 								@endforeach
 							@else
 							<div class="blog-item-style-1">
-								<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+								<img src="{{ asset('images/uploads/mv1.jpg') }}" alt="Movie News" width="170" height="250" style="object-fit: cover;">
 								<div class="blog-it-infor">
 									<h3><a href="#">Latest Movie Industry Updates</a></h3>
 									<span class="time">13 hours ago</span>
@@ -701,10 +698,10 @@ textarea:focus {
 								@php $tvNews = array_slice($latestNews, 1, 1); @endphp
 								@foreach($tvNews as $news)
 								<div class="blog-item-style-1">
-									@if(isset($news['image_url']) && $news['image_url'])
-									<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'TV Shows News' }}" width="170" height="250" style="object-fit: cover;">
+									@if(isset($news['image']) && $news['image'])
+									<img src="{{ $news['image'] }}" alt="{{ $news['title'] ?? 'TV Shows News' }}" width="170" height="250" style="object-fit: cover;">
 									@else
-									<img src="{{ asset('images/uploads/blog-it2.jpg') }}" alt="" width="170" height="250">
+									<img src="{{ asset('images/uploads/series-img.jpg') }}" alt="" width="170" height="250">
 									@endif
 									<div class="blog-it-infor">
 										<h3>
@@ -723,7 +720,7 @@ textarea:focus {
 								@endforeach
 							@else
 							<div class="blog-item-style-1">
-								<img src="{{ asset('images/uploads/blog-it2.jpg') }}" alt="" width="170" height="250">
+								<img src="{{ asset('images/uploads/series-img.jpg') }}" alt="TV Shows News" width="170" height="250" style="object-fit: cover;">
 								<div class="blog-it-infor">
 									<h3><a href="#">TV Shows & Streaming Updates</a></h3>
 									<span class="time">13 hours ago</span>
@@ -739,10 +736,10 @@ textarea:focus {
 									@php $celebNews = array_slice($latestNews, 2, 1); @endphp
 									@foreach($celebNews as $news)
 									<div class="blog-item-style-1">
-										@if(isset($news['image_url']) && $news['image_url'])
-										<img src="{{ $news['image_url'] }}" alt="{{ $news['title'] ?? 'Celebrity News' }}" width="170" height="250" style="object-fit: cover;">
+										@if(isset($news['image']) && $news['image'])
+										<img src="{{ $news['image'] }}" alt="{{ $news['title'] ?? 'Celebrity News' }}" width="170" height="250" style="object-fit: cover;">
 										@else
-										<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+										<img src="{{ asset('images/uploads/ceb1.jpg') }}" alt="" width="170" height="250">
 										@endif
 										<div class="blog-it-infor">
 											<h3>
@@ -761,7 +758,7 @@ textarea:focus {
 									@endforeach
 								@else
 								<div class="blog-item-style-1">
-									<img src="{{ asset('images/uploads/blog-it1.jpg') }}" alt="" width="170" height="250">
+									<img src="{{ asset('images/uploads/ceb2.jpg') }}" alt="Celebrity News" width="170" height="250" style="object-fit: cover;">
 									<div class="blog-it-infor">
 										<h3><a href="#">Celebrity Spotlight</a></h3>
 										<span class="time">13 hours ago</span>
@@ -828,30 +825,6 @@ textarea:focus {
 								<span class="time">Recently</span>
 							</div>
 							@endif
-						</div>
-					</div>
-				</div>
-					<div class="more-items">
-						<div class="left">
-							<div class="more-it">
-								<h6><a href="#">Michael Shannon Frontrunner to play Cable in “Deadpool 2”</a></h6>
-								<span class="time">13 hours ago</span>
-							</div>
-							<div class="more-it">
-								<h6><a href="#">French cannibal horror “Raw” inspires L.A. theater to hand out “Barf Bags”</a></h6>
-								
-								<span class="time">13 hours ago</span>
-							</div>
-						</div>
-						<div class="right">
-							<div class="more-it">
-								<h6><a href="#">Laura Dern in talks to join Justin Kelly’s biopic “JT Leroy”</a></h6>
-								<span class="time">13 hours ago</span>
-							</div>
-							<div class="more-it">
-								<h6><a href="#">China punishes more than 300 cinemas for box office cheating</a></h6>
-								<span class="time">13 hours ago</span>
-							</div>
 						</div>
 					</div>
 				</div>

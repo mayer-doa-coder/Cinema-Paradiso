@@ -22,6 +22,150 @@ class NewsService
     /**
      * Get movie news from multiple sources
      */
+    /**
+     * Get the latest entertainment content from ALL available sources with images
+     * Prioritizes recency and ensures all results have valid images
+     */
+    public function getLatestContentWithImages($page = 1, $limit = 10)
+    {
+        $cacheKey = "latest_content_with_images_page_{$page}_limit_{$limit}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page, $limit) {
+            $allContent = collect();
+
+            // 1. RSS Feeds (Primary source - most reliable for images)
+            $rssArticles = $this->parseMovieNewsRSS();
+            $allContent = $allContent->merge($rssArticles);
+
+            // 2. NewsAPI (High quality, good images)
+            if ($this->newsApiKey) {
+                $newsApiArticles = $this->getNewsAPIContent();
+                $allContent = $allContent->merge($newsApiArticles);
+            }
+
+            // 3. Guardian API (Quality journalism with images)
+            if ($this->guardianApiKey) {
+                $guardianArticles = $this->getGuardianMovieNews();
+                $allContent = $allContent->merge($guardianArticles);
+            }
+
+            // 4. Reddit Discussions (Community content with thumbnails)
+            $redditDiscussions = $this->getRedditMovieDiscussions(20);
+            // Convert Reddit format to match our article structure
+            $redditArticles = $redditDiscussions->map(function ($discussion) {
+                return [
+                    'title' => $discussion['title'],
+                    'description' => "Reddit discussion from r/{$discussion['subreddit']} with {$discussion['comments']} comments",
+                    'url' => $discussion['url'],
+                    'published_at' => $discussion['created'],
+                    'source' => "Reddit - r/{$discussion['subreddit']}",
+                    'source_key' => 'reddit',
+                    'image' => $discussion['thumbnail'] && $discussion['thumbnail'] !== 'self' && $discussion['thumbnail'] !== 'default' ? $discussion['thumbnail'] : null,
+                    'author' => $discussion['author'],
+                    'category' => 'discussion',
+                    'type' => 'reddit',
+                    'score' => $discussion['score']
+                ];
+            });
+            $allContent = $allContent->merge($redditArticles);
+
+            // Filter for articles with valid images only
+            $contentWithImages = $allContent->filter(function ($article) {
+                return isset($article['image']) && 
+                       !empty($article['image']) && 
+                       $article['image'] !== null &&
+                       $article['image'] !== 'self' &&
+                       $article['image'] !== 'default' &&
+                       $article['image'] !== 'nsfw' &&
+                       filter_var($article['image'], FILTER_VALIDATE_URL) &&
+                       !str_contains(strtolower($article['image']), 'placeholder') &&
+                       !str_contains(strtolower($article['image']), 'thumbs.redditmedia.com'); // Filter out low-quality Reddit thumbs
+            });
+
+            // Sort by publication date (most recent first) and remove duplicates
+            $sortedContent = $contentWithImages
+                ->sortByDesc(function ($article) {
+                    // Use Carbon to ensure proper date sorting
+                    try {
+                        return Carbon::parse($article['published_at'])->timestamp;
+                    } catch (\Exception $e) {
+                        return 0; // Put unparseable dates at the end
+                    }
+                })
+                ->unique('url')
+                ->values();
+
+            // Paginate results
+            $offset = ($page - 1) * $limit;
+            $paginatedContent = $sortedContent->slice($offset, $limit)->values();
+
+            return [
+                'articles' => $paginatedContent,
+                'total' => $sortedContent->count(),
+                'current_page' => $page,
+                'per_page' => $limit,
+                'last_page' => ceil($sortedContent->count() / $limit),
+                'sources_used' => $allContent->pluck('source_key')->unique()->values(),
+                'total_before_filter' => $allContent->count(),
+                'with_images' => $contentWithImages->count()
+            ];
+        });
+    }
+
+    /**
+     * Get movie news articles that have valid images
+     */
+    public function getMovieNewsWithImages($page = 1, $limit = 10)
+    {
+        $cacheKey = "movie_news_with_images_page_{$page}_limit_{$limit}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page, $limit) {
+            // Fetch more articles than needed to ensure we get enough with images
+            $fetchLimit = $limit * 5; // Fetch 5x more to filter
+            $allArticles = collect();
+
+            // Primary: RSS Feeds (Free and unlimited)
+            $rssArticles = $this->parseMovieNewsRSS();
+            $allArticles = $allArticles->merge($rssArticles);
+
+            // Secondary: NewsAPI (if we have remaining quota)
+            if ($this->newsApiKey) {
+                $newsApiArticles = $this->getNewsAPIContent();
+                $allArticles = $allArticles->merge($newsApiArticles);
+            }
+
+            // Tertiary: Guardian API (if we have key)
+            if ($this->guardianApiKey) {
+                $guardianArticles = $this->getGuardianMovieNews();
+                $allArticles = $allArticles->merge($guardianArticles);
+            }
+
+            // Filter articles to only include those with valid images
+            $articlesWithImages = $allArticles->filter(function ($article) {
+                return isset($article['image']) && 
+                       !empty($article['image']) && 
+                       $article['image'] !== null &&
+                       filter_var($article['image'], FILTER_VALIDATE_URL) &&
+                       !str_contains(strtolower($article['image']), 'placeholder');
+            });
+
+            // Sort by publication date and remove duplicates
+            $sortedArticles = $articlesWithImages->sortByDesc('published_at')->unique('url');
+            
+            // Paginate
+            $offset = ($page - 1) * $limit;
+            $paginatedArticles = $sortedArticles->slice($offset, $limit)->values();
+
+            return [
+                'articles' => $paginatedArticles,
+                'total' => $sortedArticles->count(),
+                'current_page' => $page,
+                'per_page' => $limit,
+                'last_page' => ceil($sortedArticles->count() / $limit)
+            ];
+        });
+    }
+
     public function getMovieNews($page = 1, $limit = 10)
     {
         $cacheKey = "movie_news_page_{$page}_limit_{$limit}";
@@ -45,8 +189,16 @@ class NewsService
                 $articles = $articles->merge($guardianArticles);
             }
 
+            // Filter articles to only include those with valid images
+            $articlesWithImages = $articles->filter(function ($article) {
+                return isset($article['image']) && 
+                       !empty($article['image']) && 
+                       $article['image'] !== null &&
+                       filter_var($article['image'], FILTER_VALIDATE_URL);
+            });
+
             // Sort by publication date and paginate
-            $sortedArticles = $articles->sortByDesc('published_at')->unique('url');
+            $sortedArticles = $articlesWithImages->sortByDesc('published_at')->unique('url');
             
             $offset = ($page - 1) * $limit;
             $paginatedArticles = $sortedArticles->slice($offset, $limit)->values();
@@ -86,6 +238,22 @@ class NewsService
             'screenrant' => [
                 'url' => 'https://screenrant.com/movie-news/feed/',
                 'name' => 'Screen Rant'
+            ],
+            'collider' => [
+                'url' => 'https://collider.com/rss/',
+                'name' => 'Collider'
+            ],
+            'slashfilm' => [
+                'url' => 'https://www.slashfilm.com/feed/',
+                'name' => 'SlashFilm'
+            ],
+            'cinemablend' => [
+                'url' => 'https://www.cinemablend.com/rss_entertainment.php',
+                'name' => 'CinemaBlend'
+            ],
+            'comingsoon' => [
+                'url' => 'https://www.comingsoon.net/feed',
+                'name' => 'ComingSoon'
             ]
         ];
 
@@ -137,7 +305,7 @@ class NewsService
                 'q' => 'movie OR cinema OR film OR entertainment OR hollywood',
                 'sortBy' => 'publishedAt',
                 'language' => 'en',
-                'pageSize' => 20,
+                'pageSize' => 50,
                 'domains' => 'variety.com,hollywoodreporter.com,ew.com,deadline.com',
                 'apiKey' => $this->newsApiKey
             ]);
@@ -180,7 +348,7 @@ class NewsService
             $response = Http::get('https://content.guardianapis.com/search', [
                 'section' => 'film',
                 'show-fields' => 'headline,thumbnail,short-url,body,byline',
-                'page-size' => 20,
+                'page-size' => 50,
                 'order-by' => 'newest',
                 'api-key' => $this->guardianApiKey
             ]);
@@ -283,24 +451,59 @@ class NewsService
 
     private function extractImageFromRSS($item)
     {
-        // Try to find image in description or content:encoded
+        // Try multiple methods to extract image URLs from RSS feeds
+        
+        // 1. Try enclosure tag (common in RSS feeds)
+        if (isset($item->enclosure) && $item->enclosure->attributes()) {
+            $type = (string) $item->enclosure->attributes()->type;
+            if (str_starts_with($type, 'image/')) {
+                return (string) $item->enclosure->attributes()->url;
+            }
+        }
+        
+        // 2. Try media:content or media:thumbnail (MediaRSS namespace)
+        if (isset($item->children('media', true)->content)) {
+            $mediaContent = $item->children('media', true)->content;
+            if ($mediaContent->attributes()) {
+                $type = (string) $mediaContent->attributes()->type;
+                if (str_starts_with($type, 'image/') || empty($type)) {
+                    return (string) $mediaContent->attributes()->url;
+                }
+            }
+        }
+        
+        if (isset($item->children('media', true)->thumbnail)) {
+            return (string) $item->children('media', true)->thumbnail->attributes()->url;
+        }
+        
+        // 3. Try to find image in description or content:encoded
         $description = (string) $item->description;
         $content = isset($item->children('content', true)->encoded) ? 
                    (string) $item->children('content', true)->encoded : '';
         
         $text = $description . ' ' . $content;
         
-        if (preg_match('/<img[^>]+src="([^"]+)"/', $text, $matches)) {
-            return $matches[1];
+        // Look for various image patterns
+        $patterns = [
+            '/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/',  // Standard img tags
+            '/<img[^>]+data-src=["\']([^"\']+)["\'][^>]*>/', // Lazy loaded images
+            '/https?:\/\/[^\s<>"]+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"]*)?/i', // Direct image URLs
+        ];
+        
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $text, $matches)) {
+                $imageUrl = $matches[1] ?? $matches[0];
+                // Validate it's a proper image URL
+                if (filter_var($imageUrl, FILTER_VALIDATE_URL) && 
+                    preg_match('/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i', $imageUrl)) {
+                    return $imageUrl;
+                }
+            }
         }
         
-        // Try media:content or media:thumbnail
-        if (isset($item->children('media', true)->content)) {
-            return (string) $item->children('media', true)->content->attributes()->url;
-        }
-        
-        if (isset($item->children('media', true)->thumbnail)) {
-            return (string) $item->children('media', true)->thumbnail->attributes()->url;
+        // 4. Try RSS 2.0 image tag
+        if (isset($item->image)) {
+            return (string) $item->image;
         }
         
         return null;

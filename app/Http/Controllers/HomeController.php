@@ -48,8 +48,8 @@ class HomeController extends Controller
             // Get random movie wallpapers
             $randomWallpapers = $this->getRandomMovieWallpapers();
 
-            // Get latest news for the news section (cached hourly)
-            $newsResponse = $this->newsService->getMovieNews(1, 10);
+            // Get latest entertainment content from all sources - only articles with images
+            $newsResponse = $this->newsService->getLatestContentWithImages(1, 10);
             $latestNews = collect($newsResponse['articles'] ?? [])->toArray();
 
             // Get spotlight celebrities data
