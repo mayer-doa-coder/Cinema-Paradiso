@@ -52,6 +52,9 @@ class HomeController extends Controller
             $newsResponse = $this->newsService->getMovieNews(1, 10);
             $latestNews = collect($newsResponse['articles'] ?? [])->toArray();
 
+            // Get spotlight celebrities data
+            $spotlightCelebrities = $this->getSpotlightCelebrities();
+
             // Prepare data for the view
             $data = [
                 'trending' => $this->prepareMoviesData($trendingMovies),
@@ -62,6 +65,7 @@ class HomeController extends Controller
                 'randomWallpaper' => $randomWallpapers,
                 'inTheaterTrailers' => $inTheaterTrailers,
                 'latestNews' => $latestNews,
+                'spotlightCelebrities' => $spotlightCelebrities,
                 // TV Shows data with correct variable names for the homepage
                 'popularTVShows' => $this->tvShowService->prepareTVShowsData($popularTVShows),
                 'topRatedTVShows' => $this->tvShowService->prepareTVShowsData($topRatedTVShows),
@@ -200,6 +204,68 @@ class HomeController extends Controller
             'backdrop_url' => asset('images/cinema_paradiso.png'),
             'overview' => 'Welcome to Cinema Paradiso - Your gateway to the world of movies.'
         ];
+    }
+
+    /**
+     * Get spotlight celebrities for homepage sidebar
+     *
+     * @return array
+     */
+    private function getSpotlightCelebrities()
+    {
+        try {
+            // Get popular people from TMDB API (first page)
+            $peopleData = $this->movieService->getPopularPeople(1);
+            
+            if (!$peopleData || !isset($peopleData['results'])) {
+                return [];
+            }
+
+            // Get first 4 celebrities for spotlight
+            $celebrities = array_slice($peopleData['results'], 0, 4);
+            
+            $spotlightCelebrities = [];
+            foreach ($celebrities as $person) {
+                $spotlightCelebrities[] = [
+                    'id' => $person['id'],
+                    'name' => $person['name'],
+                    'profile_path' => $person['profile_path'],
+                    'profile_url' => $this->movieService->getPersonImageUrl($person['profile_path'], 'w185'),
+                    'known_for_department' => $this->formatDepartment($person['known_for_department'] ?? 'Acting'),
+                    'popularity' => $person['popularity'] ?? 0,
+                ];
+            }
+            
+            return $spotlightCelebrities;
+            
+        } catch (\Exception $e) {
+            Log::error('Error fetching spotlight celebrities: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Format department name for display
+     *
+     * @param string $department
+     * @return string
+     */
+    private function formatDepartment($department)
+    {
+        $departmentMap = [
+            'Acting' => 'Actor',
+            'Directing' => 'Director',
+            'Writing' => 'Writer',
+            'Production' => 'Producer',
+            'Sound' => 'Sound Engineer',
+            'Camera' => 'Cinematographer',
+            'Editing' => 'Editor',
+            'Art' => 'Art Director',
+            'Costume & Make-Up' => 'Costume Designer',
+            'Visual Effects' => 'VFX Artist',
+        ];
+
+        return $departmentMap[$department] ?? $department;
     }
 
     /**

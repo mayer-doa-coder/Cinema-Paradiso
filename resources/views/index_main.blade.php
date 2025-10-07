@@ -81,6 +81,20 @@ textarea:focus {
     outline: none !important;
     box-shadow: none !important;
 }
+
+/* Celebrity image styling */
+.celebrities .celeb-item img {
+    border-radius: 100% !important;
+    object-fit: cover !important;
+    transition: all 0.3s ease !important;
+    width: 70px !important;
+    height: 70px !important;
+}
+
+.celebrities .celeb-item img:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
 </style>
 @endpush
 
@@ -510,35 +524,35 @@ textarea:focus {
 					</div>
 					<div class="celebrities">
 						<h4 class="sb-title">Spotlight Celebrities</h4>
-						<div class="celeb-item">
-							<a href="#"><img src="{{ asset('images/uploads/ava1.jpg') }}" alt="" width="70" height="70"></a>
-							<div class="celeb-author">
-								<h6><a href="#">Samuel N. Jack</a></h6>
-								<span>Actor</span>
+						@if(!empty($spotlightCelebrities))
+							@foreach($spotlightCelebrities as $celebrity)
+								<div class="celeb-item">
+									<a href="{{ route('celebrities.show', $celebrity['id']) }}">
+										<img src="{{ $celebrity['profile_url'] ?? asset('images/uploads/ava1.jpg') }}" 
+											 alt="{{ $celebrity['name'] }}" 
+											 width="70" height="70" 
+											 style="border-radius: 100%; object-fit: cover; width: 70px; height: 70px;">
+									</a>
+									<div class="celeb-author">
+										<h6><a href="{{ route('celebrities.show', $celebrity['id']) }}">{{ $celebrity['name'] }}</a></h6>
+										<span>{{ $celebrity['known_for_department'] }}</span>
+									</div>
+								</div>
+							@endforeach
+						@else
+							<!-- Fallback content if no celebrities data -->
+							<div class="celeb-item">
+								<a href="{{ route('celebrities') }}">
+									<img src="{{ asset('images/uploads/ava1.jpg') }}" alt="" width="70" height="70" 
+										 style="border-radius: 100%; object-fit: cover; width: 70px; height: 70px;">
+								</a>
+								<div class="celeb-author">
+									<h6><a href="{{ route('celebrities') }}">Browse Celebrities</a></h6>
+									<span>Discover Stars</span>
+								</div>
 							</div>
-						</div>
-						<div class="celeb-item">
-							<a href="#"><img src="{{ asset('images/uploads/ava2.jpg') }}" alt="" width="70" height="70"></a>
-							<div class="celeb-author">
-								<h6><a href="#">Benjamin Carroll</a></h6>
-								<span>Actor</span>
-							</div>
-						</div>
-						<div class="celeb-item">
-							<a href="#"><img src="{{ asset('images/uploads/ava3.jpg') }}" alt="" width="70" height="70"></a>
-							<div class="celeb-author">
-								<h6><a href="#">Beverly Griffin</a></h6>
-								<span>Actor</span>
-							</div>
-						</div>
-						<div class="celeb-item">
-							<a href="#"><img src="{{ asset('images/uploads/ava4.jpg') }}" alt="" width="70" height="70"></a>
-							<div class="celeb-author">
-								<h6><a href="#">Justin Weaver</a></h6>
-								<span>Actor</span>
-							</div>
-						</div>
-						<a href="#" class="btn">See all celebrities<i class="ion-ios-arrow-right"></i></a>
+						@endif
+						<a href="{{ route('celebrities') }}" class="btn">See all celebrities<i class="ion-ios-arrow-right"></i></a>
 					</div>
 				</div>
 			</div>
