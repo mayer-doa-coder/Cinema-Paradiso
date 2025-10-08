@@ -393,10 +393,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}">
+					            					<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -404,10 +403,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#">
+					            					<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -422,10 +420,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}">
+					            					<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -433,10 +430,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#">
+					            					<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -451,10 +447,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}">
+					            					<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -462,10 +457,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#">
+					            					<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -480,10 +474,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="{{ route('tv.show', $show['id']) }}"> Read more <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="{{ route('tv.show', $show['id']) }}">
+					            					<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] ?? 'TV Show' }}" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>
@@ -491,10 +484,9 @@ textarea:focus {
 				            		<div class="slide-it">
 				            			<div class="movie-item">
 					            			<div class="mv-img">
-					            				<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
-					            			</div>
-					            			<div class="hvr-inner">
-					            				<a href="#"> No TV shows available <i class="ion-android-arrow-dropright"></i> </a>
+					            				<a href="#">
+					            					<img src="{{ asset('images/uploads/movie-placeholder.jpg') }}" alt="" width="185" height="284">
+					            				</a>
 					            			</div>
 					            		</div>
 				            		</div>

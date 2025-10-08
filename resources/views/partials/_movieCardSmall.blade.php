@@ -9,8 +9,5 @@
                      height="284">
             </a>
         </div>
-        <div class="hvr-inner">
-            <a href="{{ route('movies.show', $movie['id']) }}">Read more <i class="ion-android-arrow-dropright"></i></a>
-        </div>
     </div>
 </div>
