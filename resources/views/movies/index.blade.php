@@ -314,34 +314,34 @@ body {
 
                     <div class="celebrities">
                         <h4 class="sb-title">Celebrities</h4>
-                        <div class="celeb-item">
-                            <a href="{{ route('celebritysingle') }}"><img src="{{ asset('images/uploads/ava1.jpg') }}" alt="" width="70" height="70"></a>
-                            <div class="celeb-author">
-                                <h6><a href="{{ route('celebritysingle') }}">Samuel N. Jack</a></h6>
-                                <span>Actor</span>
+                        @if(!empty($spotlightCelebrities))
+                            @foreach($spotlightCelebrities as $celebrity)
+                                <div class="celeb-item">
+                                    <a href="{{ route('celebrities.show', $celebrity['id']) }}">
+                                        <img src="{{ $celebrity['profile_url'] ?? asset('images/uploads/ava1.jpg') }}" 
+                                             alt="{{ $celebrity['name'] }}" 
+                                             width="70" height="70" 
+                                             style="object-fit: cover; width: 70px; height: 70px;">
+                                    </a>
+                                    <div class="celeb-author">
+                                        <h6><a href="{{ route('celebrities.show', $celebrity['id']) }}">{{ $celebrity['name'] }}</a></h6>
+                                        <span>{{ $celebrity['known_for_department'] }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <!-- Fallback content if no celebrities data -->
+                            <div class="celeb-item">
+                                <a href="{{ route('celebrities') }}">
+                                    <img src="{{ asset('images/uploads/ava1.jpg') }}" alt="" width="70" height="70" 
+                                         style="object-fit: cover; width: 70px; height: 70px;">
+                                </a>
+                                <div class="celeb-author">
+                                    <h6><a href="{{ route('celebrities') }}">Browse Celebrities</a></h6>
+                                    <span>Discover Stars</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="celeb-item">
-                            <a href="{{ route('celebritysingle') }}"><img src="{{ asset('images/uploads/ava2.jpg') }}" alt="" width="70" height="70"></a>
-                            <div class="celeb-author">
-                                <h6><a href="{{ route('celebritysingle') }}">Benjamin Carroll</a></h6>
-                                <span>Actor</span>
-                            </div>
-                        </div>
-                        <div class="celeb-item">
-                            <a href="{{ route('celebritysingle') }}"><img src="{{ asset('images/uploads/ava3.jpg') }}" alt="" width="70" height="70"></a>
-                            <div class="celeb-author">
-                                <h6><a href="{{ route('celebritysingle') }}">Beverly Griffin</a></h6>
-                                <span>Actor</span>
-                            </div>
-                        </div>
-                        <div class="celeb-item">
-                            <a href="{{ route('celebritysingle') }}"><img src="{{ asset('images/uploads/ava4.jpg') }}" alt="" width="70" height="70"></a>
-                            <div class="celeb-author">
-                                <h6><a href="{{ route('celebritysingle') }}">Justin Weaver</a></h6>
-                                <span>Actor</span>
-                            </div>
-                        </div>
+                        @endif
                         <a href="{{ route('celebrities') }}" class="btn">See all celebrities<i class="ion-ios-arrow-right"></i></a>
                     </div>
                 </div>
@@ -452,6 +452,27 @@ body {
 .full-grid-mode .movie-item-style-2 {
     width: 185px !important;
     margin-bottom: 0 !important;
+}
+
+/* Celebrity image styling */
+.celebrities .celeb-item img {
+    border-radius: 100% !important;
+    object-fit: cover !important;
+    width: 70px !important;
+    height: 70px !important;
+}
+
+.celebrities .celeb-item img:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(236, 110, 171, 0.3) !important;
+}
+
+.celebrities .celeb-item {
+    transition: all 0.3s ease;
+}
+
+.celebrities .celeb-item:hover {
+    transform: translateY(-2px);
 }
 </style>
 
