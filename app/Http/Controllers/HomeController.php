@@ -36,11 +36,27 @@ class HomeController extends Controller
             $topRatedMovies = $this->movieService->getTopRatedMovies(1);
             $genres = $this->movieService->getGenres();
 
-            // Fetch TV shows data
-            $popularTVShows = $this->tvShowService->getPopularTVShows(1);
-            $topRatedTVShows = $this->tvShowService->getTopRatedTVShows(1);
-            $airingTodayTVShows = $this->tvShowService->getAiringTodayTVShows(1);
-            $onAirTVShows = $this->tvShowService->getOnTheAirTVShows(1);
+            // Fetch TV shows data with error handling
+            try {
+                $popularTVShows = $this->tvShowService->getPopularTVShows(1);
+                $topRatedTVShows = $this->tvShowService->getTopRatedTVShows(1);
+                $airingTodayTVShows = $this->tvShowService->getAiringTodayTVShows(1);
+                $onAirTVShows = $this->tvShowService->getOnTheAirTVShows(1);
+                
+                Log::info('TV Shows data fetched successfully', [
+                    'popular_count' => $popularTVShows ? count($popularTVShows['results'] ?? []) : 0,
+                    'top_rated_count' => $topRatedTVShows ? count($topRatedTVShows['results'] ?? []) : 0,
+                    'airing_today_count' => $airingTodayTVShows ? count($airingTodayTVShows['results'] ?? []) : 0,
+                    'on_air_count' => $onAirTVShows ? count($onAirTVShows['results'] ?? []) : 0,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to fetch TV shows data: ' . $e->getMessage());
+                // Provide empty arrays instead of null to prevent template issues
+                $popularTVShows = ['results' => []];
+                $topRatedTVShows = ['results' => []];
+                $airingTodayTVShows = ['results' => []];
+                $onAirTVShows = ['results' => []];
+            }
 
             // Get in theater trailers
             $inTheaterTrailers = $this->movieService->getInTheaterTrailers(6);

@@ -15,9 +15,9 @@ class TVShowService
 
     public function __construct()
     {
-        $this->baseUrl = env('TMDB_BASE_URL', 'https://api.themoviedb.org/3');
-        $this->apiKey = env('TMDB_API_KEY');
-        $this->imageBaseUrl = env('TMDB_IMAGE_BASE_URL', 'https://image.tmdb.org/t/p');
+        $this->baseUrl = config('services.tmdb.base_url');
+        $this->apiKey = config('services.tmdb.api_key');
+        $this->imageBaseUrl = config('services.tmdb.image_base_url');
     }
 
     /**
@@ -361,7 +361,7 @@ class TVShowService
     public function getImageUrl($imagePath, $size = 'w500')
     {
         if (!$imagePath) {
-            return asset('images/uploads/default-movie-poster.jpg');
+            return asset('images/uploads/movie-placeholder.jpg');
         }
         
         return $this->imageBaseUrl . '/' . $size . $imagePath;

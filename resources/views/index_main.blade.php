@@ -378,6 +378,7 @@ textarea:focus {
 					<h2>on tv</h2>
 					<a href="{{ route('tv.index') }}" class="viewall">View all <i class="ion-ios-arrow-right"></i></a>
 				</div>
+				
 				<div class="tabs">
 					<ul class="tab-links-2">
 						<li class="active"><a href="#tab21">Popular</a></li>
