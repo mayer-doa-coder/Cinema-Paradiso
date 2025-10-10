@@ -112,8 +112,8 @@ body {
 
 <div class="page-single">
     <div class="container">
-        <div class="row ipad-width2">
-            <div class="col-md-8 col-sm-12 col-xs-12">
+        <div class="row ipad-width2" id="main-row">
+            <div class="col-md-8 col-sm-12 col-xs-12" id="main-content">
                 <!-- Modern Filter Bar -->
                 <div class="modern-filter-bar" style="background: #0f1419; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                     <div class="filter-header" style="margin-bottom: 15px; color: #abb7c4; font-size: 14px;">
@@ -180,6 +180,14 @@ body {
                                             <a href="{{ route('movies.index', array_merge(request()->except('page'), ['genre' => $genre['id']])) }}" class="dropdown-item {{ $selectedGenre == $genre['id'] ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">{{ $genre['name'] }}</a>
                                         @endforeach
                                     </div>
+                                </div>
+
+                                <!-- Grid Toggle -->
+                                <div class="grid-toggle" style="margin-left: 15px;">
+                                    <button type="button" id="grid-toggle-btn" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 15px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
+                                        <i class="ion-grid" style="font-size: 16px;"></i>
+                                        <span>Full Grid</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -270,7 +278,7 @@ body {
                 @endif
             </div>
 
-            <div class="col-md-4 col-sm-12 col-xs-12">
+            <div class="col-md-4 col-sm-12 col-xs-12" id="sidebar-content">
                 <div class="sidebar">
                     <div class="searh-form">
                         <h4 class="sb-title">Search for Movies</h4>
@@ -410,6 +418,41 @@ body {
 .filter-btn.active .ion-ios-arrow-down {
     transform: rotate(180deg);
 }
+
+/* Grid Toggle Styles */
+#grid-toggle-btn:hover {
+    background: #ec6eab !important;
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+#grid-toggle-btn.active {
+    background: #ec6eab !important;
+    color: white !important;
+}
+
+/* Full Grid Layout */
+.full-grid-mode #main-content {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.full-grid-mode #sidebar-content {
+    display: none !important;
+}
+
+.full-grid-mode .flex-wrap-movielist {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)) !important;
+    gap: 20px !important;
+    justify-items: center !important;
+}
+
+.full-grid-mode .movie-item-style-2 {
+    width: 185px !important;
+    margin-bottom: 0 !important;
+}
 </style>
 
 <script>
@@ -418,6 +461,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle dropdown toggles
     const filterButtons = document.querySelectorAll('.filter-btn');
     const dropdownContents = document.querySelectorAll('.dropdown-content');
+    
+    // Grid toggle functionality
+    const gridToggleBtn = document.getElementById('grid-toggle-btn');
+    const mainRow = document.getElementById('main-row');
+    let isFullGrid = false;
+    
+    // Load grid preference from localStorage
+    const savedGridMode = localStorage.getItem('movieGridMode');
+    if (savedGridMode === 'full') {
+        toggleGridMode();
+    }
+    
+    if (gridToggleBtn) {
+        gridToggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleGridMode();
+        });
+    }
+    
+    function toggleGridMode() {
+        isFullGrid = !isFullGrid;
+        
+        if (isFullGrid) {
+            mainRow.classList.add('full-grid-mode');
+            gridToggleBtn.classList.add('active');
+            gridToggleBtn.querySelector('span').textContent = 'Exit Grid';
+            gridToggleBtn.querySelector('i').className = 'ion-arrow-shrink';
+            localStorage.setItem('movieGridMode', 'full');
+        } else {
+            mainRow.classList.remove('full-grid-mode');
+            gridToggleBtn.classList.remove('active');
+            gridToggleBtn.querySelector('span').textContent = 'Full Grid';
+            gridToggleBtn.querySelector('i').className = 'ion-grid';
+            localStorage.setItem('movieGridMode', 'normal');
+        }
+    }
     
     filterButtons.forEach(button => {
         button.addEventListener('click', function(e) {
