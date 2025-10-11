@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Services\ApiRateLimiter;
 
 class MovieService
 {
@@ -12,13 +13,24 @@ class MovieService
     private $baseUrl;
     private $imageBaseUrl;
     private $cacheDuration;
+    private $rateLimiter;
     
-    public function __construct()
+    public function __construct(ApiRateLimiter $rateLimiter)
     {
         $this->apiKey = config('services.tmdb.api_key');
         $this->baseUrl = config('services.tmdb.base_url');
         $this->imageBaseUrl = config('services.tmdb.image_base_url');
         $this->cacheDuration = config('services.tmdb.cache_duration', 3600);
+        $this->rateLimiter = $rateLimiter;
+    }
+
+    /**
+     * Get cache duration for specific data type
+     */
+    private function getCacheDuration($type)
+    {
+        $durations = config('services.tmdb.cache_durations', []);
+        return $durations[$type] ?? $this->cacheDuration;
     }
 
     /**
@@ -28,14 +40,14 @@ class MovieService
     {
         $cacheKey = "tmdb_search_{$query}_page_{$page}";
         
-        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($query, $page) {
+        return Cache::remember($cacheKey, $this->getCacheDuration('search'), function () use ($query, $page) {
             try {
-                $response = Http::get("{$this->baseUrl}/search/movie", [
+                $response = $this->rateLimiter->makeRequest("{$this->baseUrl}/search/movie", [
                     'api_key' => $this->apiKey,
                     'query' => $query,
                     'page' => $page,
                     'include_adult' => false,
-                ]);
+                ], 'search');
 
                 if ($response->successful()) {
                     return $response->json();
@@ -57,7 +69,7 @@ class MovieService
     {
         $cacheKey = "tmdb_popular_page_{$page}";
         
-        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page) {
+        return Cache::remember($cacheKey, $this->getCacheDuration('popular'), function () use ($page) {
             try {
                 $response = Http::get("{$this->baseUrl}/movie/popular", [
                     'api_key' => $this->apiKey,
@@ -84,7 +96,7 @@ class MovieService
     {
         $cacheKey = "tmdb_top_rated_page_{$page}";
         
-        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page) {
+        return Cache::remember($cacheKey, $this->getCacheDuration('top_rated'), function () use ($page) {
             try {
                 $response = Http::get("{$this->baseUrl}/movie/top_rated", [
                     'api_key' => $this->apiKey,
@@ -111,7 +123,7 @@ class MovieService
     {
         $cacheKey = "tmdb_upcoming_page_{$page}";
         
-        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page) {
+        return Cache::remember($cacheKey, $this->getCacheDuration('upcoming'), function () use ($page) {
             try {
                 $response = Http::get("{$this->baseUrl}/movie/upcoming", [
                     'api_key' => $this->apiKey,
@@ -276,7 +288,7 @@ class MovieService
     {
         $cacheKey = "tmdb_trending_page_{$page}";
         
-        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page) {
+        return Cache::remember($cacheKey, $this->getCacheDuration('trending'), function () use ($page) {
             try {
                 $response = Http::get("{$this->baseUrl}/trending/movie/week", [
                     'api_key' => $this->apiKey,
@@ -428,7 +440,7 @@ class MovieService
     {
         $cacheKey = "tmdb_genres";
         
-        return Cache::remember($cacheKey, 86400, function () { // Cache for 24 hours
+        return Cache::remember($cacheKey, $this->getCacheDuration('genres'), function () { // Cache for 24 hours
             try {
                 $response = Http::get("{$this->baseUrl}/genre/movie/list", [
                     'api_key' => $this->apiKey,
