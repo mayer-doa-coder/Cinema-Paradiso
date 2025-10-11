@@ -1362,12 +1362,14 @@ textareainput[type="email"],
 textareainput[type="url"],
 textareainput[type="search"],
 textareainput[type="tel"],
-textareainput[type="color"],
+textarea,
+input[type="color"],
 textarea.form-control {
   height: auto;
 }
 input[type="search"] {
   -webkit-appearance: none;
+  appearance: none;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   input[type="date"].form-control,
@@ -2785,6 +2787,7 @@ button.close {
   background: transparent;
   border: 0;
   -webkit-appearance: none;
+  appearance: none;
 }
 .modal-open {
   overflow: hidden;
@@ -3186,7 +3189,7 @@ button.close {
 .navbar-header,
 .navbar-collapse,
 .modal-footer {
-  *zoom: 1;
+  zoom: 1; /* IE hasLayout fix */
 }
 .clearfix:before,
 .clearfix:after,
@@ -3939,7 +3942,7 @@ textarea {
 /* III. COMPONENT
 ***********************/
 .row {
-  *zoom: 1;
+  zoom: 1; /* IE hasLayout fix */
 }
 .row:before,
 .row:after {
@@ -4563,6 +4566,7 @@ ul {
   width: 215px;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   /* Firefox */
   background: url('../images/uploads/drop-icon.png') no-repeat right 20px center;
   border-left: 1px solid #405266;
@@ -6483,6 +6487,7 @@ ul {
 .form-style-1 select {
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   /* Firefox */
   background: url('../images/uploads/drop-icon.png') no-repeat right 20px center;
   background-color: #233a50;
@@ -7893,7 +7898,7 @@ header .navbar-default .flex-parent {
 @media (min-width: 992px) {
   header .navbar-default .flex-parent {
     display: flex !important;
-    jutify-content: flex-start;
+    justify-content: flex-start;
   }
 }
 header .navbar-default .flex-parent .menu-left {
@@ -8042,6 +8047,7 @@ header .top-search select {
   border-right: 1px solid #020d18;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   text-transform: uppercase;
   color: #ffffff;
   padding-left: 45px;

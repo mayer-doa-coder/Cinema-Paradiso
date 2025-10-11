@@ -54,6 +54,11 @@ textarea:focus {
     outline: none !important;
     box-shadow: none !important;
 }
+
+/* Override global first-child margin */
+h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, p:first-child {
+    margin-top: 20px !important;
+}
 </style>
 @endpush
 
@@ -175,8 +180,7 @@ textarea:focus {
                         <div class="alphabet-letters" style="display: flex; flex-wrap: wrap; gap: 8px;">
                             @foreach($availableLetters as $letter)
                                 <a href="{{ route('celebrities') }}?sort=name&letter={{ $letter }}&subpage=1" 
-                                   class="letter-btn {{ $currentLetter == $letter ? 'active' : '' }}"
-                                   style="display: inline-block; padding: 8px 12px; background: {{ $currentLetter == $letter ? '#dcf836' : '#2a2a2a' }}; color: {{ $currentLetter == $letter ? '#000' : '#fff' }}; text-decoration: none; border-radius: 4px; font-weight: bold; transition: all 0.3s ease;">
+                                   class="letter-btn {{ $currentLetter == $letter ? 'active' : '' }}">
                                     {{ $letter }}
                                 </a>
                             @endforeach
@@ -320,7 +324,7 @@ textarea:focus {
                     <div class="popular-categories">
                         <h4 class="sb-title">Popular Categories</h4>
                         <ul class="category-list">
-                            <li><a href="{{ route('celebrities') }}?sort=popularity">Most Popular <span class="count">{{ number_format($totalResults) }}</span></a></li>
+                            <li><a href="{{ route('celebrities') }}?sort=popularity">Most Popular</a></li>
                             <li><a href="{{ route('celebrities') }}?sort=name">Alphabetical (A-Z)</a></li>
                             <li><a href="{{ route('movies.index') }}">Browse Movies</a></li>
                             <li><a href="{{ route('community') }}">Join Community</a></li>
@@ -498,50 +502,23 @@ textarea:focus {
 
 .celebrity-search-form .form-control {
     flex: 1;
-    background: #2a2a2a;
-    border: 1px solid #444;
-    color: #fff;
+    color: #000;
     padding: 10px 15px;
-    border-radius: 4px 0 0 4px;
 }
 
 .celebrity-search-form .input-group-btn .btn {
-    background: #dcf836;
+    background: #e9d736;
     color: #000;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 0 4px 4px 0;
-}
-
-.category-list {
-    list-style: none;
-    padding: 0;
+    padding: 5px 15px;
 }
 
 .category-list li {
     margin-bottom: 10px;
 }
 
-.category-list a {
-    color: #ccc;
-    text-decoration: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #333;
-}
-
 .category-list a:hover {
-    color: #dcf836;
-}
-
-.category-list .count {
-    background: #dcf836;
-    color: #000;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 12px;
+    font-weight: bold;
+    color: #e9d736;
 }
 
 /* Alphabet Navigation Styles */
