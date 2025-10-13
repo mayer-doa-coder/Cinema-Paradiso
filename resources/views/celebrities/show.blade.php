@@ -268,7 +268,7 @@ textarea:focus {
 }
 
 .breadcrumb-nav a {
-    color: #dcf836;
+    color: #e9d736;
     text-decoration: none;
 }
 
@@ -293,7 +293,7 @@ textarea:focus {
     height: 200px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #dcf836;
+    border: 4px solid #e9d736;
     transition: all 0.3s ease;
 }
 
@@ -350,7 +350,7 @@ textarea:focus {
 }
 
 .celebrity-role {
-    color: #dcf836;
+    color: #e9d736;
     font-size: 1.2em;
     margin-bottom: 20px;
 }
@@ -430,7 +430,7 @@ textarea:focus {
 }
 
 .movie-info .character {
-    color: #dcf836;
+    color: #e9d736;
     font-size: 12px;
     margin: 0 0 5px;
 }
@@ -464,7 +464,7 @@ textarea:focus {
 }
 
 .btn-primary {
-    background: #dcf836;
+    background: #e9d736;
     color: #000;
 }
 
@@ -481,7 +481,7 @@ textarea:focus {
 
 .btn-secondary:hover {
     background: #333;
-    border-color: #dcf836;
+    border-color: #e9d736;
 }
 
 @media (max-width: 768px) {
