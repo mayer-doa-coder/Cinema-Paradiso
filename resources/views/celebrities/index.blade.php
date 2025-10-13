@@ -507,9 +507,10 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 }
 
 .celebrity-search-form .input-group-btn .btn {
-    background: #e9d736;
+    background: #ec6eab;
     color: #000;
     padding: 5px 15px;
+    margin-bottom: 30px;
 }
 
 .category-list li {
