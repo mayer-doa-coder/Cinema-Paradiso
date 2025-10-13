@@ -50,7 +50,7 @@
 }
 
 .movie-single-ct h1.bd-hd span {
-    color: #dcf836;
+    color: #e9d736;
     font-weight: 300;
     margin-left: 15px;
 }
@@ -68,65 +68,100 @@
 }
 
 .movie-btn {
-    text-align: center;
-    margin-top: 20px;
+    text-align: center !important;
+    margin-top: 20px !important;
+    /* Add any other styles you want to ensure override */
+    padding: 0 !important;
+    background-color: transparent !important;
+    border: none !important;
 }
 
 .btn-transform {
     display: inline-block;
-    margin: 0 10px;
+    margin: 0 !important;
+    margin-bottom: 10px !important;
 }
 
 .redbtn, .yellowbtn {
     display: inline-block;
-    padding: 15px 30px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
     text-decoration: none;
     font-weight: bold;
-    transition: all 0.3s ease;
-    margin: 5px;
+    border: none;
+	border-radius: 5px;
+    background: none;
+    text-align: center !important;
+    width: 100%;
 }
 
 .redbtn {
-    background: #955567ff;
-    color: #fff;
-}
-
-.redbtn:hover {
-    background: #b8002e;
-    color: #fff;
-    text-decoration: none;
+    background: #ec6eab !important;
+    color: #fff !important;
 }
 
 .yellowbtn {
-    background: #dcf836;
-    color: #020d18;
+    background: #e9d736 !important;
+    color: #020d18 !important;
 }
 
-.yellowbtn:hover {
-    background: #c9e632;
-    color: #020d18;
-    text-decoration: none;
+/* Movie Action Buttons */
+.movie-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 25px 0;
+    padding: 0;
 }
 
-.social-btn {
-    margin: 20px 0;
-}
-
-.social-btn .parent-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: #3e9fd8;
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    border: none;
     color: #fff;
     text-decoration: none;
-    border-radius: 5px;
-    margin-right: 10px;
+    padding: 10px 15px;
     transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 80px;
 }
 
-.social-btn .parent-btn:hover {
-    background: #ec6eab;
-    color: #fff;
+.action-btn:hover {
+    color: #e9d736;
     text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.action-btn i {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.action-btn:hover i {
+    color: #e9d736;
+}
+
+.action-btn span {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rating-display .stars {
+    color: #e9d736;
+    font-size: 16px;
 }
 
 .movie-rate {
@@ -143,7 +178,7 @@
 }
 
 .movie-rate .rate i {
-    color: #dcf836;
+    color: #e9d736;
     font-size: 24px;
 }
 
@@ -155,7 +190,7 @@
 
 .movie-rate .rate p span {
     font-weight: bold;
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .rate-star {
@@ -171,7 +206,7 @@
 }
 
 .rate-star i {
-    color: #dcf836;
+    color: #e9d736;
     font-size: 18px;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -195,16 +230,16 @@
 }
 
 .tabs .tab-links li {
-    background: rgba(35, 58, 80, 0.5);
+    background: transparent;
 }
 
 .tabs .tab-links li.active {
-    background: #dcf836;
+    background: transparent;
 }
 
 .tabs .tab-links li a {
     display: block;
-    padding: 10px 15px;
+    padding: 0px -10px;
     color: #fff;
     text-decoration: none;
     font-weight: bold;
@@ -213,16 +248,17 @@
 }
 
 .tabs .tab-links li.active a {
-    color: #020d18;
+    color: #e9d736;
 }
 
 .tabs .tab-links li a:hover {
-    color: #dcf836;
+    color: #e9d736;
     text-decoration: none;
+    background: transparent;
 }
 
 .tabs .tab-links li.active a:hover {
-    color: #020d18;
+    color: #e9d736;
 }
 
 .tab-content .tab {
@@ -240,7 +276,7 @@
 }
 
 .sb-it h6 {
-    color: #dcf836;
+    color: #e9d736;
     font-weight: bold;
     margin-bottom: 5px;
     font-size: 14px;
@@ -433,7 +469,7 @@
 }
 
 .mv-item-infor h6 a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .mv-item-infor h6 span {
@@ -449,12 +485,12 @@
 }
 
 .mv-item-infor p.rate {
-    color: #dcf836;
+    color: #e9d736;
     font-weight: bold;
 }
 
 .mv-item-infor p.rate i {
-    color: #dcf836;
+    color: #e9d736;
     margin-right: 3px;
 }
 
@@ -478,6 +514,24 @@
 @media (max-width: 768px) {
     .movie-single-ct h1.bd-hd {
         font-size: 1.8rem;
+    }
+    
+    .movie-actions {
+        gap: 10px;
+        justify-content: center;
+    }
+    
+    .action-btn {
+        min-width: 60px;
+        padding: 8px 10px;
+    }
+    
+    .action-btn i {
+        font-size: 20px;
+    }
+    
+    .action-btn span {
+        font-size: 10px;
     }
     
     .movie-rate {
@@ -633,7 +687,7 @@
 									$trailerUrl = $trailer ? "https://www.youtube.com/embed/{$trailer['key']}" : '#';
 								@endphp
 								<div><a href="#" class="item item-1 redbtn"> <i class="ion-play"></i> Watch Trailer</a></div>
-								<div><a href="{{ $trailerUrl }}" class="item item-2 redbtn fancybox-media hvr-grow"><i class="ion-play"></i></a></div>
+								<div><a href="{{ $trailerUrl }}" class="item item-2 redbtn fancybox-media"><i class="ion-play"></i></a></div>
 							@else
 								<div><a href="#" class="item item-1 redbtn"> <i class="ion-play"></i> Trailer Unavailable</a></div>
 							@endif
@@ -657,18 +711,36 @@
 							<span>{{ date('Y', strtotime($movie['release_date'])) }}</span>
 						@endif
 					</h1>
-					<div class="social-btn">
-						<a href="#" class="parent-btn"><i class="ion-heart"></i> Add to Favorite</a>
-						<div class="hover-bnt">
-							<a href="#" class="parent-btn"><i class="ion-android-share-alt"></i>share</a>
-							<div class="hvr-item">
-								<a href="#" class="hvr-grow"><i class="ion-social-facebook"></i></a>
-								<a href="#" class="hvr-grow"><i class="ion-social-twitter"></i></a>
-								<a href="#" class="hvr-grow"><i class="ion-social-googleplus"></i></a>
-								<a href="#" class="hvr-grow"><i class="ion-social-youtube"></i></a>
-							</div>
-						</div>		
+					
+					<!-- Movie Action Buttons -->
+					<div class="movie-actions">
+						<a href="#" class="action-btn" onclick="toggleWatchlist()">
+							<i class="ion-eye"></i>
+							<span>Watch</span>
+						</a>
+						
+						<a href="#" class="action-btn" onclick="toggleFavorite()">
+							<i class="ion-heart"></i>
+							<span>Like</span>
+						</a>
+						
+						<a href="#" class="action-btn" onclick="toggleWatchlist()">
+							<i class="ion-bookmark"></i>
+							<span>Watchlist</span>
+						</a>
+					
+						
+						<a href="#" class="action-btn" onclick="writeReview()">
+							<i class="ion-compose"></i>
+							<span>Review</span>
+						</a>
+						
+						<a href="#" class="action-btn" onclick="shareMovie()">
+							<i class="ion-android-share-alt"></i>
+							<span>Share</span>
+						</a>
 					</div>
+					
 					<div class="movie-rate">
 						<div class="rate">
 							<i class="ion-android-star"></i>
@@ -902,7 +974,7 @@
 											<div class="vd-item">
 												<div class="vd-it">
 													<img class="vd-img" src="https://img.youtube.com/vi/{{ $video['key'] }}/mqdefault.jpg" alt="">
-													<a class="fancybox-media hvr-grow" href="https://www.youtube.com/embed/{{ $video['key'] }}"><img src="{{ asset('images/uploads/play-vd.png') }}" alt=""></a>
+													<a class="fancybox-media" href="https://www.youtube.com/embed/{{ $video['key'] }}"><img src="{{ asset('images/uploads/play-vd.png') }}" alt=""></a>
 												</div>
 												<div class="vd-infor">
 													<h6><a href="#">{{ $video['name'] }}</a></h6>
@@ -1042,6 +1114,61 @@ async function logout() {
         }
     } catch (error) {
         alert('An error occurred during logout');
+    }
+}
+
+// Movie action functions
+function toggleFavorite() {
+    // Toggle favorite functionality
+    const btn = event.target.closest('.action-btn');
+    const icon = btn.querySelector('i');
+    
+    if (icon.classList.contains('ion-heart')) {
+        icon.classList.remove('ion-heart');
+        icon.classList.add('ion-heart-broken');
+        console.log('Added to favorites');
+    } else {
+        icon.classList.remove('ion-heart-broken');
+        icon.classList.add('ion-heart');
+        console.log('Removed from favorites');
+    }
+}
+
+function toggleWatchlist() {
+    // Toggle watchlist functionality
+    console.log('Watchlist toggled');
+    alert('Added to watchlist!');
+}
+
+function showActivity() {
+    // Show user activity
+    console.log('Show activity clicked');
+    alert('Feature coming soon!');
+}
+
+function writeReview() {
+    // Navigate to review section
+    document.querySelector('#reviews').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('a[href="#reviews"]').click();
+}
+
+function addToList() {
+    // Add to custom lists
+    console.log('Add to lists clicked');
+    alert('Add to lists feature coming soon!');
+}
+
+function shareMovie() {
+    // Share movie functionality
+    if (navigator.share) {
+        navigator.share({
+            title: document.querySelector('.bd-hd').textContent,
+            url: window.location.href
+        });
+    } else {
+        // Fallback for browsers that don't support Web Share API
+        navigator.clipboard.writeText(window.location.href);
+        alert('Movie link copied to clipboard!');
     }
 }
 </script>

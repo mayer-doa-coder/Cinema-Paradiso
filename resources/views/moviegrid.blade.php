@@ -423,7 +423,7 @@
 							<div class="reviewer-item">
 								<div class="reviewer-avatar">
 									<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<circle cx="20" cy="20" r="20" fill="#dcf836"/>
+										<circle cx="20" cy="20" r="20" fill="#e9d736"/>
 										<circle cx="20" cy="15" r="6" fill="#1a1a1a"/>
 										<path d="M10 32c0-5.5 4.5-10 10-10s10 4.5 10 10" fill="#1a1a1a"/>
 									</svg>

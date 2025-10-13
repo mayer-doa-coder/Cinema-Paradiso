@@ -389,7 +389,7 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 }
 
 .ceb-infor h2 a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .ceb-infor span {
@@ -411,7 +411,7 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
     padding: 15px;
     border-radius: 4px;
     margin-bottom: 20px;
-    border-left: 4px solid #dcf836;
+    border-left: 4px solid #e9d736;
 }
 
 .search-info p {
@@ -420,7 +420,7 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 }
 
 .clear-search {
-    color: #dcf836;
+    color: #e9d736;
     text-decoration: none;
     margin-left: 10px;
 }
@@ -481,7 +481,7 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 
 .pagination a:hover,
 .pagination a.active {
-    background: #dcf836;
+    background: #e9d736;
     color: #000;
 }
 
@@ -547,13 +547,13 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 }
 
 .letter-btn:hover {
-    background: #dcf836 !important;
+    background: #e9d736 !important;
     color: #000 !important;
     transform: translateY(-1px);
 }
 
 .letter-btn.active {
-    background: #dcf836 !important;
+    background: #e9d736 !important;
     color: #000 !important;
 }
 
