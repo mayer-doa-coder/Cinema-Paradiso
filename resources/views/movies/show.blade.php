@@ -81,14 +81,13 @@
     display: inline-block;
     padding: 15px 30px;
     text-decoration: none;
-    border-radius: 5px;
     font-weight: bold;
     transition: all 0.3s ease;
     margin: 5px;
 }
 
 .redbtn {
-    background: #dd003f;
+    background: #955567ff;
     color: #fff;
 }
 

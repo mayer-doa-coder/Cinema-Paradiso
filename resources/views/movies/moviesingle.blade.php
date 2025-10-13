@@ -23,8 +23,8 @@
 	<meta name="format-detection" content="telephone-no">
 
 	<!-- CSS files -->
-	<link rel="stylesheet" href="css/plugins.css">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 </head>
 <body>
