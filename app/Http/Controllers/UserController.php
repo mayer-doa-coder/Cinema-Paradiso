@@ -25,12 +25,14 @@ class UserController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'username' => 'nullable|string|max:255|unique:users,name,' . $user->id,
+            'username' => 'nullable|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
+            'bio' => 'nullable|string|max:1000',
         ]);
 
         // Update name if first_name and last_name are provided
@@ -40,7 +42,18 @@ class UserController extends Controller
             $user->name = $request->username;
         }
 
+        // Update username if provided
+        if ($request->filled('username')) {
+            $user->username = $request->username;
+        }
+
+        // Update other fields
         $user->email = $validated['email'];
+        $user->phone = $request->phone;
+        $user->country = $request->country;
+        $user->state = $request->state;
+        $user->bio = $request->bio;
+        
         $user->save();
 
         return back()->with('success', 'Profile updated successfully!');

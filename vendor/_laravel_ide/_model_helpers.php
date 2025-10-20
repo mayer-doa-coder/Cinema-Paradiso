@@ -641,6 +641,9 @@ namespace App\Models {
 	 * @property string|null $platform_username
 	 * @property string|null $platform
 	 * @property mixed $popularity_score
+	 * @property string|null $phone
+	 * @property string|null $state
+	 * @property string|null $country
 	 * @property string|null $bio
 	 * @property string|null $avatar
 	 * @property string $password
@@ -669,6 +672,9 @@ namespace App\Models {
 	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
 	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereAvatar($value)
 	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereBio($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCountry($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereState($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePhone($value)
 	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePopularityScore($value)
 	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePlatform($value)
 	 * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePlatformUsername($value)

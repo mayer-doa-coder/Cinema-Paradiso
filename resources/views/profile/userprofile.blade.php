@@ -274,13 +274,13 @@ body {
 			<div class="col-md-9 col-sm-12 col-xs-12">
 				<div class="form-style-1 user-pro">
 					@if(session('success'))
-						<div class="alert alert-success" style="background: #28a745; color: #fff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+						<div class="alert alert-success" style="background: #eb70ac; color: #fff; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #eb70ac;">
 							{{ session('success') }}
 						</div>
 					@endif
 					
 					@if($errors->any())
-						<div class="alert alert-danger" style="background: #dc3545; color: #fff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+						<div class="alert alert-danger" style="background: #eb70ac; color: #fff; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #eb70ac;">
 							<ul style="margin: 0; padding-left: 20px;">
 								@foreach($errors->all() as $error)
 									<li>{{ $error }}</li>
@@ -299,7 +299,7 @@ body {
 							</div>
 							<div class="col-md-6 form-it">
 								<label>Email Address</label>
-								<input type="email" name="email" value="{{ Auth::user()->email }}" placeholder="Email Address">
+								<input type="email" name="email" value="{{ Auth::user()->email }}" placeholder="Email Address" required>
 							</div>
 						</div>
 						<div class="row">
@@ -314,24 +314,26 @@ body {
 						</div>
 						<div class="row">
 							<div class="col-md-6 form-it">
+								<label>Phone Number</label>
+								<input type="tel" name="phone" value="{{ Auth::user()->phone ?? '' }}" placeholder="+1 234 567 8900">
+							</div>
+							<div class="col-md-6 form-it">
 								<label>Country</label>
-								<select name="country">
+								<select name="country" id="country-select">
 									<option value="">Select Country</option>
-									<option value="united_states">United States</option>
-									<option value="canada">Canada</option>
-									<option value="uk">United Kingdom</option>
-									<option value="others">Others</option>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 form-it">
+								<label>State/Province</label>
+								<select name="state" id="state-select">
+									<option value="">Select State/Province</option>
 								</select>
 							</div>
 							<div class="col-md-6 form-it">
-								<label>State</label>
-								<select name="state">
-									<option value="">Select State</option>
-									<option value="new_york">New York</option>
-									<option value="california">California</option>
-									<option value="texas">Texas</option>
-									<option value="others">Others</option>
-								</select>
+								<label>Bio</label>
+								<textarea name="bio" placeholder="Tell us about yourself" style="width: 100%; padding: 10px 15px; background: #020d18; border: 1px solid #405266; border-radius: 3px; color: #abb7c4; min-height: 100px; resize: vertical;">{{ Auth::user()->bio ?? '' }}</textarea>
 							</div>
 						</div>
 						<div class="row">
@@ -373,3 +375,64 @@ body {
 	</div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/countries-states.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const countrySelect = document.getElementById('country-select');
+    const stateSelect = document.getElementById('state-select');
+    const currentCountry = "{{ Auth::user()->country ?? '' }}";
+    const currentState = "{{ Auth::user()->state ?? '' }}";
+    
+    // Populate countries dropdown
+    const countries = getCountries();
+    countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country;
+        option.textContent = country;
+        if (country === currentCountry) {
+            option.selected = true;
+        }
+        countrySelect.appendChild(option);
+    });
+    
+    // Function to update states dropdown
+    function updateStates(country) {
+        // Clear existing states
+        stateSelect.innerHTML = '<option value="">Select State/Province</option>';
+        
+        if (country) {
+            const states = getStates(country);
+            if (states.length > 0) {
+                states.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    if (state === currentState) {
+                        option.selected = true;
+                    }
+                    stateSelect.appendChild(option);
+                });
+                stateSelect.disabled = false;
+            } else {
+                stateSelect.disabled = true;
+                stateSelect.innerHTML = '<option value="">No states available</option>';
+            }
+        } else {
+            stateSelect.disabled = true;
+        }
+    }
+    
+    // Initialize states if country is already selected
+    if (currentCountry) {
+        updateStates(currentCountry);
+    }
+    
+    // Update states when country changes
+    countrySelect.addEventListener('change', function() {
+        updateStates(this.value);
+    });
+});
+</script>
+@endpush
