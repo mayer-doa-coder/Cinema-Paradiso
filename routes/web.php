@@ -93,8 +93,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/profile/password', [UserController::class, 'updatePassword'])->name('user.password.update');
-    Route::get('/profile/favorites', [UserController::class, 'favorites'])->name('user.favorites');
-    Route::get('/profile/rated', [UserController::class, 'rated'])->name('user.rated');
+    Route::get('/profile/watchlist', [UserController::class, 'watchlist'])->name('user.watchlist');
+    Route::get('/profile/reviews', [UserController::class, 'reviews'])->name('user.reviews');
+    Route::get('/profile/movies', [UserController::class, 'movies'])->name('user.movies');
+    Route::get('/profile/list', [UserController::class, 'list'])->name('user.list');
 });
 
 // Authentication routes

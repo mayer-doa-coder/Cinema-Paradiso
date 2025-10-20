@@ -54,39 +54,70 @@ class UserController extends Controller
         $validated = $request->validate([
             'old_password' => 'required',
             'new_password' => 'required|min:8|confirmed',
+        ], [
+            'old_password.required' => 'Please enter your current password.',
+            'new_password.required' => 'Please enter a new password.',
+            'new_password.min' => 'New password must be at least 8 characters.',
+            'new_password.confirmed' => 'Password confirmation does not match.',
         ]);
 
         $user = Auth::user();
 
         // Check if the old password is correct
         if (!Hash::check($request->old_password, $user->password)) {
-            throw ValidationException::withMessages([
-                'old_password' => ['The provided password does not match your current password.'],
-            ]);
+            return back()->withErrors([
+                'old_password' => 'The provided password does not match your current password.',
+            ])->withInput();
         }
 
-        // Update the password
+        // Update the password in database
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return back()->with('success', 'Password changed successfully!');
+        // Logout the user after password change
+        Auth::logout();
+        
+        // Invalidate the session
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Redirect to home with a flag to show login popup
+        return redirect()->route('home')->with('password_changed', true)->with('message', 'Password changed successfully! Please login with your new password.');
     }
 
     /**
-     * Display the user's favorite movies.
+     * Display the user's watchlist.
      */
-    public function favorites()
+    public function watchlist()
     {
-        // TODO: Implement favorites functionality
-        return view('profile.userfavorites');
+        // TODO: Implement watchlist functionality
+        return view('profile.userwatchlist');
+    }
+
+    /**
+     * Display the user's reviews.
+     */
+    public function reviews()
+    {
+        // TODO: Implement reviews functionality
+        return view('profile.userreviews');
     }
 
     /**
      * Display the user's rated movies.
      */
-    public function rated()
+    public function movies()
     {
         // TODO: Implement rated movies functionality
-        return view('profile.userrated');
+        return view('profile.usermovies');
+    }
+
+    /**
+     * Display the user's custom lists.
+     */
+    public function list()
+    {
+        // TODO: Implement lists functionality
+        return view('profile.userlist');
     }
 }

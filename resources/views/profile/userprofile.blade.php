@@ -251,8 +251,10 @@ body {
 						<p>Account Details</p>
 						<ul>
 							<li class="active"><a href="{{ route('user.profile') }}">Profile</a></li>
-							<li><a href="{{ route('user.favorites') }}">Favorite movies</a></li>
-							<li><a href="{{ route('user.rated') }}">Rated movies</a></li>
+							<li><a href="{{ route('user.watchlist') }}">Watchlist</a></li>
+							<li><a href="{{ route('user.reviews') }}">Reviews</a></li>
+							<li><a href="{{ route('user.movies') }}">Movies</a></li>
+							<li><a href="{{ route('user.list') }}">List</a></li>
 						</ul>
 					</div>
 					<div class="user-fav">

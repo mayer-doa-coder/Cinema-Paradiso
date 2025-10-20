@@ -244,6 +244,22 @@ async function checkAuthStatus() {
 
 // Check auth status on page load
 document.addEventListener('DOMContentLoaded', checkAuthStatus);
+
+// Handle password change - show login popup
+@if(session('password_changed'))
+document.addEventListener('DOMContentLoaded', function() {
+    // Show success message
+    alert('{{ session('message') }}');
+    
+    // Trigger login popup
+    setTimeout(function() {
+        const loginLink = document.querySelector('.loginLink a');
+        if (loginLink) {
+            loginLink.click();
+        }
+    }, 500);
+});
+@endif
 </script>
 
 @yield('scripts')
