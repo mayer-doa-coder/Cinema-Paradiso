@@ -710,28 +710,28 @@
 					
 					<!-- Movie Action Buttons -->
 					<div class="movie-actions">
-						<a href="#" class="action-btn" onclick="toggleWatchlist()">
-							<i class="ion-eye"></i>
-							<span>Watch</span>
+						<a href="#" class="action-btn" id="addMovieBtn" onclick="addMovieToCollection(event)">
+							<i class="ion-plus"></i>
+							<span>Add</span>
 						</a>
 						
-						<a href="#" class="action-btn" onclick="toggleFavorite()">
+						<a href="#" class="action-btn" id="likeBtn" onclick="toggleFavorite(event)">
 							<i class="ion-heart"></i>
 							<span>Like</span>
 						</a>
 						
-						<a href="#" class="action-btn" onclick="toggleWatchlist()">
+						<a href="#" class="action-btn" id="watchlistBtn" onclick="toggleWatchlist(event)">
 							<i class="ion-bookmark"></i>
 							<span>Watchlist</span>
 						</a>
 					
 						
-						<a href="#" class="action-btn" onclick="writeReview()">
+						<a href="#" class="action-btn" id="reviewBtn" onclick="openReviewModal(event)">
 							<i class="ion-compose"></i>
 							<span>Review</span>
 						</a>
 						
-						<a href="#" class="action-btn" onclick="shareMovie()">
+						<a href="#" class="action-btn" onclick="shareMovie(event)">
 							<i class="ion-android-share-alt"></i>
 							<span>Share</span>
 						</a>
@@ -746,13 +746,12 @@
 						</div>
 						<div class="rate-star">
 							<p>Rate This Movie:  </p>
-							@for($i = 1; $i <= 10; $i++)
-								@if($i <= ($movie['vote_average'] ?? 0))
-									<i class="ion-ios-star"></i>
-								@else
-									<i class="ion-ios-star-outline"></i>
-								@endif
-							@endfor
+							<div class="star-rating">
+								@for($i = 1; $i <= 10; $i++)
+									<i class="ion-ios-star-outline star-icon" data-rating="{{ $i }}" onclick="rateMovie({{ $i }})"></i>
+								@endfor
+							</div>
+							<span id="currentRating" style="margin-left: 10px; color: #dcf836;"></span>
 						</div>
 					</div>
 					<div class="movie-tabs">
@@ -1154,7 +1153,8 @@ function addToList() {
     alert('Add to lists feature coming soon!');
 }
 
-function shareMovie() {
+function shareMovie(event) {
+    event.preventDefault();
     // Share movie functionality
     if (navigator.share) {
         navigator.share({
@@ -1167,5 +1167,335 @@ function shareMovie() {
         alert('Movie link copied to clipboard!');
     }
 }
+
+// Movie data
+const movieData = {
+    id: {{ $movie['id'] }},
+    title: "{{ $movie['title'] ?? 'Untitled' }}",
+    poster: "{{ isset($movie['poster_path']) ? app('App\Services\MovieService')->getImageUrl($movie['poster_path'], 'w500') : '' }}",
+    year: {{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'null' }}
+};
+
+let userRating = 0;
+
+// Load user's movie status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    @auth
+        loadMovieStatus();
+    @endauth
+});
+
+// Load movie status (liked, in watchlist, etc.)
+function loadMovieStatus() {
+    fetch(`/movies/${movieData.id}/status`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update UI based on status
+            if (data.status.is_liked) {
+                document.getElementById('likeBtn').classList.add('active');
+            }
+            if (data.status.in_watchlist) {
+                document.getElementById('watchlistBtn').classList.add('active');
+            }
+            if (data.status.in_collection) {
+                document.getElementById('addMovieBtn').classList.add('active');
+                document.getElementById('addMovieBtn').querySelector('span').textContent = 'Added';
+            }
+        }
+    })
+    .catch(error => console.error('Error loading movie status:', error));
+}
+
+// Rate movie
+function rateMovie(rating) {
+    @guest
+        alert('Please login to rate this movie');
+        return;
+    @endguest
+    
+    userRating = rating;
+    
+    // Update star display
+    const stars = document.querySelectorAll('.star-icon');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.remove('ion-ios-star-outline');
+            star.classList.add('ion-ios-star');
+        } else {
+            star.classList.remove('ion-ios-star');
+            star.classList.add('ion-ios-star-outline');
+        }
+    });
+    
+    document.getElementById('currentRating').textContent = `You rated: ${rating}/10`;
+}
+
+// Add movie to collection
+function addMovieToCollection(event) {
+    event.preventDefault();
+    
+    @guest
+        alert('Please login to add movies to your collection');
+        return;
+    @endguest
+    
+    if (userRating === 0) {
+        alert('Please rate this movie first (1-10 stars)');
+        return;
+    }
+    
+    const data = {
+        movie_id: movieData.id,
+        movie_title: movieData.title,
+        movie_poster: movieData.poster,
+        rating: userRating,
+        release_year: movieData.year,
+        _token: '{{ csrf_token() }}'
+    };
+    
+    fetch('/movies/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            document.getElementById('addMovieBtn').classList.add('active');
+            document.getElementById('addMovieBtn').querySelector('span').textContent = 'Added';
+        } else {
+            alert(data.message || 'Failed to add movie');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add movie to collection');
+    });
+}
+
+// Toggle like
+function toggleFavorite(event) {
+    event.preventDefault();
+    
+    @guest
+        alert('Please login to like movies');
+        return;
+    @endguest
+    
+    const data = {
+        movie_id: movieData.id,
+        _token: '{{ csrf_token() }}'
+    };
+    
+    fetch('/movies/like', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const likeBtn = document.getElementById('likeBtn');
+            if (data.liked) {
+                likeBtn.classList.add('active');
+            } else {
+                likeBtn.classList.remove('active');
+            }
+            alert(data.message);
+        } else {
+            alert(data.message || 'Failed to toggle like');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to toggle like');
+    });
+}
+
+// Toggle watchlist
+function toggleWatchlist(event) {
+    event.preventDefault();
+    
+    @guest
+        alert('Please login to add movies to watchlist');
+        return;
+    @endguest
+    
+    const data = {
+        movie_id: movieData.id,
+        movie_title: movieData.title,
+        movie_poster: movieData.poster,
+        release_year: movieData.year,
+        _token: '{{ csrf_token() }}'
+    };
+    
+    fetch('/movies/watchlist', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const watchlistBtn = document.getElementById('watchlistBtn');
+            if (data.in_watchlist) {
+                watchlistBtn.classList.add('active');
+            } else {
+                watchlistBtn.classList.remove('active');
+            }
+            alert(data.message);
+        } else {
+            alert(data.message || 'Failed to toggle watchlist');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to toggle watchlist');
+    });
+}
+
+// Open review modal
+function openReviewModal(event) {
+    event.preventDefault();
+    
+    @guest
+        alert('Please login to write a review');
+        return;
+    @endguest
+    
+    if (userRating === 0) {
+        alert('Please rate this movie first (1-10 stars)');
+        return;
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.id = 'reviewModal';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center;';
+    
+    modal.innerHTML = `
+        <div style="background: #0b1a2a; padding: 30px; border-radius: 10px; max-width: 600px; width: 90%;">
+            <h2 style="color: #dcf836; margin-bottom: 20px;">Write Your Review</h2>
+            <p style="color: #fff; margin-bottom: 15px;">Your Rating: ${userRating}/10</p>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="color: #fff; display: block; margin-bottom: 10px;">
+                    <input type="checkbox" id="watchedBefore" style="margin-right: 10px;">
+                    Have you watched this movie before?
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="color: #fff; display: block; margin-bottom: 10px;">Your Review:</label>
+                <textarea id="reviewText" rows="6" style="width: 100%; padding: 10px; background: #020d18; color: #fff; border: 1px solid #405266; border-radius: 5px; font-family: inherit;" placeholder="Share your thoughts about this movie... (minimum 10 characters)"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button onclick="closeReviewModal()" style="padding: 10px 20px; background: #405266; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+                <button onclick="submitReview()" style="padding: 10px 20px; background: #eb70ac; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Submit Review</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function closeReviewModal() {
+    const modal = document.getElementById('reviewModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function submitReview() {
+    const reviewText = document.getElementById('reviewText').value.trim();
+    const watchedBefore = document.getElementById('watchedBefore').checked;
+    
+    if (reviewText.length < 10) {
+        alert('Please write at least 10 characters for your review');
+        return;
+    }
+    
+    const data = {
+        movie_id: movieData.id,
+        movie_title: movieData.title,
+        movie_poster: movieData.poster,
+        rating: userRating,
+        watched_before: watchedBefore,
+        review: reviewText,
+        release_year: movieData.year,
+        _token: '{{ csrf_token() }}'
+    };
+    
+    fetch('/movies/review', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            closeReviewModal();
+        } else {
+            alert(data.message || 'Failed to submit review');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to submit review');
+    });
+}
 </script>
+
+<style>
+.action-btn.active {
+    color: #eb70ac !important;
+}
+
+.action-btn.active i {
+    color: #eb70ac !important;
+}
+
+.star-icon {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #dcf836;
+}
+
+.star-icon:hover {
+    transform: scale(1.2);
+}
+
+.ion-ios-star {
+    color: #dcf836 !important;
+}
+
+.ion-ios-star-outline {
+    color: #405266 !important;
+}
+</style>
 @endpush
