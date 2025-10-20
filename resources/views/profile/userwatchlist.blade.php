@@ -89,10 +89,17 @@
     border-left: 3px solid #eb70ac;
 }
 .topbar-filter.user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     margin-bottom: 30px;
 }
 .topbar-filter.user p {
     color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    margin-right: 20px;
 }
 .topbar-filter.user p span {
     color: #dcf836;
@@ -100,31 +107,15 @@
 }
 .topbar-filter.user label {
     color: #abb7c4;
-    margin-right: 10px;
+    margin: 0;
+    white-space: nowrap;
 }
 .topbar-filter.user select {
-    background: #0b1a2a;
+    background: #020d18;
     border: 1px solid #405266;
     color: #fff;
     padding: 8px 15px;
     border-radius: 5px;
-}
-.topbar-filter.user .list,
-.topbar-filter.user .grid {
-    display: inline-block;
-    padding: 8px 12px;
-    background: #0b1a2a;
-    color: #abb7c4;
-    border-radius: 5px;
-    margin-left: 10px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-.topbar-filter.user .grid.active,
-.topbar-filter.user .list:hover,
-.topbar-filter.user .grid:hover {
-    background: #eb70ac;
-    color: #fff;
 }
 .flex-wrap-movielist.grid-fav {
     display: grid;
@@ -199,14 +190,28 @@
 .topbar-filter {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background: #0b1a2a;
-    border-radius: 5px;
+    gap: 10px;
     margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #405266;
+}
+.topbar-filter label {
+    color: #abb7c4;
+    margin: 0;
+    white-space: nowrap;
+}
+.topbar-filter select {
+    background: #020d18;
+    border: 1px solid #405266;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
 }
 .pagination2 {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 .pagination2 span {
     color: #abb7c4;
@@ -219,7 +224,6 @@
     color: #fff;
     text-decoration: none;
     border-radius: 3px;
-    margin: 0 3px;
     transition: all 0.3s ease;
 }
 .pagination2 a.active,
@@ -290,8 +294,6 @@
 						<option value="newest">Newest First</option>
 						<option value="oldest">Oldest First</option>
 					</select>
-					<a href="#" class="list"><i class="ion-ios-list-outline"></i></a>
-					<a href="#" class="grid active"><i class="ion-grid"></i></a>
 				</div>
 
 				@if($watchlist->count() > 0)

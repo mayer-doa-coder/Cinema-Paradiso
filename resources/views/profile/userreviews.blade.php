@@ -95,15 +95,17 @@
 .topbar-filter {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background: #0b1a2a;
-    border-radius: 5px;
+    justify-content: center;
+    gap: 10px;
     margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #405266;
 }
 .topbar-filter p {
     color: #fff;
     margin: 0;
+    white-space: nowrap;
+    margin-right: 20px;
 }
 .topbar-filter p span {
     color: #dcf836;
@@ -111,7 +113,8 @@
 }
 .topbar-filter label {
     color: #abb7c4;
-    margin: 0 10px 0 0;
+    margin: 0;
+    white-space: nowrap;
 }
 .topbar-filter select {
     background: #020d18;
@@ -228,6 +231,14 @@
 .pagination2 a.active,
 .pagination2 a:hover {
     background: #eb70ac;
+}
+.topbar-filter.bottom {
+    margin-top: 30px;
+    margin-bottom: 0;
+    padding-top: 15px;
+    padding-bottom: 0;
+    border-top: 1px solid #405266;
+    border-bottom: none;
 }
 </style>
 @endpush
