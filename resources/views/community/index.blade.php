@@ -216,14 +216,17 @@ textarea:focus {
                                 <div class="user-favorite-movies-compact">
                                     <div class="favorite-movies-list-compact">
                                         @foreach($user->favoriteMovies->take(5) as $movie)
-                                            @if(!empty($movie->movie_poster))
+                                            @if(!empty($movie->movie_poster) && $movie->poster_url)
                                                 <a href="{{ route('movies.show', $movie->movie_id) }}" 
                                                    class="favorite-movie-item-compact" 
                                                    title="{{ $movie->movie_title }}"
                                                    onclick="event.stopPropagation();">
                                                     <img src="{{ $movie->poster_url }}" 
                                                          alt="{{ $movie->movie_title }}"
-                                                         loading="lazy">
+                                                         width="35"
+                                                         height="52"
+                                                         loading="lazy"
+                                                         onerror="this.parentElement.style.display='none'">
                                                 </a>
                                             @endif
                                         @endforeach
@@ -498,6 +501,7 @@ textarea:focus {
     cursor: pointer;
     display: block;
     position: relative;
+    flex-shrink: 0;
 }
 
 .favorite-movie-item-compact:hover {
@@ -511,6 +515,7 @@ textarea:focus {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
 }
 
