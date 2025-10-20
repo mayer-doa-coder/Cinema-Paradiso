@@ -6,6 +6,9 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\CacheStatus' => $baseDir . '/app/Console/Commands/CacheStatus.php',
+    'App\\Console\\Commands\\InvalidateCache' => $baseDir . '/app/Console/Commands/InvalidateCache.php',
+    'App\\Console\\Commands\\OptimizeCache' => $baseDir . '/app/Console/Commands/OptimizeCache.php',
     'App\\Console\\Commands\\UpdateUserPopularity' => $baseDir . '/app/Console/Commands/UpdateUserPopularity.php',
     'App\\Http\\Controllers\\AuthController' => $baseDir . '/app/Http/Controllers/AuthController.php',
     'App\\Http\\Controllers\\BlogController' => $baseDir . '/app/Http/Controllers/BlogController.php',
@@ -15,6 +18,9 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Controllers\\MovieController' => $baseDir . '/app/Http/Controllers/MovieController.php',
+    'App\\Http\\Controllers\\TVShowController' => $baseDir . '/app/Http/Controllers/TVShowController.php',
+    'App\\Http\\Middleware\\CompressResponse' => $baseDir . '/app/Http/Middleware/CompressResponse.php',
+    'App\\Jobs\\WarmCacheJob' => $baseDir . '/app/Jobs/WarmCacheJob.php',
     'App\\Mail\\ContactNotification' => $baseDir . '/app/Mail/ContactNotification.php',
     'App\\Models\\Contact' => $baseDir . '/app/Models/Contact.php',
     'App\\Models\\Movie' => $baseDir . '/app/Models/Movie.php',
@@ -23,7 +29,11 @@ return array(
     'App\\Models\\UserFavoriteMovie' => $baseDir . '/app/Models/UserFavoriteMovie.php',
     'App\\Models\\UserFollower' => $baseDir . '/app/Models/UserFollower.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
+    'App\\Services\\ApiRateLimiter' => $baseDir . '/app/Services/ApiRateLimiter.php',
+    'App\\Services\\CacheOptimizationService' => $baseDir . '/app/Services/CacheOptimizationService.php',
     'App\\Services\\MovieService' => $baseDir . '/app/Services/MovieService.php',
+    'App\\Services\\NewsService' => $baseDir . '/app/Services/NewsService.php',
+    'App\\Services\\TVShowService' => $baseDir . '/app/Services/TVShowService.php',
     'App\\Services\\UserPopularityService' => $baseDir . '/app/Services/UserPopularityService.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',

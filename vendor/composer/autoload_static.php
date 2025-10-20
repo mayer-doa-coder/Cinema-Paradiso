@@ -533,6 +533,9 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\CacheStatus' => __DIR__ . '/../..' . '/app/Console/Commands/CacheStatus.php',
+        'App\\Console\\Commands\\InvalidateCache' => __DIR__ . '/../..' . '/app/Console/Commands/InvalidateCache.php',
+        'App\\Console\\Commands\\OptimizeCache' => __DIR__ . '/../..' . '/app/Console/Commands/OptimizeCache.php',
         'App\\Console\\Commands\\UpdateUserPopularity' => __DIR__ . '/../..' . '/app/Console/Commands/UpdateUserPopularity.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\BlogController' => __DIR__ . '/../..' . '/app/Http/Controllers/BlogController.php',
@@ -542,6 +545,9 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\MovieController' => __DIR__ . '/../..' . '/app/Http/Controllers/MovieController.php',
+        'App\\Http\\Controllers\\TVShowController' => __DIR__ . '/../..' . '/app/Http/Controllers/TVShowController.php',
+        'App\\Http\\Middleware\\CompressResponse' => __DIR__ . '/../..' . '/app/Http/Middleware/CompressResponse.php',
+        'App\\Jobs\\WarmCacheJob' => __DIR__ . '/../..' . '/app/Jobs/WarmCacheJob.php',
         'App\\Mail\\ContactNotification' => __DIR__ . '/../..' . '/app/Mail/ContactNotification.php',
         'App\\Models\\Contact' => __DIR__ . '/../..' . '/app/Models/Contact.php',
         'App\\Models\\Movie' => __DIR__ . '/../..' . '/app/Models/Movie.php',
@@ -550,7 +556,11 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Models\\UserFavoriteMovie' => __DIR__ . '/../..' . '/app/Models/UserFavoriteMovie.php',
         'App\\Models\\UserFollower' => __DIR__ . '/../..' . '/app/Models/UserFollower.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
+        'App\\Services\\ApiRateLimiter' => __DIR__ . '/../..' . '/app/Services/ApiRateLimiter.php',
+        'App\\Services\\CacheOptimizationService' => __DIR__ . '/../..' . '/app/Services/CacheOptimizationService.php',
         'App\\Services\\MovieService' => __DIR__ . '/../..' . '/app/Services/MovieService.php',
+        'App\\Services\\NewsService' => __DIR__ . '/../..' . '/app/Services/NewsService.php',
+        'App\\Services\\TVShowService' => __DIR__ . '/../..' . '/app/Services/TVShowService.php',
         'App\\Services\\UserPopularityService' => __DIR__ . '/../..' . '/app/Services/UserPopularityService.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',

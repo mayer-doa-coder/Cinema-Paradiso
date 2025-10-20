@@ -1840,19 +1840,18 @@ tbody.collapse.in {
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 160px;
-  padding: 5px 0;
+  min-width: 180px;
+  padding: 8px 0;
   margin: 2px 0 0;
   list-style: none;
   font-size: 14px;
   text-align: left;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 0;
-  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-color: #0b1a2a;
+  border: 2px solid #405266;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
   background-clip: padding-box;
 }
 .dropdown-menu.pull-right {
@@ -1861,37 +1860,38 @@ tbody.collapse.in {
 }
 .dropdown-menu .divider {
   height: 1px;
-  margin: 9px 0;
+  margin: 6px 0;
   overflow: hidden;
-  background-color: #e5e5e5;
+  background-color: #405266;
 }
 .dropdown-menu > li > a {
   display: block;
-  padding: 3px 20px;
+  padding: 8px 20px;
   clear: both;
   font-weight: normal;
   line-height: 1.42857143;
-  color: #333333;
+  color: #abb7c4;
   white-space: nowrap;
+  transition: all 0.3s ease;
 }
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
   text-decoration: none;
-  color: #262626;
-  background-color: #f5f5f5;
+  color: #0b1a2a;
+  background-color: #dcf836;
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
-  color: #fff;
+  color: #0b1a2a;
   text-decoration: none;
   outline: 0;
-  background-color: #2b6f9b;
+  background-color: #dcf836;
 }
 .dropdown-menu > .disabled > a,
 .dropdown-menu > .disabled > a:hover,
 .dropdown-menu > .disabled > a:focus {
-  color: #777777;
+  color: #405266;
 }
 .dropdown-menu > .disabled > a:hover,
 .dropdown-menu > .disabled > a:focus {
@@ -1907,6 +1907,14 @@ tbody.collapse.in {
 .open > a {
   outline: 0;
 }
+.dropdown-menu > li:first-child > a {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.dropdown-menu > li:last-child > a {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
 .dropdown-menu-right {
   left: auto;
   right: 0;
@@ -1920,7 +1928,7 @@ tbody.collapse.in {
   padding: 3px 20px;
   font-size: 12px;
   line-height: 1.42857143;
-  color: #777777;
+  color: #abb7c4;
   white-space: nowrap;
 }
 .dropdown-backdrop {

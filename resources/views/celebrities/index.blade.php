@@ -117,6 +117,10 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">Profile</a></li>
+                                    <li><a href="#">Settings</a></li>
+                                    <li><a href="#">Movies</a></li>
+                                    <li><a href="#">Reviews</a></li>
+                                    <li><a href="#">Watchlist</a></li>
                                     <li><a href="#" onclick="logout()">Logout</a></li>
                                 </ul>
                             </li>
