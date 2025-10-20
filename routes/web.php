@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/profile/password', [UserController::class, 'updatePassword'])->name('user.password.update');
+    Route::post('/profile/avatar', [UserController::class, 'updateAvatar'])->name('user.avatar.update');
+    Route::delete('/profile/avatar', [UserController::class, 'deleteAvatar'])->name('user.avatar.delete');
     Route::get('/profile/watchlist', [UserController::class, 'watchlist'])->name('user.watchlist');
     Route::get('/profile/reviews', [UserController::class, 'reviews'])->name('user.reviews');
     Route::get('/profile/movies', [UserController::class, 'movies'])->name('user.movies');

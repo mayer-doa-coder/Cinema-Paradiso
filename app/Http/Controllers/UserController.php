@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -132,5 +133,55 @@ class UserController extends Controller
     {
         // TODO: Implement lists functionality
         return view('profile.userlist');
+    }
+
+    /**
+     * Update the user's avatar.
+     */
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
+        ], [
+            'avatar.required' => 'Please select an image to upload.',
+            'avatar.image' => 'The file must be an image.',
+            'avatar.mimes' => 'Only jpeg, png, jpg, and gif images are allowed.',
+            'avatar.max' => 'The image size must not exceed 2MB.',
+        ]);
+
+        $user = Auth::user();
+
+        // Delete old avatar if exists
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        // Store new avatar
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        
+        // Update user's avatar path
+        $user->avatar = $avatarPath;
+        $user->save();
+
+        return back()->with('success', 'Avatar updated successfully!');
+    }
+
+    /**
+     * Delete the user's avatar.
+     */
+    public function deleteAvatar()
+    {
+        $user = Auth::user();
+
+        // Delete avatar file if exists
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        // Clear avatar path from database
+        $user->avatar = null;
+        $user->save();
+
+        return back()->with('success', 'Avatar deleted successfully!');
     }
 }
