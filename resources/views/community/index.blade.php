@@ -191,7 +191,7 @@ textarea:focus {
                                     </div>
                                     <div class="user-basic-info">
                                         <h4 class="user-name">{{ $user->name }}</h4>
-                                        <p class="user-username">@{{ $user->username }}</p>
+                                        <p class="user-username">{{ $user->username }}</p>
                                     </div>
                                 </div>
                                 
