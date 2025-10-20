@@ -121,20 +121,7 @@ textarea:focus {
                 </div>
         </nav>
         
-        <!-- top search form -->
-        <div class="top-search">
-            <div class="search-dropdown">
-                <i class="ion-ios-list-outline"></i>
-                <select id="search-type">
-                    <option value="movies">Movies</option>
-                    <option value="tvshows">TV Shows</option>
-                </select>
-            </div>
-            <div class="search-input">
-                <input type="text" id="search-query" placeholder="Search for a movie, TV Show that you are looking for">
-                <i class="ion-ios-search" id="search-icon" style="cursor: pointer;"></i>
-            </div>
-        </div>
+        @include('partials._search')
     </div>
 </header>
 <!-- END | Header -->
@@ -485,7 +472,7 @@ textarea:focus {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 5px solid #dd2c00;
+    border: 5px solid #dcf836;
     object-fit: cover;
 }
 
@@ -497,7 +484,7 @@ textarea:focus {
     height: 25px;
     background: #4caf50;
     border-radius: 50%;
-    border: 4px solid white;
+    border: 4px solid #020d18;
 }
 
 .profile-info {
@@ -507,17 +494,18 @@ textarea:focus {
 .profile-name {
     font-size: 2.5em;
     margin-bottom: 5px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    font-weight: bold;
+    color: #ffffff;
 }
 
 .profile-username {
     font-size: 1.2em;
-    opacity: 0.8;
+    color: #abb7c4;
     margin-bottom: 10px;
 }
 
 .profile-location, .profile-platform {
-    color: rgba(255,255,255,0.9);
+    color: #abb7c4;
     margin: 5px 0;
 }
 
@@ -525,40 +513,48 @@ textarea:focus {
     font-size: 1.1em;
     margin: 15px 0;
     font-style: italic;
-    opacity: 0.9;
+    color: #abb7c4;
 }
 
 .profile-stats {
     display: flex;
     gap: 20px;
     margin: 20px 0;
+    flex-wrap: wrap;
 }
 
 .stat-box {
     text-align: center;
-    background: rgba(255,255,255,0.1);
+    background: #0b1a2a;
     padding: 15px;
-    border-radius: 8px;
-    min-width: 80px;
+    border-radius: 5px;
+    min-width: 90px;
+    border: 1px solid #405266;
 }
 
 .stat-number {
     display: block;
     font-size: 1.5em;
     font-weight: bold;
-    color: #dd2c00;
+    color: #dcf836;
 }
 
 .stat-label {
     display: block;
     font-size: 0.8em;
-    opacity: 0.8;
+    color: #abb7c4;
+    text-transform: uppercase;
+    margin-top: 5px;
 }
 
 .profile-meta {
     margin: 15px 0;
     font-size: 0.9em;
-    opacity: 0.8;
+    color: #abb7c4;
+}
+
+.profile-meta strong {
+    color: #ffffff;
 }
 
 .social-links {
@@ -567,18 +563,50 @@ textarea:focus {
 
 .social-link {
     display: inline-block;
-    margin-right: 10px;
-    color: white;
+    margin-right: 15px;
+    color: #dcf836;
     font-size: 1.5em;
     transition: color 0.3s;
 }
 
 .social-link:hover {
-    color: #dd2c00;
+    color: #dd003f;
 }
 
 .profile-tabs {
     margin-top: 30px;
+}
+
+.profile-tabs .nav-tabs {
+    border-bottom: 2px solid #405266;
+}
+
+.profile-tabs .nav-tabs > li > a {
+    color: #abb7c4;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+}
+
+.profile-tabs .nav-tabs > li.active > a,
+.profile-tabs .nav-tabs > li.active > a:hover,
+.profile-tabs .nav-tabs > li.active > a:focus {
+    color: #dcf836;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #dcf836;
+}
+
+.profile-tabs .nav-tabs > li > a:hover {
+    background-color: transparent;
+    border-bottom: 2px solid #abb7c4;
+}
+
+.profile-section h3 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-weight: 600;
 }
 
 .favorite-movies-grid {
@@ -589,15 +617,16 @@ textarea:focus {
 }
 
 .favorite-movie-card {
-    background: white;
-    border-radius: 8px;
+    background: #0b1a2a;
+    border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    border: 1px solid #405266;
+    transition: transform 0.3s, border-color 0.3s;
 }
 
 .favorite-movie-card:hover {
     transform: translateY(-3px);
+    border-color: #dcf836;
 }
 
 .movie-poster {
@@ -614,7 +643,7 @@ textarea:focus {
 .movie-poster-placeholder {
     width: 100%;
     height: 100%;
-    background: #dd2c00;
+    background: #dd003f;
     color: white;
     display: flex;
     align-items: center;
@@ -627,11 +656,12 @@ textarea:focus {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(0,0,0,0.8);
-    color: white;
-    padding: 5px 8px;
-    border-radius: 15px;
-    font-size: 0.8em;
+    background: rgba(2, 13, 24, 0.9);
+    color: #dcf836;
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: bold;
 }
 
 .movie-info {
@@ -641,18 +671,19 @@ textarea:focus {
 .movie-info h4 {
     margin: 0 0 10px 0;
     font-size: 1.1em;
+    color: #ffffff;
 }
 
 .user-review {
     font-size: 0.9em;
-    color: #666;
+    color: #abb7c4;
     font-style: italic;
     margin: 8px 0;
 }
 
 .watched-date {
     font-size: 0.8em;
-    color: #888;
+    color: #abb7c4;
     margin: 5px 0 0 0;
 }
 
@@ -665,13 +696,16 @@ textarea:focus {
     align-items: flex-start;
     gap: 15px;
     padding: 15px;
-    border-bottom: 1px solid #eee;
+    background: #0b1a2a;
+    border: 1px solid #405266;
+    border-radius: 5px;
+    margin-bottom: 15px;
 }
 
 .activity-icon {
     width: 40px;
     height: 40px;
-    background: #dd2c00;
+    background: #dd003f;
     color: white;
     border-radius: 50%;
     display: flex;
@@ -688,15 +722,16 @@ textarea:focus {
 .activity-description {
     font-weight: 500;
     margin-bottom: 5px;
+    color: #ffffff;
 }
 
 .activity-time {
     font-size: 0.8em;
-    color: #666;
+    color: #abb7c4;
 }
 
 .activity-points {
-    color: #dd2c00;
+    color: #dcf836;
     font-weight: bold;
     margin-left: 10px;
 }

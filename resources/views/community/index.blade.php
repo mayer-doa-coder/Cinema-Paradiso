@@ -130,40 +130,38 @@ textarea:focus {
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <!-- Community header with search -->
-                <div class="community-header">
-                    <h1 class="community-title">Cinema Community</h1>
-                    <p class="community-subtitle">Discover movie lovers from around the world</p>
-                    
-                    <div class="community-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">{{ number_format($totalUsers) }}</span>
-                            <span class="stat-label">Members</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">{{ number_format($activeUsers) }}</span>
-                            <span class="stat-label">Active</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">{{ number_format($totalMoviesWatched) }}</span>
-                            <span class="stat-label">Movies Watched</span>
-                        </div>
+                <!-- Community header -->
+                <h1 class="page-title">Cinema Community</h1>
+                <p class="page-subtitle">Discover movie lovers from around the world</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="community-header-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="community-stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ number_format($totalUsers) }}</span>
+                        <span class="stat-label">Members</span>
                     </div>
-                    
-                    <!-- Search and sort controls -->
-                    <div class="community-controls">
-                        <div class="search-container">
-                            <input type="text" id="user-search" placeholder="Search members..." class="form-control">
-                            <div id="search-results" class="search-dropdown"></div>
-                        </div>
-                        
-                        <div class="sort-container">
-                            <select id="sort-users" class="form-control">
-                                <option value="popularity" {{ $currentSort == 'popularity' ? 'selected' : '' }}>Most Popular</option>
-                                <option value="recent" {{ $currentSort == 'recent' ? 'selected' : '' }}>Recently Active</option>
-                                <option value="alphabetical" {{ $currentSort == 'alphabetical' ? 'selected' : '' }}>Alphabetical</option>
-                            </select>
-                        </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ number_format($activeUsers) }}</span>
+                        <span class="stat-label">Active</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ number_format($totalMoviesWatched) }}</span>
+                        <span class="stat-label">Movies Watched</span>
+                    </div>
+                    <div class="sort-container">
+                        <label for="sort-users">Sort by:</label>
+                        <select id="sort-users" class="form-control">
+                            <option value="popularity" {{ $currentSort == 'popularity' ? 'selected' : '' }}>Most Popular</option>
+                            <option value="recent" {{ $currentSort == 'recent' ? 'selected' : '' }}>Recently Active</option>
+                            <option value="alphabetical" {{ $currentSort == 'alphabetical' ? 'selected' : '' }}>Alphabetical</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -183,78 +181,55 @@ textarea:focus {
                 <div class="community-users-grid">
                     @forelse($users as $user)
                         <div class="user-card">
-                            <div class="user-avatar-container">
-                                <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="user-avatar-circle">
-                                @if($user->last_active && $user->last_active->gt(now()->subHours(24)))
-                                    <span class="online-indicator"></span>
-                                @endif
-                            </div>
-                            
-                            <div class="user-info">
-                                <h3 class="user-name">
-                                    <a href="{{ route('community.profile', $user->username) }}">{{ $user->name }}</a>
-                                </h3>
-                                <p class="user-username">@{{ $user->username }}</p>
-                                
-                                @if($user->location)
-                                    <p class="user-location">
-                                        <i class="ion-location"></i> {{ $user->location }}
-                                    </p>
-                                @endif
-                                
-                                @if($user->platform)
-                                    <p class="user-platform">
-                                        <i class="ion-link"></i> {{ ucfirst($user->platform) }}
-                                        @if($user->platform_username)
-                                            ({{ $user->platform_username }})
+                            <a href="{{ route('community.profile', $user->username) }}" class="user-card-link">
+                                <div class="user-card-header">
+                                    <div class="user-avatar-small">
+                                        <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}">
+                                        @if($user->last_active && $user->last_active->gt(now()->subHours(24)))
+                                            <span class="online-dot"></span>
                                         @endif
-                                    </p>
-                                @endif
-                                
-                                <div class="user-stats">
-                                    <div class="stat">
-                                        <span class="stat-value">{{ $user->popularity_score }}</span>
-                                        <span class="stat-name">Points</span>
                                     </div>
-                                    <div class="stat">
-                                        <span class="stat-value">{{ $user->followers()->count() }}</span>
-                                        <span class="stat-name">Followers</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-value">{{ $user->total_movies_watched }}</span>
-                                        <span class="stat-name">Movies</span>
+                                    <div class="user-basic-info">
+                                        <h4 class="user-name">{{ $user->name }}</h4>
+                                        <p class="user-username">@{{ $user->username }}</p>
                                     </div>
                                 </div>
                                 
-                                @if($user->bio)
-                                    <p class="user-bio">{{ Str::limit($user->bio, 100) }}</p>
-                                @endif
-                                
-                                <!-- Favorite Movies Preview -->
-                                @if($user->favoriteMovies->count() > 0)
-                                    <div class="user-favorite-movies">
-                                        <h5>Favorite Movies</h5>
-                                        <div class="favorite-movies-list">
-                                            @foreach($user->favoriteMovies->take(4) as $movie)
-                                                <div class="favorite-movie-item">
-                                                    @if($movie->movie_poster)
-                                                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" title="{{ $movie->movie_title }}">
-                                                    @else
-                                                        <div class="movie-placeholder">{{ substr($movie->movie_title, 0, 2) }}</div>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                            @if($user->favoriteMovies->count() > 4)
-                                                <div class="more-movies">+{{ $user->favoriteMovies->count() - 4 }}</div>
+                                <div class="user-stats-compact">
+                                    <div class="stat-compact">
+                                        <i class="ion-ios-star"></i>
+                                        <span>{{ number_format($user->popularity_score) }}</span>
+                                    </div>
+                                    <div class="stat-compact">
+                                        <i class="ion-ios-people"></i>
+                                        <span>{{ $user->followers()->count() }}</span>
+                                    </div>
+                                    <div class="stat-compact">
+                                        <i class="ion-ios-film"></i>
+                                        <span>{{ $user->total_movies_watched }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <!-- Favorite Movies Preview -->
+                            @if($user->favoriteMovies->count() >= 5)
+                                <div class="user-favorite-movies-compact">
+                                    <div class="favorite-movies-list-compact">
+                                        @foreach($user->favoriteMovies->take(5) as $movie)
+                                            @if(!empty($movie->movie_poster))
+                                                <a href="{{ route('movies.show', $movie->movie_id) }}" 
+                                                   class="favorite-movie-item-compact" 
+                                                   title="{{ $movie->movie_title }}"
+                                                   onclick="event.stopPropagation();">
+                                                    <img src="{{ $movie->poster_url }}" 
+                                                         alt="{{ $movie->movie_title }}"
+                                                         loading="lazy">
+                                                </a>
                                             @endif
-                                        </div>
+                                        @endforeach
                                     </div>
-                                @endif
-                                
-                                <div class="user-actions">
-                                    <a href="{{ route('community.profile', $user->username) }}" class="btn btn-primary btn-sm">View Profile</a>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     @empty
                         <div class="no-users-found">
@@ -311,29 +286,32 @@ textarea:focus {
 </div>
 
 <style>
-.community-header {
-    text-align: center;
-    padding: 40px 0;
-    color: white;
-}
-
-.community-title {
+.page-title {
     font-size: 3em;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
 }
 
-.community-subtitle {
+.page-subtitle {
     font-size: 1.2em;
-    opacity: 0.9;
+    color: #abb7c4;
+    text-align: center;
     margin-bottom: 30px;
 }
 
-.community-stats {
+.community-header-section {
+    background-color: #020d18;
+    padding: 20px 0 30px;
+}
+
+.community-stats-bar {
     display: flex;
     justify-content: center;
-    gap: 40px;
-    margin-bottom: 30px;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap;
 }
 
 .stat-item {
@@ -344,223 +322,207 @@ textarea:focus {
     display: block;
     font-size: 2em;
     font-weight: bold;
-    color: #dd2c00;
+    color: #dcf836;
 }
 
 .stat-label {
     display: block;
     font-size: 0.9em;
-    opacity: 0.8;
-}
-
-.community-controls {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.search-container {
-    position: relative;
-    flex: 1;
-}
-
-.search-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid #ddd;
-    border-top: none;
-    max-height: 300px;
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
-}
-
-.search-dropdown .search-result {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-}
-
-.search-dropdown .search-result:hover {
-    background: #f5f5f5;
+    color: #abb7c4;
+    text-transform: uppercase;
+    margin-top: 5px;
 }
 
 .sort-container {
-    width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-container label {
+    color: #abb7c4;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.sort-container .form-control {
+    width: 180px;
+    background-color: #0b1a2a;
+    border: 1px solid #405266;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 3px;
+}
+
+.sort-container .form-control:focus {
+    border-color: #dcf836;
+    outline: none;
 }
 
 .community-users-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
     margin-top: 30px;
 }
 
 .user-card {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+    border: 1px solid #235fa2ff;
+    transition: all 0.3s ease;
     position: relative;
+    overflow: hidden;
 }
 
 .user-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    border-color: #dcf836;
+    box-shadow: 0 4px 12px rgba(220, 248, 54, 0.1);
 }
 
-.user-avatar-container {
+.user-card-link {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-card-link:hover,
+.user-card-link:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
+.user-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.user-avatar-small {
     position: relative;
-    text-align: center;
-    margin-bottom: 15px;
+    flex-shrink: 0;
 }
 
-.user-avatar-circle {
-    width: 80px;
-    height: 80px;
+.user-avatar-small img {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    border: 3px solid #dd2c00;
     object-fit: cover;
 }
 
-.online-indicator {
+.online-dot {
     position: absolute;
-    bottom: 5px;
-    right: calc(50% - 35px);
-    width: 15px;
-    height: 15px;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
     background: #4caf50;
     border-radius: 50%;
-    border: 2px solid white;
+    border: 2px solid #0b1a2a;
 }
 
-.user-info {
-    text-align: center;
+.user-basic-info {
+    flex: 1;
+    min-width: 0;
 }
 
-.user-name a {
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2em;
+.user-name {
+    margin: 0;
+    font-size: 1em;
+    line-height: 1.2;
+    color: #ffffff;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.user-name a:hover {
-    color: #dd2c00;
+.user-card-link:hover .user-name {
+    color: #dcf836;
 }
 
 .user-username {
-    color: #666;
-    margin: 5px 0;
-    font-size: 0.9em;
-}
-
-.user-location, .user-platform {
-    color: #888;
+    color: #abb7c4;
+    margin: 2px 0 0 0;
     font-size: 0.8em;
-    margin: 3px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.user-stats {
+.user-stats-compact {
     display: flex;
     justify-content: space-around;
-    margin: 15px 0;
-    padding: 10px;
-    background: #f8f9fa;
+    padding: 10px 0;
+    background: #020d18;
     border-radius: 5px;
 }
 
-.stat {
-    text-align: center;
+.stat-compact {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #dcf836;
+    font-size: 0.85em;
+    font-weight: 600;
 }
 
-.stat-value {
-    display: block;
-    font-weight: bold;
-    color: #dd2c00;
+.stat-compact i {
     font-size: 1.1em;
 }
 
-.stat-name {
-    font-size: 0.8em;
-    color: #666;
+.stat-compact span {
+    color: #ffffff;
 }
 
-.user-bio {
-    font-size: 0.9em;
-    color: #666;
-    margin: 10px 0;
-    font-style: italic;
+.user-favorite-movies-compact {
+    margin: 12px 15px;
 }
 
-.user-favorite-movies {
-    margin: 15px 0;
-}
-
-.user-favorite-movies h5 {
-    font-size: 0.9em;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.favorite-movies-list {
+.favorite-movies-list-compact {
     display: flex;
+    gap: 6px;
     justify-content: center;
-    gap: 5px;
-    align-items: center;
+    flex-wrap: wrap;
 }
 
-.favorite-movie-item img {
-    width: 30px;
-    height: 45px;
+.favorite-movie-item-compact {
+    width: 35px;
+    height: 52px;
     border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid #405266;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: block;
+    position: relative;
+}
+
+.favorite-movie-item-compact:hover {
+    transform: scale(1.15);
+    border-color: #dcf836;
+    box-shadow: 0 2px 8px rgba(220, 248, 54, 0.3);
+    z-index: 10;
+}
+
+.favorite-movie-item-compact img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-}
-
-.movie-placeholder {
-    width: 30px;
-    height: 45px;
-    background: #dd2c00;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7em;
-    font-weight: bold;
-    border-radius: 3px;
-}
-
-.more-movies {
-    width: 30px;
-    height: 45px;
-    background: #f0f0f0;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7em;
-    border-radius: 3px;
-}
-
-.user-actions {
-    margin-top: 15px;
-}
-
-.btn-sm {
-    padding: 5px 15px;
-    font-size: 0.8em;
+    display: block;
 }
 
 .no-users-found {
     text-align: center;
     padding: 60px 20px;
-    color: #666;
+    color: #abb7c4;
+}
+
+.no-users-found h3 {
+    color: #ffffff;
+    margin-bottom: 10px;
 }
 
 .community-pagination {
@@ -570,11 +532,20 @@ textarea:focus {
 
 .community-guidelines {
     margin-top: 30px;
+    background: #0b1a2a;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #405266;
+}
+
+.community-guidelines h4 {
+    color: #dcf836;
+    margin-bottom: 15px;
 }
 
 .community-guidelines ul {
     padding-left: 20px;
-    color: #666;
+    color: #abb7c4;
 }
 
 .community-guidelines li {
@@ -583,21 +554,52 @@ textarea:focus {
 }
 
 @media (max-width: 768px) {
-    .community-controls {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .community-users-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .community-stats {
+    .community-stats-bar {
         gap: 20px;
     }
     
     .stat-number {
         font-size: 1.5em;
+    }
+    
+    .community-users-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+    }
+    
+    .sort-container {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .sort-container .form-control {
+        width: 100%;
+    }
+    
+    .user-card-link {
+        padding: 12px;
+    }
+    
+    .user-avatar-small img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .favorite-movie-item-compact {
+        width: 30px;
+        height: 45px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .community-users-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (min-width: 1400px) {
+    .community-users-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 }
 </style>
@@ -606,96 +608,16 @@ textarea:focus {
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('user-search');
-    const searchResults = document.getElementById('search-results');
     const sortSelect = document.getElementById('sort-users');
     
-    // Search functionality
-    let searchTimeout;
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
-        
-        if (query.length < 2) {
-            searchResults.style.display = 'none';
-            return;
-        }
-        
-        searchTimeout = setTimeout(() => {
-            fetch(`/community/search?q=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.users && data.users.length > 0) {
-                        let html = '';
-                        data.users.forEach(user => {
-                            html += `
-                                <div class="search-result" onclick="window.location.href='${user.profile_url}'">
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <img src="${user.avatar_url}" alt="${user.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-                                        <div>
-                                            <div style="font-weight: bold;">${user.name}</div>
-                                            <div style="font-size: 0.8em; color: #666;">@${user.username}</div>
-                                            ${user.location ? `<div style="font-size: 0.7em; color: #888;"><i class="ion-location"></i> ${user.location}</div>` : ''}
-                                        </div>
-                                        <div style="margin-left: auto; color: #dd2c00; font-weight: bold;">${user.popularity_score}</div>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        searchResults.innerHTML = html;
-                        searchResults.style.display = 'block';
-                    } else {
-                        searchResults.innerHTML = '<div class="search-result">No users found</div>';
-                        searchResults.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Search error:', error);
-                    searchResults.style.display = 'none';
-                });
-        }, 300);
-    });
-    
-    // Hide search results when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-            searchResults.style.display = 'none';
-        }
-    });
-    
     // Sort functionality
-    sortSelect.addEventListener('change', function() {
-        const url = new URL(window.location);
-        url.searchParams.set('sort', this.value);
-        window.location.href = url.toString();
-    });
-});
-
-// Search functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const searchIcon = document.getElementById('search-icon');
-    const searchInput = document.getElementById('search-query');
-    const searchType = document.getElementById('search-type');
-    
-    function performSearch() {
-        const query = searchInput.value.trim();
-        const type = searchType.value;
-        
-        if (query) {
-            const searchUrl = `{{ route('home.search') }}?q=${encodeURIComponent(query)}&type=${type}`;
-            window.location.href = searchUrl;
-        }
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            const url = new URL(window.location);
+            url.searchParams.set('sort', this.value);
+            window.location.href = url.toString();
+        });
     }
-    
-    // Search on icon click
-    searchIcon.addEventListener('click', performSearch);
-    
-    // Search on Enter key press
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
-    });
 });
 
 async function logout() {
