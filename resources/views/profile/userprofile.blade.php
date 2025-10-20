@@ -45,7 +45,6 @@ body {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 3px solid #dcf836;
     margin-bottom: 15px;
 }
 .user-img .redbtn {
@@ -64,12 +63,13 @@ body {
     margin-bottom: 20px;
 }
 .user-fav p {
-    color: #eb70ac;
+    color: #3e9fd8;
     font-weight: 600;
     font-size: 16px;
-    text-align: left;
+    text-align: left !important;
     margin-bottom: 10px;
     padding-bottom: 10px;
+    padding-left: 0 !important;
     border-bottom: 1px solid #405266;
 }
 .user-fav ul {
@@ -89,7 +89,6 @@ body {
 }
 .user-fav ul li.active a,
 .user-fav ul li a:hover {
-    background: #405266;
     color: #dcf836;
 }
 .form-style-1.user-pro {
@@ -143,6 +142,10 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
+    text-align: center;
+    display: block;
+    width: 150px;
+    margin: 0;
 }
 .form-style-1 input.submit:hover {
     background: #eb70ac;
@@ -330,7 +333,7 @@ body {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-2">
+							<div class="col-md-12">
 								<input class="submit" type="submit" value="Save">
 							</div>
 						</div>	
@@ -357,7 +360,7 @@ body {
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-2">
+							<div class="col-md-12">
 								<input class="submit" type="submit" value="Change">
 							</div>
 						</div>	
