@@ -10,6 +10,7 @@ use App\Http\Controllers\CelebrityController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserMovieController;
 
 // Home route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -115,9 +116,12 @@ Route::prefix('auth')->group(function () {
 
 // You can add other protected routes here
 Route::middleware('auth')->group(function () {
-    // Add protected movie routes here if needed
-    // Route::post('/movies/{id}/favorite', [MovieController::class, 'favorite'])->name('movies.favorite');
-    // Route::post('/movies/{id}/rate', [MovieController::class, 'rate'])->name('movies.rate');
+    // User Movie Interactions
+    Route::post('/movies/add', [UserMovieController::class, 'addMovie'])->name('movies.add');
+    Route::post('/movies/like', [UserMovieController::class, 'toggleLike'])->name('movies.like');
+    Route::post('/movies/watchlist', [UserMovieController::class, 'toggleWatchlist'])->name('movies.watchlist');
+    Route::post('/movies/review', [UserMovieController::class, 'submitReview'])->name('movies.review');
+    Route::get('/movies/{movieId}/status', [UserMovieController::class, 'getMovieStatus'])->name('movies.status');
 });
 Route::middleware('auth')->group(function () {
     // Example protected routes

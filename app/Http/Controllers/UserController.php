@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use App\Models\UserMovie;
+use App\Models\UserWatchlist;
+use App\Models\UserMovieReview;
 
 class UserController extends Controller
 {
@@ -104,8 +107,11 @@ class UserController extends Controller
      */
     public function watchlist()
     {
-        // TODO: Implement watchlist functionality
-        return view('profile.userwatchlist');
+        $watchlist = UserWatchlist::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('profile.userwatchlist', compact('watchlist'));
     }
 
     /**
@@ -113,17 +119,23 @@ class UserController extends Controller
      */
     public function reviews()
     {
-        // TODO: Implement reviews functionality
-        return view('profile.userreviews');
+        $reviews = UserMovieReview::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('profile.userreviews', compact('reviews'));
     }
 
     /**
-     * Display the user's rated movies.
+     * Display user's rated movies.
      */
     public function movies()
     {
-        // TODO: Implement rated movies functionality
-        return view('profile.usermovies');
+        $movies = UserMovie::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('profile.usermovies', compact('movies'));
     }
 
     /**

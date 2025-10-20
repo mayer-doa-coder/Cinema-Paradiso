@@ -13,6 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Add compression middleware globally
         $middleware->append(\App\Http\Middleware\CompressResponse::class);
+        
+        // Use custom Authenticate middleware to redirect to home instead of login
+        $middleware->alias([
+            'auth' => \App\Http\Middleware\Authenticate::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

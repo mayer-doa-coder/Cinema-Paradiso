@@ -134,17 +134,10 @@ class AuthController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Logout successful'
-            ], 200);
+            return redirect()->route('home')->with('success', 'Logout successful');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Logout failed',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('home')->with('error', 'Logout failed: ' . $e->getMessage());
         }
     }
 
