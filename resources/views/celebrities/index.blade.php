@@ -111,18 +111,10 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
                     <ul class="nav navbar-nav flex-child-menu menu-right">               
                         <li><a href="{{ route('help') }}">Help</a></li>
                         @auth
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    {{ Auth::user()->name }} <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            <li>
+                                <a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+                                    {{ Auth::user()->name }}
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Profile</a></li>
-                                    <li><a href="#">Settings</a></li>
-                                    <li><a href="#">Movies</a></li>
-                                    <li><a href="#">Reviews</a></li>
-                                    <li><a href="#">Watchlist</a></li>
-                                    <li><a href="#" onclick="logout()">Logout</a></li>
-                                </ul>
                             </li>
                         @else
                             <li class="loginLink"><a href="#">LOG In</a></li>
