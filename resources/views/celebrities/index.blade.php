@@ -234,53 +234,50 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
                 <!-- Pagination -->
                 @if($totalPages > 1)
                     <div class="topbar-filter">
-                        <div class="pagination-container">
-                            <div class="pagination">
-                                @if($isAlphabetical)
-                                    <!-- Alphabetical Sub-Page Navigation -->
-                                    @if($currentSubPage > 1)
-                                        <a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $currentSubPage - 1 }}" class="prev">
-                                            <i class="ion-ios-arrow-left"></i> Previous
-                                        </a>
-                                    @endif
-
-                                    @for($i = max(1, $currentSubPage - 2); $i <= min($totalSubPages, $currentSubPage + 2); $i++)
-                                        <a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $i }}" 
-                                           class="page {{ $i == $currentSubPage ? 'active' : '' }}">{{ $currentLetter }}{{ $i }}</a>
-                                    @endfor
-
-                                    @if($currentSubPage < $totalSubPages)
-                                        <a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $currentSubPage + 1 }}" class="next">
-                                            Next <i class="ion-ios-arrow-right"></i>
-                                        </a>
-                                    @endif
-                                @else
-                                    <!-- Regular Numeric Pagination -->
-                                    @if($currentPage > 1)
-                                        <a href="{{ request()->fullUrlWithQuery(['page' => $currentPage - 1, 'sort' => $currentSort]) }}" class="prev">
-                                            <i class="ion-ios-arrow-left"></i> Previous
-                                        </a>
-                                    @endif
-
-                                    @for($i = max(1, $currentPage - 2); $i <= min($totalPages, $currentPage + 2); $i++)
-                                        <a href="{{ request()->fullUrlWithQuery(['page' => $i, 'sort' => $currentSort]) }}" 
-                                           class="page {{ $i == $currentPage ? 'active' : '' }}">{{ $i }}</a>
-                                    @endfor
-
-                                    @if($currentPage < $totalPages)
-                                        <a href="{{ request()->fullUrlWithQuery(['page' => $currentPage + 1, 'sort' => $currentSort]) }}" class="next">
-                                            Next <i class="ion-ios-arrow-right"></i>
-                                        </a>
-                                    @endif
+                        <div class="pagination2">
+                            @if($isAlphabetical)
+                                <!-- Alphabetical Sub-Page Navigation -->
+                                @if($currentSubPage > 1)
+                                    <span><a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $currentSubPage - 1 }}">
+                                        <i class="ion-arrow-left-b"></i></a></span>
                                 @endif
-                            </div>
-                            <div class="pagination-info">
-                                @if($isAlphabetical)
-                                    <span>{{ $currentLetter }} - Page {{ $currentSubPage }} of {{ $totalSubPages }}</span>
-                                @else
-                                    <span>Page {{ $currentPage }} of {{ $totalPages }}</span>
+
+                                @php
+                                    $start = max(1, $currentSubPage - 2);
+                                    $end = min($totalSubPages, $currentSubPage + 2);
+                                @endphp
+
+                                @for($i = $start; $i <= $end; $i++)
+                                    <span><a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $i }}" 
+                                        class="{{ $i == $currentSubPage ? 'active' : '' }}">{{ $currentLetter }}{{ $i }}</a></span>
+                                @endfor
+
+                                @if($currentSubPage < $totalSubPages)
+                                    <span><a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $currentSubPage + 1 }}">
+                                        <i class="ion-arrow-right-b"></i></a></span>
                                 @endif
-                            </div>
+                            @else
+                                <!-- Regular Numeric Pagination -->
+                                @if($currentPage > 1)
+                                    <span><a href="{{ request()->fullUrlWithQuery(['page' => $currentPage - 1, 'sort' => $currentSort]) }}">
+                                        <i class="ion-arrow-left-b"></i></a></span>
+                                @endif
+
+                                @php
+                                    $start = max(1, $currentPage - 2);
+                                    $end = min($totalPages, $currentPage + 2);
+                                @endphp
+
+                                @for($i = $start; $i <= $end; $i++)
+                                    <span><a href="{{ request()->fullUrlWithQuery(['page' => $i, 'sort' => $currentSort]) }}" 
+                                        class="{{ $i == $currentPage ? 'active' : '' }}">{{ $i }}</a></span>
+                                @endfor
+
+                                @if($currentPage < $totalPages)
+                                    <span><a href="{{ request()->fullUrlWithQuery(['page' => $currentPage + 1, 'sort' => $currentSort]) }}">
+                                        <i class="ion-arrow-right-b"></i></a></span>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 @endif
@@ -373,7 +370,6 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 }
 
 .ceb-item:hover {
-    background: #2a2a2a;
     transform: translateY(-8px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
@@ -455,39 +451,6 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
     border: 1px solid #444;
     padding: 8px 12px;
     border-radius: 4px;
-}
-
-.pagination-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.pagination {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.pagination a {
-    padding: 8px 15px;
-    background: #2a2a2a;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.pagination a:hover,
-.pagination a.active {
-    background: #e9d736;
-    color: #000;
-}
-
-.pagination-info {
-    color: #999;
-    font-size: 14px;
 }
 
 .no-results {
@@ -622,11 +585,6 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
         flex-direction: column;
         gap: 15px;
         align-items: flex-start;
-    }
-    
-    .pagination-container {
-        flex-direction: column;
-        gap: 15px;
     }
 }
 

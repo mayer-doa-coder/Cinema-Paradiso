@@ -115,7 +115,7 @@ body {
         <div class="row ipad-width2" id="main-row">
             <div class="col-md-8 col-sm-12 col-xs-12" id="main-content">
                 <!-- Modern Filter Bar -->
-                <div class="modern-filter-bar" style="background: #0f1419; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <div class="modern-filter-bar" style="padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                     <div class="filter-header" style="margin-bottom: 15px; color: #abb7c4; font-size: 14px;">
                         Found <span style="color: #ec6eab; font-weight: bold;">{{ $total_results ?? count($movies) }} movies</span> in total
                     </div>
