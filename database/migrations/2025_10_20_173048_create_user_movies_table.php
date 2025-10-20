@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('user_movies', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->integer('movie_id'); // TMDB movie ID
+            $table->string('movie_title');
+            $table->string('movie_poster')->nullable();
+            $table->decimal('rating', 3, 1)->nullable(); // User's rating (0.0 - 10.0)
+            $table->year('release_year')->nullable();
+            $table->timestamps();
+            
+            // Unique constraint to prevent duplicate entries
+            $table->unique(['user_id', 'movie_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('user_movies');
+    }
+};
