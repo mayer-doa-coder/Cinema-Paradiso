@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CelebrityController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\UserController;
 
 // Home route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -86,6 +87,15 @@ Route::get('/help', function () {
 })->name('help');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+
+// User Profile routes (protected)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
+    Route::post('/profile/password', [UserController::class, 'updatePassword'])->name('user.password.update');
+    Route::get('/profile/favorites', [UserController::class, 'favorites'])->name('user.favorites');
+    Route::get('/profile/rated', [UserController::class, 'rated'])->name('user.rated');
+});
 
 // Authentication routes
 Route::prefix('auth')->group(function () {
