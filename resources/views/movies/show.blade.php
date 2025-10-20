@@ -1232,8 +1232,6 @@ function rateMovie(rating) {
             star.classList.add('ion-ios-star-outline');
         }
     });
-    
-    document.getElementById('currentRating').textContent = `You rated: ${rating}/10`;
 }
 
 // Add movie to collection
