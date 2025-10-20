@@ -173,33 +173,54 @@ class NewsService
         return Cache::remember($cacheKey, $this->cacheDuration, function () use ($page, $limit) {
             $articles = collect();
 
-            // Primary: RSS Feeds (Free and unlimited)
+            // Primary: RSS Feeds (Free and unlimited) - fetch more to ensure enough with images
             $rssArticles = $this->parseMovieNewsRSS();
             $articles = $articles->merge($rssArticles);
 
-            // Secondary: NewsAPI (if we have remaining quota)
-            if ($this->newsApiKey && $articles->count() < $limit * 2) {
-                $newsApiArticles = $this->getNewsAPIContent();
-                $articles = $articles->merge($newsApiArticles);
-            }
-
-            // Tertiary: Guardian API (if we have key)
-            if ($this->guardianApiKey && $articles->count() < $limit * 3) {
-                $guardianArticles = $this->getGuardianMovieNews();
-                $articles = $articles->merge($guardianArticles);
-            }
-
-            // Filter articles to only include those with valid images
+            // Filter articles to only include those with valid images FIRST
             $articlesWithImages = $articles->filter(function ($article) {
                 return isset($article['image']) && 
                        !empty($article['image']) && 
                        $article['image'] !== null &&
-                       filter_var($article['image'], FILTER_VALIDATE_URL);
+                       filter_var($article['image'], FILTER_VALIDATE_URL) &&
+                       !str_contains(strtolower($article['image']), 'placeholder') &&
+                       !str_contains(strtolower($article['image']), 'default');
             });
 
-            // Sort by publication date and paginate
-            $sortedArticles = $articlesWithImages->sortByDesc('published_at')->unique('url');
+            Log::info("RSS Articles: " . $articles->count() . ", With Images: " . $articlesWithImages->count());
+
+            // If we don't have enough, try NewsAPI and Guardian
+            if ($articlesWithImages->count() < $limit * 2) {
+                if ($this->newsApiKey) {
+                    $newsApiArticles = $this->getNewsAPIContent();
+                    $newsApiWithImages = $newsApiArticles->filter(function ($article) {
+                        return isset($article['image']) && 
+                               !empty($article['image']) && 
+                               filter_var($article['image'], FILTER_VALIDATE_URL);
+                    });
+                    $articlesWithImages = $articlesWithImages->merge($newsApiWithImages);
+                }
+            }
+
+            if ($articlesWithImages->count() < $limit * 2) {
+                if ($this->guardianApiKey) {
+                    $guardianArticles = $this->getGuardianMovieNews();
+                    $guardianWithImages = $guardianArticles->filter(function ($article) {
+                        return isset($article['image']) && 
+                               !empty($article['image']) && 
+                               filter_var($article['image'], FILTER_VALIDATE_URL);
+                    });
+                    $articlesWithImages = $articlesWithImages->merge($guardianWithImages);
+                }
+            }
+
+            // Sort by publication date and remove duplicates
+            $sortedArticles = $articlesWithImages
+                ->sortByDesc('published_at')
+                ->unique('url')
+                ->values();
             
+            // Paginate
             $offset = ($page - 1) * $limit;
             $paginatedArticles = $sortedArticles->slice($offset, $limit)->values();
 
@@ -218,6 +239,7 @@ class NewsService
      */
     private function parseMovieNewsRSS()
     {
+        // Only use feeds that consistently have good quality images
         $feeds = [
             'variety' => [
                 'url' => 'https://variety.com/c/film/feed/',
@@ -225,11 +247,7 @@ class NewsService
             ],
             'thr' => [
                 'url' => 'https://www.hollywoodreporter.com/c/movies/feed/',
-                'name' => 'The Hollywood Reporter'
-            ],
-            'ew' => [
-                'url' => 'https://ew.com/movies/feed/',
-                'name' => 'Entertainment Weekly'
+                'name' => 'Hollywood Reporter'
             ],
             'deadline' => [
                 'url' => 'https://deadline.com/category/movie-news/feed/',
@@ -242,18 +260,6 @@ class NewsService
             'collider' => [
                 'url' => 'https://collider.com/rss/',
                 'name' => 'Collider'
-            ],
-            'slashfilm' => [
-                'url' => 'https://www.slashfilm.com/feed/',
-                'name' => 'SlashFilm'
-            ],
-            'cinemablend' => [
-                'url' => 'https://www.cinemablend.com/rss_entertainment.php',
-                'name' => 'CinemaBlend'
-            ],
-            'comingsoon' => [
-                'url' => 'https://www.comingsoon.net/feed',
-                'name' => 'ComingSoon'
             ]
         ];
 
@@ -261,25 +267,36 @@ class NewsService
 
         foreach ($feeds as $sourceKey => $source) {
             try {
-                $response = Http::timeout(10)->get($source['url']);
+                $response = Http::timeout(8)->get($source['url']);
                 
                 if ($response->successful()) {
                     $rss = simplexml_load_string($response->body());
                     
                     if ($rss && isset($rss->channel->item)) {
+                        // Limit to 15 items per feed to speed up processing
+                        $itemCount = 0;
+                        
                         foreach ($rss->channel->item as $item) {
-                            $articles->push([
-                                'title' => $this->cleanTitle((string) $item->title),
-                                'description' => $this->cleanDescription((string) $item->description),
-                                'url' => (string) $item->link,
-                                'published_at' => $this->parseDate((string) $item->pubDate),
-                                'source' => $source['name'],
-                                'source_key' => $sourceKey,
-                                'image' => $this->extractImageFromRSS($item),
-                                'author' => $this->extractAuthor($item),
-                                'category' => 'movie-news',
-                                'type' => 'rss'
-                            ]);
+                            if ($itemCount >= 15) break;
+                            
+                            $imageUrl = $this->extractImageFromRSS($item);
+                            
+                            // Only add articles with valid images
+                            if ($imageUrl && filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+                                $articles->push([
+                                    'title' => $this->cleanTitle((string) $item->title),
+                                    'description' => $this->cleanDescription((string) $item->description),
+                                    'url' => (string) $item->link,
+                                    'published_at' => $this->parseDate((string) $item->pubDate),
+                                    'source' => $source['name'],
+                                    'source_key' => $sourceKey,
+                                    'image' => $imageUrl,
+                                    'author' => $this->extractAuthor($item),
+                                    'category' => 'movie-news',
+                                    'type' => 'rss'
+                                ]);
+                                $itemCount++;
+                            }
                         }
                     }
                 }

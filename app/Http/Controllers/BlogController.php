@@ -27,25 +27,32 @@ class BlogController extends Controller
     {
         try {
             $page = $request->get('page', 1);
-            $limit = 12; // Articles per page
+            $limit = 20; // Increased articles per page for full-width layout
 
-            // Get movie news from multiple sources
+            // Get movie news with valid images only (service will fetch more to filter)
             $newsData = $this->newsService->getMovieNews($page, $limit);
             
+            // Ensure we only show articles with valid images
+            $articlesWithImages = collect($newsData['articles'])->filter(function($article) {
+                return !empty($article['image']) && 
+                       $article['image'] !== null &&
+                       filter_var($article['image'], FILTER_VALIDATE_URL);
+            })->values();
+            
             // Get Reddit discussions for additional content
-            $discussions = $this->newsService->getRedditMovieDiscussions(6);
+            $discussions = $this->newsService->getRedditMovieDiscussions(8);
 
             // Get random movie wallpaper
             $randomWallpaper = $this->getRandomMovieWallpapers();
 
             return view('bloggrid', [
-                'articles' => $newsData['articles'],
+                'articles' => $articlesWithImages, // Use filtered articles
                 'discussions' => $discussions,
                 'pagination' => [
                     'current_page' => $newsData['current_page'],
                     'last_page' => $newsData['last_page'],
                     'per_page' => $newsData['per_page'],
-                    'total' => $newsData['total']
+                    'total' => $articlesWithImages->count() // Update total
                 ],
                 'randomWallpaper' => $randomWallpaper,
                 'error' => null
