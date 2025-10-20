@@ -34,6 +34,41 @@ class MovieService
     }
 
     /**
+     * Filter results to only include items with valid poster/profile images
+     */
+    private function filterResultsWithImages($results, $imageField = 'poster_path')
+    {
+        if (!isset($results['results']) || !is_array($results['results'])) {
+            return $results;
+        }
+
+        $results['results'] = array_filter($results['results'], function($item) use ($imageField) {
+            return !empty($item[$imageField]);
+        });
+
+        // Re-index array to maintain sequential keys
+        $results['results'] = array_values($results['results']);
+        
+        return $results;
+    }
+
+    /**
+     * Filter array of items to only include those with valid images
+     */
+    private function filterArrayWithImages($items, $imageField = 'poster_path')
+    {
+        if (!is_array($items)) {
+            return $items;
+        }
+
+        $filtered = array_filter($items, function($item) use ($imageField) {
+            return !empty($item[$imageField]);
+        });
+
+        return array_values($filtered);
+    }
+
+    /**
      * Search for movies by query
      */
     public function searchMovies($query, $page = 1)
@@ -50,7 +85,9 @@ class MovieService
                 ], 'search');
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster images
+                    return $this->filterResultsWithImages($data, 'poster_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -77,7 +114,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster images
+                    return $this->filterResultsWithImages($data, 'poster_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -104,7 +143,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster images
+                    return $this->filterResultsWithImages($data, 'poster_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -131,7 +172,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster images
+                    return $this->filterResultsWithImages($data, 'poster_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -158,7 +201,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster or backdrop images
+                    return $this->filterResultsWithImages($data, 'backdrop_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -296,7 +341,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster images
+                    return $this->filterResultsWithImages($data, 'poster_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -476,7 +523,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster images
+                    return $this->filterResultsWithImages($data, 'poster_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -522,7 +571,9 @@ class MovieService
                 $response = Http::get("{$this->baseUrl}/discover/movie", $params);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out movies without poster images
+                    return $this->filterResultsWithImages($data, 'poster_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -586,7 +637,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out people without profile images
+                    return $this->filterResultsWithImages($data, 'profile_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -615,7 +668,9 @@ class MovieService
                 ]);
 
                 if ($response->successful()) {
-                    return $response->json();
+                    $data = $response->json();
+                    // Filter out people without profile images
+                    return $this->filterResultsWithImages($data, 'profile_path');
                 }
 
                 Log::error('TMDb API Error: ' . $response->body());
@@ -881,6 +936,11 @@ class MovieService
             }
 
             foreach ($peopleData['results'] as $person) {
+                // Skip people without profile images (already filtered by getPopularPeople)
+                if (empty($person['profile_path'])) {
+                    continue;
+                }
+                
                 $firstLetter = strtoupper(substr($person['name'], 0, 1));
                 if (in_array($firstLetter, $alphabet)) {
                     $peopleByLetter[$firstLetter][] = $person;
@@ -918,6 +978,11 @@ class MovieService
                 }
 
                 foreach ($peopleData['results'] as $person) {
+                    // Skip people without profile images (already filtered by getPopularPeople)
+                    if (empty($person['profile_path'])) {
+                        continue;
+                    }
+                    
                     if (strtoupper(substr($person['name'], 0, 1)) === strtoupper($letter)) {
                         $celebrities[] = $person;
                         
