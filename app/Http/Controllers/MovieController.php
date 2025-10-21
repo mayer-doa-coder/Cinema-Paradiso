@@ -23,90 +23,124 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        $page = $request->get('page', 1);
-        $category = $request->get('category', 'popular');
-        
-        // Get filter parameters
-        $genre = $request->get('genre');
-        $year = $request->get('year');
-        $rating = $request->get('rating');
-        $sortBy = $request->get('sort_by', 'popularity.desc');
-        
-        $moviesData = null;
-        $title = 'Popular Movies';
-        
-        // If filters are applied, use discover endpoint
-        if ($genre || $year || $rating) {
-            $filters = [
-                'genre' => $genre,
-                'year' => $year,
-                'rating' => $rating,
-                'sort_by' => $sortBy,
-            ];
-            $moviesData = $this->movieService->discoverMovies($filters, $page);
-            $title = 'Filtered Movies';
-        } else {
-            // Otherwise use category-based endpoints
-            switch ($category) {
-                case 'top-rated':
-                    $moviesData = $this->movieService->getTopRatedMovies($page);
-                    $title = 'Top Rated Movies';
-                    break;
-                case 'upcoming':
-                    $moviesData = $this->movieService->getUpcomingMovies($page);
-                    $title = 'Upcoming Movies';
-                    break;
-                case 'trending':
-                    $moviesData = $this->movieService->getTrendingMovies($page);
-                    $title = 'Trending Movies';
-                    break;
-                default:
-                    $moviesData = $this->movieService->getPopularMovies($page);
-                    break;
+        try {
+            $page = $request->get('page', 1);
+            $category = $request->get('category', 'popular');
+            
+            // Get filter parameters
+            $genre = $request->get('genre');
+            $year = $request->get('year');
+            $rating = $request->get('rating');
+            $sortBy = $request->get('sort_by', 'popularity.desc');
+            
+            $moviesData = null;
+            $title = 'Popular Movies';
+            
+            // If filters are applied, use discover endpoint
+            if ($genre || $year || $rating) {
+                $filters = [
+                    'genre' => $genre,
+                    'year' => $year,
+                    'rating' => $rating,
+                    'sort_by' => $sortBy,
+                ];
+                $moviesData = $this->movieService->discoverMovies($filters, $page);
+                $title = 'Filtered Movies';
+            } else {
+                // Otherwise use category-based endpoints
+                switch ($category) {
+                    case 'top-rated':
+                        $moviesData = $this->movieService->getTopRatedMovies($page);
+                        $title = 'Top Rated Movies';
+                        break;
+                    case 'upcoming':
+                        $moviesData = $this->movieService->getUpcomingMovies($page);
+                        $title = 'Upcoming Movies';
+                        break;
+                    case 'trending':
+                        $moviesData = $this->movieService->getTrendingMovies($page);
+                        $title = 'Trending Movies';
+                        break;
+                    default:
+                        $moviesData = $this->movieService->getPopularMovies($page);
+                        break;
+                }
             }
-        }
 
-        if (!$moviesData) {
+            if (!$moviesData || !isset($moviesData['results'])) {
+                Log::warning('MovieController@index: No movie data returned', [
+                    'category' => $category,
+                    'page' => $page,
+                    'moviesData' => $moviesData
+                ]);
+                
+                return view('movies.index', [
+                    'movies' => [],
+                    'current_page' => 1,
+                    'total_pages' => 1,
+                    'total_results' => 0,
+                    'title' => $title,
+                    'category' => $category,
+                    'genres' => [],
+                    'selectedGenre' => $genre,
+                    'selectedYear' => $year,
+                    'selectedRating' => $rating,
+                    'error' => 'Unable to load movies at the moment. Please try again later.'
+                ]);
+            }
+
+            // Get genres for filter dropdown
+            $genresData = $this->movieService->getGenres();
+            $genres = $genresData['genres'] ?? [];
+
+            // Get random movie wallpaper
+            $randomWallpaper = $this->getRandomMovieWallpapers();
+
+            // Get celebrities for sidebar
+            $spotlightCelebrities = $this->getSpotlightCelebrities();
+
+            Log::info('MovieController@index: Successfully loaded movies', [
+                'category' => $category,
+                'page' => $page,
+                'total_results' => $moviesData['total_results'] ?? 0,
+                'movies_count' => count($moviesData['results'] ?? [])
+            ]);
+
+            return view('movies.index', [
+                'movies' => $moviesData['results'] ?? [],
+                'current_page' => $moviesData['page'] ?? 1,
+                'total_pages' => $moviesData['total_pages'] ?? 1,
+                'total_results' => $moviesData['total_results'] ?? 0,
+                'title' => $title,
+                'category' => $category,
+                'genres' => $genres,
+                'selectedGenre' => $genre,
+                'selectedYear' => $year,
+                'selectedRating' => $rating,
+                'randomWallpaper' => $randomWallpaper,
+                'spotlightCelebrities' => $spotlightCelebrities,
+                'error' => null
+            ]);
+        } catch (\Exception $e) {
+            Log::error('MovieController@index error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return view('movies.index', [
                 'movies' => [],
                 'current_page' => 1,
                 'total_pages' => 1,
                 'total_results' => 0,
-                'title' => $title,
-                'category' => $category,
+                'title' => $title ?? 'Popular Movies',
+                'category' => $category ?? 'popular',
                 'genres' => [],
-                'selectedGenre' => $genre,
-                'selectedYear' => $year,
-                'selectedRating' => $rating,
+                'selectedGenre' => $genre ?? null,
+                'selectedYear' => $year ?? null,
+                'selectedRating' => $rating ?? null,
                 'error' => 'Unable to load movies at the moment. Please try again later.'
             ]);
         }
-
-        // Get genres for filter dropdown
-        $genresData = $this->movieService->getGenres();
-        $genres = $genresData['genres'] ?? [];
-
-        // Get random movie wallpaper
-        $randomWallpaper = $this->getRandomMovieWallpapers();
-
-        // Get celebrities for sidebar
-        $spotlightCelebrities = $this->getSpotlightCelebrities();
-
-        return view('movies.index', [
-            'movies' => $moviesData['results'] ?? [],
-            'current_page' => $moviesData['page'] ?? 1,
-            'total_pages' => $moviesData['total_pages'] ?? 1,
-            'total_results' => $moviesData['total_results'] ?? 0,
-            'title' => $title,
-            'category' => $category,
-            'genres' => $genres,
-            'selectedGenre' => $genre,
-            'selectedYear' => $year,
-            'selectedRating' => $rating,
-            'randomWallpaper' => $randomWallpaper,
-            'spotlightCelebrities' => $spotlightCelebrities,
-            'error' => null
-        ]);
     }
 
     /**
