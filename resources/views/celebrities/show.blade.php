@@ -182,7 +182,7 @@ textarea:focus {
                     @if($celebrity['homepage'])
                         <div class="celebrity-links">
                             <a href="{{ $celebrity['homepage'] }}" target="_blank" class="btn btn-primary">
-                                <i class="ion-link"></i> Official Website
+                                <i class="ion-link"></i> OFFICIAL SITE
                             </a>
                         </div>
                     @endif
@@ -197,7 +197,7 @@ textarea:focus {
                         
                         <div class="celebrity-actions">
                             <a href="{{ route('celebrities') }}" class="btn btn-secondary">
-                                <i class="ion-ios-arrow-left"></i> Back to Celebrities
+                                <i class="ion-ios-arrow-left"></i> BACK TO CELEBRITIES
                             </a>
                         </div>
                     </div>
@@ -206,7 +206,8 @@ textarea:focus {
                         <div class="celebrity-section">
                             <h3>Biography</h3>
                             <div class="biography-content">
-                                <p>{{ $celebrity['biography'] }}</p>
+                                <p id="biographyText" class="biography-text collapsed">{{ $celebrity['biography'] }}</p>
+                                <a href="#" id="readMoreBtn" class="read-more-btn" onclick="toggleBiography(event)">Read More</a>
                             </div>
                         </div>
                     @endif
@@ -253,7 +254,7 @@ textarea:focus {
 
 <style>
 .celebrity-single {
-    background: #1e1e1e;
+    background: #020d18;
     min-height: 600px;
     padding: 40px 0;
 }
@@ -274,7 +275,6 @@ textarea:focus {
 }
 
 .celebrity-profile-sidebar {
-    background: #2a2a2a;
     padding: 30px;
     border-radius: 8px;
     text-align: center;
@@ -289,7 +289,6 @@ textarea:focus {
     height: 200px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #e9d736;
     transition: all 0.3s ease;
 }
 
@@ -373,6 +372,33 @@ textarea:focus {
     font-size: 16px;
 }
 
+.biography-text.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.biography-text.expanded {
+    display: block;
+}
+
+.read-more-btn {
+    color: #e9d736;
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 10px;
+    display: inline-block;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.read-more-btn:hover {
+    color: #e9d736;
+    text-decoration: none;
+}
+
 .movie-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -450,7 +476,7 @@ textarea:focus {
 
 .btn {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 5px 5px;
     border-radius: 4px;
     text-decoration: none;
     font-size: 14px;
@@ -460,23 +486,24 @@ textarea:focus {
 }
 
 .btn-primary {
-    background: #e9d736;
-    color: #000;
+    background: #ec6eab;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .btn-primary:hover {
-    background: #c9e62f;
+    background: #ec6eab;
     transform: translateY(-2px);
 }
 
 .btn-secondary {
-    background: #2a2a2a;
+    background: #ec6eab;
     color: #fff;
     border: 1px solid #444;
 }
 
 .btn-secondary:hover {
-    background: #333;
+    background: #ec6eab3;
     border-color: #e9d736;
 }
 
@@ -518,6 +545,23 @@ textarea:focus {
 
 @push('scripts')
 <script>
+// Biography Read More/Less Toggle
+function toggleBiography(event) {
+    event.preventDefault();
+    const bioText = document.getElementById('biographyText');
+    const readMoreBtn = document.getElementById('readMoreBtn');
+    
+    if (bioText.classList.contains('collapsed')) {
+        bioText.classList.remove('collapsed');
+        bioText.classList.add('expanded');
+        readMoreBtn.textContent = 'Read Less';
+    } else {
+        bioText.classList.remove('expanded');
+        bioText.classList.add('collapsed');
+        readMoreBtn.textContent = 'Read More';
+    }
+}
+
 // Search functionality
 document.addEventListener('DOMContentLoaded', function() {
     const searchIcon = document.getElementById('search-icon');
