@@ -58,13 +58,37 @@
 .movie-img {
     text-align: center;
     margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .movie-img img {
-    width: 100%;
-    max-width: 350px;
+    width: 100% !important;
+    max-width: 400px !important;
+    min-height: 550px !important;
+    max-height: 650px !important;
+    height: auto !important;
+    object-fit: cover !important;
+    object-position: center top !important;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 991px) {
+    .movie-img img {
+        max-width: 350px !important;
+        min-height: 500px !important;
+        max-height: 600px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .movie-img img {
+        max-width: 300px !important;
+        min-height: 450px !important;
+        max-height: 550px !important;
+    }
 }
 
 .movie-btn {
@@ -587,8 +611,8 @@
 
 .movie-item-style-2 img {
     width: 80px;
-    height: 120px;
-    object-fit: cover;
+    height: 220px !important;
+    object-fit: contain !important;
     border-radius: 6px;
     flex-shrink: 0;
 }
@@ -815,7 +839,8 @@
 			<div class="col-md-4 col-sm-12 col-xs-12">
 				<div class="movie-img sticky-sb">
 					<img src="{{ app('App\Services\MovieService')->getImageUrl($movie['poster_path'] ?? null, 'w500') }}" 
-					     alt="{{ $movie['title'] ?? 'Movie Poster' }}">
+					     alt="{{ $movie['title'] ?? 'Movie Poster' }}"
+					     style="max-width: 400px; min-height: 550px; max-height: 650px; width: 100%; height: auto; object-fit: cover; object-position: center top;">
 					<div class="movie-btn">	
 						<div class="btn-transform transform-vertical red">
 							@if($videos && isset($videos['results']) && count($videos['results']) > 0)
@@ -1204,44 +1229,47 @@
 					       	 			<h3>Related Movies To</h3>
 					       	 			<h2>{{ $movie['title'] ?? 'This Movie' }}</h2>
 					       	 			<div class="topbar-filter">
-											<p>Found <span>12 movies</span> in total</p>
-											<label>Sort by:</label>
-											<select>
-												<option value="popularity">Popularity Descending</option>
-												<option value="popularity">Popularity Ascending</option>
-												<option value="rating">Rating Descending</option>
-												<option value="rating">Rating Ascending</option>
-												<option value="date">Release date Descending</option>
-												<option value="date">Release date Ascending</option>
+											<p>Found <span>{{ $relatedMovies->count() ?? 0 }} movies</span> in total</p>
+											<label>Filter by:</label>
+											<select id="relatedMoviesFilter">
+												<option value="all">All Related</option>
+												<option value="rating">Highest Rated</option>
+												<option value="recent">Most Recent</option>
 											</select>
 										</div>
 										
-										@if(isset($movie['genres']) && count($movie['genres']) > 0)
-											@php
-												$genreId = $movie['genres'][0]['id'];
-												$relatedMovies = app('App\Services\MovieService')->discoverMoviesByGenre($genreId, 1);
-											@endphp
-											
-											@if($relatedMovies && isset($relatedMovies['results']))
-												@foreach(array_slice($relatedMovies['results'], 0, 5) as $related)
-												<div class="movie-item-style-2">
-													<img src="{{ app('App\Services\MovieService')->getImageUrl($related['poster_path'], 'w300') }}" alt="">
+										@if($relatedMovies && $relatedMovies->count() > 0)
+											<div id="relatedMoviesContainer">
+												@foreach($relatedMovies as $related)
+												<div class="movie-item-style-2" data-rating="{{ $related['vote_average'] ?? 0 }}" data-date="{{ $related['release_date'] ?? '' }}">
+													<img src="{{ app('App\Services\MovieService')->getImageUrl($related['poster_path'], 'w300') }}" alt="{{ $related['title'] }}">
 													<div class="mv-item-infor">
-														<h6><a href="{{ route('movies.show', $related['id']) }}">{{ $related['title'] }} <span>({{ date('Y', strtotime($related['release_date'] ?? '')) }})</span></a></h6>
-														<p class="rate"><i class="ion-android-star"></i><span>{{ number_format($related['vote_average'], 1) }}</span> /10</p>
-														<p class="describe">{{ Str::limit($related['overview'], 200) }}</p>
-														<p class="run-time">Release: {{ date('j M Y', strtotime($related['release_date'] ?? '')) }}</p>
-														@if(isset($related['genres']))
+														<h6><a href="{{ route('movies.show', $related['id']) }}">{{ $related['title'] }} <span>({{ isset($related['release_date']) ? date('Y', strtotime($related['release_date'])) : 'N/A' }})</span></a></h6>
+														<p class="rate"><i class="ion-android-star"></i><span>{{ number_format($related['vote_average'] ?? 0, 1) }}</span> /10</p>
+														<p class="describe">{{ Str::limit($related['overview'] ?? 'No description available.', 200) }}</p>
+														<p class="run-time">Release: {{ isset($related['release_date']) ? date('j M Y', strtotime($related['release_date'])) : 'Unknown' }}</p>
+														@if(isset($related['genre_ids']) && is_array($related['genre_ids']))
+															@php
+																$genresData = app('App\Services\MovieService')->getGenres();
+																$allGenres = $genresData['genres'] ?? [];
+																$movieGenres = collect($allGenres)->whereIn('id', array_slice($related['genre_ids'], 0, 3));
+															@endphp
+															@if($movieGenres->count() > 0)
 															<p>Genres: 
-																@foreach(array_slice($related['genres'], 0, 3) as $genre)
+																@foreach($movieGenres as $genre)
 																	<a href="{{ route('movies.genre', $genre['id']) }}">{{ $genre['name'] }}</a>@if(!$loop->last), @endif
 																@endforeach
 															</p>
+															@endif
 														@endif
 													</div>
 												</div>
 												@endforeach
-											@endif
+											</div>
+										@else
+											<div class="no-results" style="text-align: center; padding: 40px 0; color: #abb7c4;">
+												<p>No related movies found at the moment.</p>
+											</div>
 										@endif
 					       	 		</div>
 					       	 	</div>
@@ -1669,6 +1697,33 @@ function submitReview() {
         alert('Failed to submit review');
     });
 }
+
+// Related movies filter
+document.addEventListener('DOMContentLoaded', function() {
+    const filterSelect = document.getElementById('relatedMoviesFilter');
+    if (filterSelect) {
+        filterSelect.addEventListener('change', function() {
+            const container = document.getElementById('relatedMoviesContainer');
+            const movies = Array.from(container.querySelectorAll('.movie-item-style-2'));
+            const filterValue = this.value;
+            
+            // Sort movies based on filter
+            movies.sort((a, b) => {
+                if (filterValue === 'rating') {
+                    return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+                } else if (filterValue === 'recent') {
+                    return new Date(b.dataset.date) - new Date(a.dataset.date);
+                }
+                return 0; // 'all' - keep original order
+            });
+            
+            // Re-append sorted movies
+            if (filterValue !== 'all') {
+                movies.forEach(movie => container.appendChild(movie));
+            }
+        });
+    }
+});
 </script>
 
 <style>

@@ -184,6 +184,28 @@ class MovieController extends Controller
         $images = $this->movieService->getMovieImages($id);
         $videos = $this->movieService->getMovieVideos($id);
         $reviews = $this->movieService->getMovieReviews($id);
+        
+        // Get related movies (similar by genre, theme, and culture)
+        $similarMovies = $this->movieService->getSimilarMovies($id);
+        $recommendedMovies = $this->movieService->getRecommendedMovies($id);
+        
+        // Combine and deduplicate related movies
+        $relatedMovies = collect([]);
+        if ($similarMovies && isset($similarMovies['results'])) {
+            $relatedMovies = $relatedMovies->concat($similarMovies['results']);
+        }
+        if ($recommendedMovies && isset($recommendedMovies['results'])) {
+            $relatedMovies = $relatedMovies->concat($recommendedMovies['results']);
+        }
+        
+        // Remove duplicates and the current movie
+        $relatedMovies = $relatedMovies
+            ->unique('id')
+            ->filter(function($movie) use ($id) {
+                return $movie['id'] != $id;
+            })
+            ->take(12)
+            ->values();
 
         // Get high-resolution backdrop/scene image for hero section (prioritize actual movie scenes)
         $heroBackdrop = null;
@@ -231,6 +253,7 @@ class MovieController extends Controller
             'images' => $images,
             'videos' => $videos,
             'reviews' => $reviews,
+            'relatedMovies' => $relatedMovies,
             'heroBackdrop' => $heroBackdrop,
             'error' => null
         ]);

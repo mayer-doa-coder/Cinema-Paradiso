@@ -5938,10 +5938,32 @@ ul {
 }
 .movie-single .movie-img img,
 .movie-single .mv-ceb img {
-  width: 100%;
+  width: 100% !important;
+  max-width: 400px !important;
+  min-height: 550px !important;
+  max-height: 650px !important;
+  height: auto !important;
+  object-fit: cover !important;
+  object-position: center top !important;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+}
+@media (max-width: 991px) {
+  .movie-single .movie-img img,
+  .movie-single .mv-ceb img {
+    max-width: 350px !important;
+    min-height: 500px !important;
+    max-height: 600px !important;
+  }
+}
+@media (max-width: 767px) {
+  .movie-single .movie-img img,
+  .movie-single .mv-ceb img {
+    max-width: 300px !important;
+    min-height: 450px !important;
+    max-height: 550px !important;
+  }
 }
 .movie-single .movie-img .movie-btn,
 .movie-single .mv-ceb .movie-btn {

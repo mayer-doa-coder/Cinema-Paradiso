@@ -488,6 +488,60 @@ class MovieService
     }
 
     /**
+     * Get similar movies based on genre, keywords, and themes
+     */
+    public function getSimilarMovies($movieId, $page = 1)
+    {
+        $cacheKey = "tmdb_movie_{$movieId}_similar_page_{$page}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($movieId, $page) {
+            try {
+                $response = Http::get("{$this->baseUrl}/movie/{$movieId}/similar", [
+                    'api_key' => $this->apiKey,
+                    'page' => $page,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Get recommended movies based on viewing history and preferences
+     */
+    public function getRecommendedMovies($movieId, $page = 1)
+    {
+        $cacheKey = "tmdb_movie_{$movieId}_recommendations_page_{$page}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($movieId, $page) {
+            try {
+                $response = Http::get("{$this->baseUrl}/movie/{$movieId}/recommendations", [
+                    'api_key' => $this->apiKey,
+                    'page' => $page,
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
      * Build full image URL
      */
     public function getImageUrl($path, $size = 'w500')
