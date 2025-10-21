@@ -463,6 +463,84 @@
     transform: scale(1.05);
 }
 
+/* Media section - Videos */
+.media-item {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.media-item .vd-item {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.media-item .vd-it {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.media-item .vd-it img.vd-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-item .vd-it a {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.media-item .vd-infor {
+    margin-top: 8px;
+}
+
+.media-item .vd-infor h6 {
+    margin-bottom: 3px;
+    font-size: 13px;
+}
+
+.media-item .vd-infor .time {
+    font-size: 11px;
+}
+
+/* Media section - Photos */
+#media .mvsingle-item {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+#media .mvsingle-item img {
+    height: 100px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .media-item {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 6px;
+    }
+    
+    #media .mvsingle-item {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 6px;
+    }
+    
+    #media .mvsingle-item img {
+        height: 80px;
+    }
+}
+
 .ov-item {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 10px;
@@ -935,82 +1013,144 @@
 						        </div>
 						        <div id="reviews" class="tab">
 						           <div class="row">
-						            	<div class="rv-hd">
-						            		<div class="div">
-							            		<h3>Related Movies To</h3>
-						       	 				<h2>{{ $movie['title'] ?? 'This Movie' }}</h2>
-							            	</div>
-							            	<a href="#" class="redbtn">Write Review</a>
-						            	</div>
 						            	<div class="topbar-filter">
-											<p>Found <span>{{ $movie['vote_count'] ?? 0 }} reviews</span> in total</p>
+											<p>Found <span>{{ isset($reviews['total_results']) ? $reviews['total_results'] : 0 }} reviews</span> in total</p>
 											<label>Filter by:</label>
 											<select>
-												<option value="popularity">Popularity Descending</option>
-												<option value="popularity">Popularity Ascending</option>
-												<option value="rating">Rating Descending</option>
-												<option value="rating">Rating Ascending</option>
-												<option value="date">Release date Descending</option>
-												<option value="date">Release date Ascending</option>
+												<option value="newest">Newest First</option>
+												<option value="oldest">Oldest First</option>
+												<option value="helpful">Most Helpful</option>
 											</select>
 										</div>
-										<div class="mv-user-review-item">
-											<div class="user-infor">
-												<img src="{{ asset('images/uploads/userava1.jpg') }}" alt="">
-												<div>
-													<h3>Great movie experience!</h3>
-													<div class="no-star">
-														@for($i = 1; $i <= 10; $i++)
-															@if($i <= 8)
-																<i class="ion-android-star"></i>
-															@else
-																<i class="ion-android-star last"></i>
-															@endif
-														@endfor
+										
+										@if(isset($reviews['results']) && count($reviews['results']) > 0)
+											@foreach($reviews['results'] as $review)
+											<div class="mv-user-review-item">
+												<div class="user-infor">
+													@if(isset($review['author_details']['avatar_path']))
+														@php
+															$avatarPath = $review['author_details']['avatar_path'];
+															// Handle Gravatar URLs
+															if (str_starts_with($avatarPath, '/https://') || str_starts_with($avatarPath, '/http://')) {
+																$avatarUrl = substr($avatarPath, 1); // Remove leading slash
+															} elseif (str_starts_with($avatarPath, '/')) {
+																$avatarUrl = 'https://image.tmdb.org/t/p/w200' . $avatarPath;
+															} else {
+																$avatarUrl = asset('images/uploads/userava1.jpg');
+															}
+														@endphp
+														<img src="{{ $avatarUrl }}" alt="{{ $review['author'] }}" onerror="this.src='{{ asset('images/uploads/userava1.jpg') }}'">
+													@else
+														<img src="{{ asset('images/uploads/userava1.jpg') }}" alt="{{ $review['author'] }}">
+													@endif
+													<div>
+														<h3>{{ $review['author'] }}</h3>
+														@if(isset($review['author_details']['rating']) && $review['author_details']['rating'])
+														<div class="no-star">
+															@php
+																$rating = $review['author_details']['rating'];
+																$fullStars = floor($rating);
+															@endphp
+															@for($i = 1; $i <= 10; $i++)
+																@if($i <= $fullStars)
+																	<i class="ion-android-star"></i>
+																@else
+																	<i class="ion-android-star last"></i>
+																@endif
+															@endfor
+														</div>
+														@endif
+														<p class="time">
+															{{ date('j F Y', strtotime($review['created_at'])) }} by <a href="{{ $review['url'] ?? '#' }}" target="_blank">{{ $review['author'] }}</a>
+														</p>
 													</div>
-													<p class="time">
-														{{ date('j F Y') }} by <a href="#"> moviefan</a>
-													</p>
 												</div>
+												<p>
+													@php
+														$content = $review['content'];
+														// Limit content to 500 characters for preview
+														$isLong = strlen($content) > 500;
+														$shortContent = $isLong ? substr($content, 0, 500) . '...' : $content;
+													@endphp
+													{{ $shortContent }}
+													@if($isLong)
+														<a href="{{ $review['url'] ?? '#' }}" target="_blank" style="color: #dcf836;">Read full review</a>
+													@endif
+												</p>
 											</div>
-											<p>{{ $movie['overview'] ?? 'This movie provides an excellent cinematic experience with great storytelling and performances.' }}</p>
-										</div>
+											@endforeach
+										@else
+											<div class="mv-user-review-item">
+												<p style="text-align: center; color: #abb7c4; padding: 40px 0;">No reviews available for this movie yet.</p>
+											</div>
+										@endif
 						            </div>
 						        </div>
 						        <div id="cast" class="tab">
 						        	<div class="row">
-						            	<h3>Cast & Crew of</h3>
-					       	 			<h2>{{ $movie['title'] ?? 'This Movie' }}</h2>
-										
-										@if(isset($credits['crew']))
-										<div class="title-hd-sm">
-											<h4>Directors & Writers</h4>
-										</div>
-										<div class="mvcast-item">
-											@foreach(collect($credits['crew'])->whereIn('job', ['Director', 'Writer', 'Screenplay'])->take(10) as $crew)											
-											<div class="cast-it">
-												<div class="cast-left">
-													<a href="{{ route('celebrities.show', $crew['id']) }}">{{ $crew['name'] }}</a>
-												</div>
-											</div>
-											@endforeach
-										</div>
-										@endif
-										
-										@if(isset($credits['cast']) && count($credits['cast']) > 0)
-										<div class="title-hd-sm">
-											<h4>Cast</h4>
-										</div>
-										<div class="mvcast-item">											
-											@foreach(array_slice($credits['cast'], 0, 20) as $actor)
-											<div class="cast-it">
-												<div class="cast-left">
-													<a href="{{ route('celebrities.show', $actor['id']) }}">{{ $actor['name'] }}</a>
-												</div>
-											</div>
-											@endforeach
-										</div>
-										@endif
+						            	<div class="col-md-12">
+						            		<h3>Cast & Crew of</h3>
+					       	 				<h2 style="margin-bottom: 30px;">{{ $movie['title'] ?? 'This Movie' }}</h2>
+						            	</div>
+						            	
+						            	<!-- Two Column Layout -->
+						            	<div class="col-md-6 col-sm-12 col-xs-12">
+						            		@if(isset($credits['cast']) && count($credits['cast']) > 0)
+						            		<div class="sb-it">
+						            			<h6>Cast:</h6>
+						            			<p class="cast-names">
+						            				@foreach(array_slice($credits['cast'], 0, 20) as $actor)
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $actor['id']) }}">{{ $actor['name'] }}</a></span>
+						            				@endforeach
+						            			</p>
+						            		</div>
+						            		@endif
+						            	</div>
+						            	
+						            	<div class="col-md-6 col-sm-12 col-xs-12">
+						            		@if(isset($credits['crew']))
+						            		<div class="sb-it">
+						            			<h6>Directors & Writers:</h6>
+						            			<p class="cast-names">
+						            				@foreach(collect($credits['crew'])->whereIn('job', ['Director', 'Writer', 'Screenplay'])->unique('name')->take(15) as $crew)
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $crew['id']) }}">{{ $crew['name'] }}</a></span>
+						            				@endforeach
+						            			</p>
+						            		</div>
+						            		@endif
+						            		
+						            		@if(isset($credits['crew']))
+						            		@php
+						            			$producers = collect($credits['crew'])->where('job', 'Producer')->unique('name')->take(10);
+						            		@endphp
+						            		@if($producers->isNotEmpty())
+						            		<div class="sb-it">
+						            			<h6>Producers:</h6>
+						            			<p class="cast-names">
+						            				@foreach($producers as $producer)
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $producer['id']) }}">{{ $producer['name'] }}</a></span>
+						            				@endforeach
+						            			</p>
+						            		</div>
+						            		@endif
+						            		@endif
+						            		
+						            		@if(isset($credits['crew']))
+						            		@php
+						            			$composers = collect($credits['crew'])->where('job', 'Original Music Composer')->unique('name')->take(5);
+						            		@endphp
+						            		@if($composers->isNotEmpty())
+						            		<div class="sb-it">
+						            			<h6>Music:</h6>
+						            			<p class="cast-names">
+						            				@foreach($composers as $composer)
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $composer['id']) }}">{{ $composer['name'] }}</a></span>
+						            				@endforeach
+						            			</p>
+						            		</div>
+						            		@endif
+						            		@endif
+						            	</div>
 						            </div>
 					       	 	</div>
 					       	 	<div id="media" class="tab">

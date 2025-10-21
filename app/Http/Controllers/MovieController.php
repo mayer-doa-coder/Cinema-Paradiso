@@ -183,6 +183,7 @@ class MovieController extends Controller
         $credits = $this->movieService->getMovieCredits($id);
         $images = $this->movieService->getMovieImages($id);
         $videos = $this->movieService->getMovieVideos($id);
+        $reviews = $this->movieService->getMovieReviews($id);
 
         // Get high-resolution backdrop/scene image for hero section (prioritize actual movie scenes)
         $heroBackdrop = null;
@@ -229,6 +230,7 @@ class MovieController extends Controller
             'credits' => $credits,
             'images' => $images,
             'videos' => $videos,
+            'reviews' => $reviews,
             'heroBackdrop' => $heroBackdrop,
             'error' => null
         ]);
