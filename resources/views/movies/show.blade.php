@@ -841,30 +841,6 @@
 					<img src="{{ app('App\Services\MovieService')->getImageUrl($movie['poster_path'] ?? null, 'w500') }}" 
 					     alt="{{ $movie['title'] ?? 'Movie Poster' }}"
 					     style="max-width: 400px; min-height: 550px; max-height: 650px; width: 100%; height: auto; object-fit: cover; object-position: center top;">
-					<div class="movie-btn">	
-						<div class="btn-transform transform-vertical red">
-							@if($videos && isset($videos['results']) && count($videos['results']) > 0)
-								@php
-									$trailer = collect($videos['results'])->firstWhere('type', 'Trailer');
-									if (!$trailer) $trailer = $videos['results'][0];
-									$trailerUrl = $trailer ? "https://www.youtube.com/embed/{$trailer['key']}" : '#';
-								@endphp
-								<div><a href="#" class="item item-1 redbtn"> <i class="ion-play"></i> Watch Trailer</a></div>
-								<div><a href="{{ $trailerUrl }}" class="item item-2 redbtn fancybox-media"><i class="ion-play"></i></a></div>
-							@else
-								<div><a href="#" class="item item-1 redbtn"> <i class="ion-play"></i> Trailer Unavailable</a></div>
-							@endif
-						</div>
-						<div class="btn-transform transform-vertical">
-							@if(isset($movie['homepage']) && $movie['homepage'])
-								<div><a href="{{ $movie['homepage'] }}" class="item item-1 yellowbtn" target="_blank"> <i class="ion-card"></i> Official Site</a></div>
-								<div><a href="{{ $movie['homepage'] }}" class="item item-2 yellowbtn" target="_blank"><i class="ion-card"></i></a></div>
-							@else
-								<div><a href="#" class="item item-1 yellowbtn"> <i class="ion-card"></i> Buy ticket</a></div>
-								<div><a href="#" class="item item-2 yellowbtn"><i class="ion-card"></i></a></div>
-							@endif
-						</div>
-					</div>
 				</div>
 			</div>
 			<div class="col-md-8 col-sm-12 col-xs-12">
@@ -902,6 +878,13 @@
 							<i class="ion-android-share-alt"></i>
 							<span>Share</span>
 						</a>
+						
+						<a href="{{ $movie['homepage'] ?? '#' }}" class="action-btn" target="_blank" {{ !isset($movie['homepage']) || !$movie['homepage'] ? 'onclick="alert(\'Official site not available for this movie\'); return false;"' : '' }}>
+							<i class="ion-link"></i>
+							<span>Site</span>
+						</a>
+                        
+                        
 					</div>
 					
 					<div class="movie-rate">
@@ -950,7 +933,7 @@
 						            		<div class="sb-it">
 						            			<h6>Director:</h6>
 						            			<p class="cast-names">
-						            				<span class="name-badge"><a href="{{ route('celebrities.show', $director['id']) }}">{{ $director['name'] }}</a></span>
+						            				<span class="name-badge"><a href="{{ route('celebrities.show', ['id' => $director['id']]) }}">{{ $director['name'] }}</a></span>
 						            			</p>
 						            		</div>
 						            		@endif
@@ -960,7 +943,7 @@
 						            			<h6>Stars:</h6>
 						            			<p class="cast-names">
 						            				@foreach(array_slice($credits['cast'], 0, 5) as $actor)
-						            					<span class="name-badge"><a href="{{ route('celebrities.show', $actor['id']) }}">{{ $actor['name'] }}</a></span>
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', ['id' => $actor['id']]) }}">{{ $actor['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -986,7 +969,8 @@
 						            			<h6>Writers:</h6>
 						            			<p class="cast-names">
 						            				@foreach($writers->take(3) as $writer)
-						            					<span class="name-badge"><a href="{{ route('celebrities.show', $writer['id']) }}">{{ $writer['name'] }}</a></span>
+						            					@php $writerId = $writer['id']; @endphp
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $writerId) }}">{{ $writer['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -997,7 +981,8 @@
 						            			<h6>Genres:</h6>
 						            			<p class="cast-names">
 						            				@foreach($movie['genres'] as $genre)
-						            					<span class="name-badge"><a href="{{ route('movies.genre', $genre['id']) }}">{{ $genre['name'] }}</a></span>
+						            					@php $genreId = $genre['id']; @endphp
+						            					<span class="name-badge"><a href="{{ route('movies.genre', $genreId) }}">{{ $genre['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -1125,7 +1110,8 @@
 						            			<h6>Cast:</h6>
 						            			<p class="cast-names">
 						            				@foreach(array_slice($credits['cast'], 0, 20) as $actor)
-						            					<span class="name-badge"><a href="{{ route('celebrities.show', $actor['id']) }}">{{ $actor['name'] }}</a></span>
+						            					@php $actorId = $actor['id']; @endphp
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $actorId) }}">{{ $actor['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -1138,7 +1124,8 @@
 						            			<h6>Directors & Writers:</h6>
 						            			<p class="cast-names">
 						            				@foreach(collect($credits['crew'])->whereIn('job', ['Director', 'Writer', 'Screenplay'])->unique('name')->take(15) as $crew)
-						            					<span class="name-badge"><a href="{{ route('celebrities.show', $crew['id']) }}">{{ $crew['name'] }}</a></span>
+						            					@php $crewId = $crew['id']; @endphp
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $crewId) }}">{{ $crew['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -1153,7 +1140,7 @@
 						            			<h6>Producers:</h6>
 						            			<p class="cast-names">
 						            				@foreach($producers as $producer)
-						            					<span class="name-badge"><a href="{{ route('celebrities.show', $producer['id']) }}">{{ $producer['name'] }}</a></span>
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', ['id' => $producer['id']]) }}">{{ $producer['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -1169,7 +1156,7 @@
 						            			<h6>Music:</h6>
 						            			<p class="cast-names">
 						            				@foreach($composers as $composer)
-						            					<span class="name-badge"><a href="{{ route('celebrities.show', $composer['id']) }}">{{ $composer['name'] }}</a></span>
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', ['id' => $composer['id']]) }}">{{ $composer['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -1244,7 +1231,7 @@
 												<div class="movie-item-style-2" data-rating="{{ $related['vote_average'] ?? 0 }}" data-date="{{ $related['release_date'] ?? '' }}">
 													<img src="{{ app('App\Services\MovieService')->getImageUrl($related['poster_path'], 'w300') }}" alt="{{ $related['title'] }}">
 													<div class="mv-item-infor">
-														<h6><a href="{{ route('movies.show', $related['id']) }}">{{ $related['title'] }} <span>({{ isset($related['release_date']) ? date('Y', strtotime($related['release_date'])) : 'N/A' }})</span></a></h6>
+														<h6><a href="{{ route('movies.show', ['id' => $related['id']]) }}">{{ $related['title'] }} <span>({{ isset($related['release_date']) ? date('Y', strtotime($related['release_date'])) : 'N/A' }})</span></a></h6>
 														<p class="rate"><i class="ion-android-star"></i><span>{{ number_format($related['vote_average'] ?? 0, 1) }}</span> /10</p>
 														<p class="describe">{{ Str::limit($related['overview'] ?? 'No description available.', 200) }}</p>
 														<p class="run-time">Release: {{ isset($related['release_date']) ? date('j M Y', strtotime($related['release_date'])) : 'Unknown' }}</p>
@@ -1257,7 +1244,7 @@
 															@if($movieGenres->count() > 0)
 															<p>Genres: 
 																@foreach($movieGenres as $genre)
-																	<a href="{{ route('movies.genre', $genre['id']) }}">{{ $genre['name'] }}</a>@if(!$loop->last), @endif
+																	<a href="{{ route('movies.genre', ['genreId' => $genre['id']]) }}">{{ $genre['name'] }}</a>@if(!$loop->last), @endif
 																@endforeach
 															</p>
 															@endif
