@@ -677,6 +677,25 @@
 .mv-item-infor p a:hover {
     color: #ec6eab;
 }
+
+/* Review Section Styles */
+.mv-user-review-item {
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(64, 82, 102, 0.3);
+}
+
+.mv-user-review-item:last-child {
+    border-bottom: none;
+}
+
+.mv-user-review-item .user-infor img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 @media (max-width: 768px) {
     .movie-single-ct h1.bd-hd {
         font-size: 1.8rem;
@@ -1014,10 +1033,6 @@
 						            			</p>
 						            		</div>
 						            		@endif
-						            		
-						            		<div class="ads">
-												<img src="{{ asset('images/uploads/ads1.png') }}" alt="">
-											</div>
 						            	</div>
 						            </div>
 						        </div>
