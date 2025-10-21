@@ -56,9 +56,6 @@ textarea:focus {
 }
 
 /* Override global first-child margin */
-h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, p:first-child {
-    margin-top: 20px !important;
-}
 </style>
 @endpush
 
@@ -153,41 +150,14 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
                 @endif
 
                 <div class="topbar-filter">
-                    <p>Found <span>{{ number_format($totalResults) }} celebrities</span> 
-                    @if($isAlphabetical)
-                        starting with "{{ $currentLetter }}"
-                    @else
-                        in total
-                    @endif
-                    </p>
+                    <p>Found <span>{{ number_format($totalResults) }} celebrities</span> in total</p>
                     <div class="filter-controls">
                         <label>Sort by:</label>
                         <select id="sort-select">
                             <option value="popularity" {{ $currentSort == 'popularity' ? 'selected' : '' }}>Popularity Descending</option>
-                            <option value="name" {{ $currentSort == 'name' ? 'selected' : '' }}>Name (A-Z)</option>
                         </select>
                     </div>
                 </div>
-
-                @if($isAlphabetical)
-                    <!-- Alphabetical Navigation -->
-                    <div class="alphabet-navigation" style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-                        <h4 style="color: #fff; margin-bottom: 15px; font-size: 16px;">Browse by Letter:</h4>
-                        <div class="alphabet-letters" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                            @foreach($availableLetters as $letter)
-                                <a href="{{ route('celebrities') }}?sort=name&letter={{ $letter }}&subpage=1" 
-                                   class="letter-btn {{ $currentLetter == $letter ? 'active' : '' }}">
-                                    {{ $letter }}
-                                </a>
-                            @endforeach
-                        </div>
-                        @if($totalSubPages > 1)
-                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
-                                <span style="color: #ccc; font-size: 14px;">{{ $currentLetter }} - Page {{ $currentSubPage }} of {{ $totalSubPages }}</span>
-                            </div>
-                        @endif
-                    </div>
-                @endif
 
                 @if($searchQuery)
                     <div class="search-info">
@@ -231,48 +201,24 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
                 @if($totalPages > 1)
                     <div class="topbar-filter">
                         <div class="pagination2">
-                            @if($isAlphabetical)
-                                <!-- Alphabetical Sub-Page Navigation -->
-                                @if($currentSubPage > 1)
-                                    <span><a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $currentSubPage - 1 }}">
-                                        <i class="ion-arrow-left-b"></i></a></span>
-                                @endif
+                            @if($currentPage > 1)
+                                <span><a href="{{ request()->fullUrlWithQuery(['page' => $currentPage - 1, 'sort' => $currentSort]) }}">
+                                    <i class="ion-arrow-left-b"></i></a></span>
+                            @endif
 
-                                @php
-                                    $start = max(1, $currentSubPage - 2);
-                                    $end = min($totalSubPages, $currentSubPage + 2);
-                                @endphp
+                            @php
+                                $start = max(1, $currentPage - 2);
+                                $end = min($totalPages, $currentPage + 2);
+                            @endphp
 
-                                @for($i = $start; $i <= $end; $i++)
-                                    <span><a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $i }}" 
-                                        class="{{ $i == $currentSubPage ? 'active' : '' }}">{{ $currentLetter }}{{ $i }}</a></span>
-                                @endfor
+                            @for($i = $start; $i <= $end; $i++)
+                                <span><a href="{{ request()->fullUrlWithQuery(['page' => $i, 'sort' => $currentSort]) }}" 
+                                    class="{{ $i == $currentPage ? 'active' : '' }}">{{ $i }}</a></span>
+                            @endfor
 
-                                @if($currentSubPage < $totalSubPages)
-                                    <span><a href="{{ route('celebrities') }}?sort=name&letter={{ $currentLetter }}&subpage={{ $currentSubPage + 1 }}">
-                                        <i class="ion-arrow-right-b"></i></a></span>
-                                @endif
-                            @else
-                                <!-- Regular Numeric Pagination -->
-                                @if($currentPage > 1)
-                                    <span><a href="{{ request()->fullUrlWithQuery(['page' => $currentPage - 1, 'sort' => $currentSort]) }}">
-                                        <i class="ion-arrow-left-b"></i></a></span>
-                                @endif
-
-                                @php
-                                    $start = max(1, $currentPage - 2);
-                                    $end = min($totalPages, $currentPage + 2);
-                                @endphp
-
-                                @for($i = $start; $i <= $end; $i++)
-                                    <span><a href="{{ request()->fullUrlWithQuery(['page' => $i, 'sort' => $currentSort]) }}" 
-                                        class="{{ $i == $currentPage ? 'active' : '' }}">{{ $i }}</a></span>
-                                @endfor
-
-                                @if($currentPage < $totalPages)
-                                    <span><a href="{{ request()->fullUrlWithQuery(['page' => $currentPage + 1, 'sort' => $currentSort]) }}">
-                                        <i class="ion-arrow-right-b"></i></a></span>
-                                @endif
+                            @if($currentPage < $totalPages)
+                                <span><a href="{{ request()->fullUrlWithQuery(['page' => $currentPage + 1, 'sort' => $currentSort]) }}">
+                                    <i class="ion-arrow-right-b"></i></a></span>
                             @endif
                         </div>
                     </div>
@@ -315,12 +261,11 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
                     </div>
 
                     <div class="popular-categories">
-                        <h4 class="sb-title">Popular Categories</h4>
+                        <h4 class="sb-title">Quick Links</h4>
                         <ul class="category-list">
-                            <li><a href="{{ route('celebrities') }}?sort=popularity">Most Popular</a></li>
-                            <li><a href="{{ route('celebrities') }}?sort=name">Alphabetical (A-Z)</a></li>
-                            <li><a href="{{ route('movies.index') }}">Browse Movies</a></li>
-                            <li><a href="{{ route('community') }}">Join Community</a></li>
+                            <li><a href="{{ route('celebrities') }}?sort=popularity"><i class="ion-star" style="color: #dcf836; margin-right: 8px;"></i>Most Popular</a></li>
+                            <li><a href="{{ route('movies.index') }}"><i class="ion-ios-film" style="color: #eb70ac; margin-right: 8px;"></i>Browse Movies</a></li>
+                            <li><a href="{{ route('community') }}"><i class="ion-person-stalker" style="color: #4bb4f0; margin-right: 8px;"></i>Join Community</a></li>
                         </ul>
                     </div>
                 </div>
@@ -427,7 +372,7 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
     align-items: center;
     margin-bottom: 30px;
     padding: 15px 0;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #405266;
 }
 
 .filter-controls {
@@ -442,9 +387,8 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
 }
 
 .filter-controls select {
-    background: #2a2a2a;
     color: #fff;
-    border: 1px solid #444;
+    border: 1px solid #3e9fd8ff;
     padding: 8px 12px;
     border-radius: 4px;
 }
@@ -481,40 +425,7 @@ h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, 
     color: #e9d736;
 }
 
-/* Alphabet Navigation Styles */
-.alphabet-navigation {
-    background: #1e1e1e !important;
-    padding: 20px !important;
-    border-radius: 8px !important;
-    margin-bottom: 30px !important;
-}
 
-.alphabet-letters {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-}
-
-.letter-btn {
-    display: inline-block !important;
-    padding: 8px 12px !important;
-    text-decoration: none !important;
-    border-radius: 4px !important;
-    font-weight: bold !important;
-    transition: all 0.3s ease !important;
-    font-size: 14px !important;
-}
-
-.letter-btn:hover {
-    background: #e9d736 !important;
-    color: #000 !important;
-    transform: translateY(-1px);
-}
-
-.letter-btn.active {
-    background: #e9d736 !important;
-    color: #000 !important;
-}
 
 @media (max-width: 1200px) {
     .ceb-item {
@@ -648,21 +559,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sortSelect) {
         sortSelect.addEventListener('change', function() {
             const url = new URL(window.location);
-            
-            if (this.value === 'name') {
-                // For alphabetical sorting, redirect to letter A, page 1
-                url.searchParams.set('sort', 'name');
-                url.searchParams.set('letter', 'A');
-                url.searchParams.set('subpage', '1');
-                url.searchParams.delete('page'); // Remove regular page parameter
-            } else {
-                // For popularity sorting, use regular pagination
-                url.searchParams.set('sort', this.value);
-                url.searchParams.set('page', '1');
-                url.searchParams.delete('letter'); // Remove alphabetical parameters
-                url.searchParams.delete('subpage');
-            }
-            
+            url.searchParams.set('sort', this.value);
+            url.searchParams.set('page', '1');
             window.location.href = url.toString();
         });
     }
