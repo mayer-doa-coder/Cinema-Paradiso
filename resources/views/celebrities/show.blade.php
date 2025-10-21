@@ -219,27 +219,29 @@ textarea:focus {
                                 <div class="movie-grid">
                                     @foreach($movies as $movie)
                                         <div class="movie-item-small">
-                                            <div class="movie-poster">
-                                                <img src="{{ $movie['poster_url'] }}" alt="{{ $movie['title'] }}"
-                                                     class="movie-poster-img">
-                                                <div class="movie-overlay">
-                                                    <div class="movie-info">
-                                                        <h5>{{ $movie['title'] }}</h5>
-                                                        @if($movie['character'])
-                                                            <p class="character">as {{ $movie['character'] }}</p>
-                                                        @endif
-                                                        @if($movie['release_date'])
-                                                            <p class="release-year">{{ \Carbon\Carbon::parse($movie['release_date'])->format('Y') }}</p>
-                                                        @endif
-                                                        @if($movie['vote_average'] > 0)
-                                                            <div class="rating">
-                                                                <i class="ion-star"></i>
-                                                                <span>{{ number_format($movie['vote_average'], 1) }}</span>
-                                                            </div>
-                                                        @endif
+                                            <a href="{{ route('movies.show', $movie['id']) }}" class="movie-poster-link">
+                                                <div class="movie-poster">
+                                                    <img src="{{ $movie['poster_url'] }}" alt="{{ $movie['title'] }}"
+                                                         class="movie-poster-img">
+                                                    <div class="movie-overlay">
+                                                        <div class="movie-info">
+                                                            <h5>{{ $movie['title'] }}</h5>
+                                                            @if($movie['character'])
+                                                                <p class="character">as {{ $movie['character'] }}</p>
+                                                            @endif
+                                                            @if($movie['release_date'])
+                                                                <p class="release-year">{{ \Carbon\Carbon::parse($movie['release_date'])->format('Y') }}</p>
+                                                            @endif
+                                                            @if($movie['vote_average'] > 0)
+                                                                <div class="rating">
+                                                                    <i class="ion-star"></i>
+                                                                    <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     @endforeach
                                 </div>
@@ -407,14 +409,23 @@ textarea:focus {
 
 .movie-item-small {
     position: relative;
-    background: #333;
+    background: #1a1a1a;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .movie-item-small:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(233, 215, 54, 0.3);
+}
+
+.movie-poster-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
 }
 
 .movie-poster {
@@ -427,6 +438,11 @@ textarea:focus {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.movie-item-small:hover .movie-poster-img {
+    transform: scale(1.1);
 }
 
 .movie-overlay {
@@ -434,10 +450,10 @@ textarea:focus {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 50%, transparent 100%);
     color: white;
-    padding: 15px;
-    transform: translateY(100%);
+    padding: 20px 15px 15px;
+    transform: translateY(65%);
     transition: transform 0.3s ease;
 }
 
@@ -446,15 +462,23 @@ textarea:focus {
 }
 
 .movie-info h5 {
-    margin: 0 0 5px;
+    margin: 0 0 8px;
     font-size: 14px;
     font-weight: bold;
+    color: #fff;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .movie-info .character {
     color: #e9d736;
     font-size: 12px;
     margin: 0 0 5px;
+    font-style: italic;
 }
 
 .movie-info .release-year {
@@ -467,11 +491,13 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 .movie-info .rating i {
     color: #f39c12;
+    font-size: 14px;
 }
 
 .btn {

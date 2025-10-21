@@ -4,6 +4,12 @@
 
 @push('styles')
 <style>
+/* Ensure body and html have dark background */
+html, body {
+    background-color: #020d18 !important;
+    min-height: 100%;
+}
+
 /* Movie Single Page Styles */
 .hero.mv-single-hero {
     background: linear-gradient(135deg, #020d18 0%, #0d1b2a 100%);
@@ -11,9 +17,9 @@
 }
 
 .page-single.movie-single {
-    background: #020d18;
+    background: #020d18 !important;
     min-height: 100vh;
-    padding: 50px 0;
+    padding: 50px 0 100px;
     position: relative;
 }
 
@@ -36,6 +42,7 @@
 .page-single.movie-single .container {
     position: relative;
     z-index: 1;
+    background: transparent;
 }
 
 .movie-single-ct {
@@ -1753,6 +1760,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .ion-ios-star-outline {
     color: #405266 !important;
+}
+
+/* Ensure no white background anywhere on the page */
+footer, .footer, .ht-footer {
+    background: #020d18 !important;
+}
+
+/* Prevent any white gaps */
+.row, .container, .col-md-12, .col-md-8, .col-md-4 {
+    background: transparent !important;
 }
 </style>
 @endpush
