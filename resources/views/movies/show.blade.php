@@ -29,7 +29,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    opacity: 0.25;
+    opacity: 0.10;
     z-index: 0;
 }
 
@@ -380,6 +380,70 @@
     margin: 0;
     color: #ccc;
     font-size: 14px;
+}
+
+/* Name Badge Styles for Overview Section */
+.cast-names {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.name-badge {
+    display: inline-block;
+    border: 1px solid #405266;
+    border-radius: 4px;
+    padding-left:2px;
+    padding-right:2px;
+    background: #0f2133;
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.name-badge:hover {
+    border-color: #dcf836;
+    background: rgba(220, 248, 54, 0.1);
+    transform: translateY(-1px);
+}
+
+.name-badge a {
+    color: #abb7c4;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.name-badge:hover a {
+    color: #dcf836;
+}
+
+/* Overview Details Layout */
+#overview .sb-it {
+    margin-bottom: 25px;
+}
+
+#overview .sb-it h6 {
+    font-size: 13px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+#overview .sb-it p {
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #overview .col-md-4 {
+        margin-bottom: 20px;
+    }
+    
+    .name-badge {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
 }
 
 .mvsingle-item {
@@ -766,68 +830,34 @@
 						    <div class="tab-content">
 						        <div id="overview" class="tab active">
 						            <div class="row">
-						            	<div class="col-md-8 col-sm-12 col-xs-12">
-						            		<p>{{ $movie['overview'] ?? 'No overview available for this movie.' }}</p>
-						            		
-						            		@if(isset($credits['cast']) && count($credits['cast']) > 0)
-											<div class="title-hd-sm">
-												<h4>Cast</h4>
-											</div>
-											<!-- movie cast -->
-											<div class="mvcast-item">											
-												@foreach(array_slice($credits['cast'] ?? [], 0, 12) as $actor)
-												<div class="cast-it">
-													<div class="cast-left">
-														<a href="{{ route('celebrities.show', $actor['id']) }}">{{ $actor['name'] }}</a>
-													</div>
-												</div>
-												@endforeach
-											</div>
-											@endif
+						            	<!-- Full-width movie description -->
+						            	<div class="col-md-12 col-sm-12 col-xs-12">
+						            		<p style="margin-bottom: 40px; line-height: 1.8; font-size: 15px;">{{ $movie['overview'] ?? 'No overview available for this movie.' }}</p>
 						            	</div>
-						            	<div class="col-md-4 col-xs-12 col-sm-12">
-						            		@if(isset($credits['crew']))
+						            	
+						            	<!-- Movie details in 3 columns -->
+						            	<div class="col-md-4 col-sm-6 col-xs-12">
+						            	    @if(isset($credits['crew']))
 						            			@php 
 						            				$director = collect($credits['crew'])->firstWhere('job', 'Director');
-						            				$writers = collect($credits['crew'])->where('department', 'Writing');
 						            			@endphp
 						            		@endif
 						            		
 						            		@if($director)
 						            		<div class="sb-it">
-						            			<h6>Director: </h6>
-						            			<p><a href="{{ route('celebrities.show', $director['id']) }}">{{ $director['name'] }}</a></p>
-						            		</div>
-						            		@endif
-						            		
-						            		@if($writers->isNotEmpty())
-						            		<div class="sb-it">
-						            			<h6>Writer: </h6>
-						            			<p>
-						            				@foreach($writers->take(3) as $index => $writer)
-						            					<a href="{{ route('celebrities.show', $writer['id']) }}">{{ $writer['name'] }}</a>@if(!$loop->last), @endif
-						            				@endforeach
+						            			<h6>Director:</h6>
+						            			<p class="cast-names">
+						            				<span class="name-badge"><a href="{{ route('celebrities.show', $director['id']) }}">{{ $director['name'] }}</a></span>
 						            			</p>
 						            		</div>
 						            		@endif
 						            		
 						            		@if(isset($credits['cast']) && count($credits['cast']) > 0)
 						            		<div class="sb-it">
-						            			<h6>Stars: </h6>
-						            			<p>
-						            				@foreach(array_slice($credits['cast'], 0, 4) as $index => $actor)
-						            					<a href="{{ route('celebrities.show', $actor['id']) }}">{{ $actor['name'] }}</a>@if($index < 3 && isset($credits['cast'][$index + 1])), @endif
-						            				@endforeach
-						            			</p>
-						            		</div>
-						            		@endif
-						            		
-						            		@if(isset($movie['genres']) && count($movie['genres']) > 0)
-						            		<div class="sb-it">
-						            			<h6>Genres:</h6>
-						            			<p>
-						            				@foreach($movie['genres'] as $index => $genre)
-						            					<a href="{{ route('movies.genre', $genre['id']) }}">{{ $genre['name'] }}</a>@if(!$loop->last), @endif
+						            			<h6>Stars:</h6>
+						            			<p class="cast-names">
+						            				@foreach(array_slice($credits['cast'], 0, 5) as $actor)
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $actor['id']) }}">{{ $actor['name'] }}</a></span>
 						            				@endforeach
 						            			</p>
 						            		</div>
@@ -839,6 +869,36 @@
 						            			<p>{{ date('F j, Y', strtotime($movie['release_date'])) }}</p>
 						            		</div>
 						            		@endif
+						            	</div>
+						            	
+						            	<div class="col-md-4 col-sm-6 col-xs-12">
+						            	    @if(isset($credits['crew']))
+						            			@php 
+						            				$writers = collect($credits['crew'])->where('department', 'Writing');
+						            			@endphp
+						            		@endif
+						            		
+						            		@if($writers->isNotEmpty())
+						            		<div class="sb-it">
+						            			<h6>Writers:</h6>
+						            			<p class="cast-names">
+						            				@foreach($writers->take(3) as $writer)
+						            					<span class="name-badge"><a href="{{ route('celebrities.show', $writer['id']) }}">{{ $writer['name'] }}</a></span>
+						            				@endforeach
+						            			</p>
+						            		</div>
+						            		@endif
+						            		
+						            		@if(isset($movie['genres']) && count($movie['genres']) > 0)
+						            		<div class="sb-it">
+						            			<h6>Genres:</h6>
+						            			<p class="cast-names">
+						            				@foreach($movie['genres'] as $genre)
+						            					<span class="name-badge"><a href="{{ route('movies.genre', $genre['id']) }}">{{ $genre['name'] }}</a></span>
+						            				@endforeach
+						            			</p>
+						            		</div>
+						            		@endif
 						            		
 						            		@if(isset($movie['runtime']) && $movie['runtime'])
 						            		<div class="sb-it">
@@ -846,7 +906,9 @@
 						            			<p>{{ $movie['runtime'] }} min</p>
 						            		</div>
 						            		@endif
-						            		
+						            	</div>
+						            	
+						            	<div class="col-md-4 col-sm-12 col-xs-12">
 						            		@if(isset($movie['vote_average']))
 						            		<div class="sb-it">
 						            			<h6>TMDB Rating:</h6>
