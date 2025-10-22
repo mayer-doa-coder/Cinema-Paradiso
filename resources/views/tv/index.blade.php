@@ -295,77 +295,77 @@ body {
 
                     <!-- TV Series Gamification Section -->
                     <div class="tv-gamification">
-                        <h4 class="sb-title">🎬 TV Series Challenge</h4>
-                        <div class="gamification-card" style="background: linear-gradient(135deg, #0a1929 0%, #1a2332 100%); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(236, 110, 171, 0.2); border: 1px solid rgba(236, 110, 171, 0.1);">
+                        <h4 class="sb-title">TV Series Challenge</h4>
+                        <div class="gamification-card" style="background: #0d1b2a; padding: 18px; border-radius: 5px; border: 1px solid #1e3a5f;">
                             <!-- Daily Quiz Question -->
-                            <div class="quiz-section" style="margin-bottom: 20px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                    <h5 style="color: #e9d736; margin: 0; font-size: 14px; font-weight: bold;">
-                                        <i class="ion-help-circled"></i> Daily Trivia
+                            <div class="quiz-section" style="margin-bottom: 18px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <h5 style="color: #ffffff; margin: 0; font-size: 13px; font-weight: 600;">
+                                        Daily Trivia
                                     </h5>
-                                    <span style="background: #ec6eab; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                                    <span style="background: #1e3a5f; color: #abb7c4; padding: 3px 8px; border-radius: 3px; font-size: 13px;">
                                         +10 Points
                                     </span>
                                 </div>
-                                <p id="quiz-question" style="color: #abb7c4; font-size: 13px; line-height: 1.6; margin-bottom: 15px;">
+                                <p id="quiz-question" style="color: #abb7c4; font-size: 13px; line-height: 1.5; margin-bottom: 12px;">
                                     Which TV series holds the record for most Emmy Awards won by a comedy series?
                                 </p>
-                                <div class="quiz-options" style="display: flex; flex-direction: column; gap: 8px;">
-                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                <div class="quiz-options" style="display: flex; flex-direction: column; gap: 6px;">
+                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #1e3a5f; padding: 8px 12px; border-radius: 3px; cursor: pointer; transition: all 0.2s ease; text-align: left; font-size: 13px;">
                                         A) Friends
                                     </button>
-                                    <button class="quiz-option" data-answer="correct" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                    <button class="quiz-option" data-answer="correct" style="background: #020d18; color: #abb7c4; border: 1px solid #1e3a5f; padding: 8px 12px; border-radius: 3px; cursor: pointer; transition: all 0.2s ease; text-align: left; font-size: 13px;">
                                         B) Frasier
                                     </button>
-                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #1e3a5f; padding: 8px 12px; border-radius: 3px; cursor: pointer; transition: all 0.2s ease; text-align: left; font-size: 13px;">
                                         C) The Office
                                     </button>
-                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #1e3a5f; padding: 8px 12px; border-radius: 3px; cursor: pointer; transition: all 0.2s ease; text-align: left; font-size: 13px;">
                                         D) Modern Family
                                     </button>
                                 </div>
-                                <div id="quiz-result" style="margin-top: 12px; padding: 10px; border-radius: 8px; display: none; font-size: 12px;"></div>
+                                <div id="quiz-result" style="margin-top: 10px; padding: 8px; border-radius: 3px; display: none; font-size: 13px;"></div>
                             </div>
 
                             <!-- Achievements Badge -->
-                            <div class="achievements-section" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                                <h5 style="color: #ffffff; margin: 0 0 12px 0; font-size: 13px; font-weight: bold;">
-                                    <i class="ion-trophy"></i> Your Badges
+                            <div class="achievements-section" style="border-top: 1px solid #1e3a5f; padding-top: 15px; margin-bottom: 15px;">
+                                <h5 style="color: #ffffff; margin: 0 0 10px 0; font-size: 13px; font-weight: 600;">
+                                    Achievements
                                 </h5>
-                                <div class="badges-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                                    <div class="badge-item" data-badge="binge" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
-                                        <div style="font-size: 24px; margin-bottom: 4px;">📺</div>
-                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Binge Watcher</span>
+                                <div class="badges-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                                    <div class="badge-item" data-badge="binge" style="text-align: center; padding: 8px; background: #020d18; border: 1px solid #1e3a5f; border-radius: 3px; cursor: pointer;">
+                                        <div style="font-size: 13px; color: #e9d736; font-weight: 600;">B</div>
+                                        <span style="font-size: 8px; color: #abb7c4; display: block; margin-top: 2px;">Binge</span>
                                     </div>
-                                    <div class="badge-item" data-badge="critic" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; opacity: 0.4;">
-                                        <div style="font-size: 24px; margin-bottom: 4px;">⭐</div>
-                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Top Critic</span>
+                                    <div class="badge-item" data-badge="critic" style="text-align: center; padding: 8px; background: #020d18; border: 1px solid #1e3a5f; border-radius: 3px; cursor: pointer; opacity: 0.4;">
+                                        <div style="font-size: 13px; color: #e9d736; font-weight: 600;">C</div>
+                                        <span style="font-size: 8px; color: #abb7c4; display: block; margin-top: 2px;">Critic</span>
                                     </div>
-                                    <div class="badge-item" data-badge="explorer" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; opacity: 0.4;">
-                                        <div style="font-size: 24px; margin-bottom: 4px;">🌍</div>
-                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Genre Explorer</span>
+                                    <div class="badge-item" data-badge="explorer" style="text-align: center; padding: 8px; background: #020d18; border: 1px solid #1e3a5f; border-radius: 3px; cursor: pointer; opacity: 0.4;">
+                                        <div style="font-size: 13px; color: #e9d736; font-weight: 600;">E</div>
+                                        <span style="font-size: 8px; color: #abb7c4; display: block; margin-top: 2px;">Explorer</span>
                                     </div>
-                                    <div class="badge-item" data-badge="trivia" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; opacity: 0.4;">
-                                        <div style="font-size: 24px; margin-bottom: 4px;">🎯</div>
-                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Trivia Master</span>
+                                    <div class="badge-item" data-badge="trivia" style="text-align: center; padding: 8px; background: #020d18; border: 1px solid #1e3a5f; border-radius: 3px; cursor: pointer; opacity: 0.4;">
+                                        <div style="font-size: 13px; color: #e9d736; font-weight: 600;">T</div>
+                                        <span style="font-size: 8px; color: #abb7c4; display: block; margin-top: 2px;">Trivia</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Stats Display -->
-                            <div class="stats-section" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <div class="stats-section" style="border-top: 1px solid #1e3a5f; padding-top: 15px;">
                                 <div style="display: flex; justify-content: space-around; text-align: center;">
                                     <div>
-                                        <div style="color: #e9d736; font-size: 20px; font-weight: bold;" id="user-points">150</div>
-                                        <div style="color: #abb7c4; font-size: 10px;">Points</div>
+                                        <div style="color: #e9d736; font-size: 16px; font-weight: 600;" id="user-points">150</div>
+                                        <div style="color: #abb7c4; font-size: 13px;">Points</div>
                                     </div>
                                     <div>
-                                        <div style="color: #ec6eab; font-size: 20px; font-weight: bold;" id="user-streak">5</div>
-                                        <div style="color: #abb7c4; font-size: 10px;">Day Streak</div>
+                                        <div style="color: #e9d736; font-size: 16px; font-weight: 600;" id="user-streak">5</div>
+                                        <div style="color: #abb7c4; font-size: 13px;">Streak</div>
                                     </div>
                                     <div>
-                                        <div style="color: #4CAF50; font-size: 20px; font-weight: bold;" id="user-rank">#247</div>
-                                        <div style="color: #abb7c4; font-size: 10px;">Rank</div>
+                                        <div style="color: #e9d736; font-size: 16px; font-weight: 600;" id="user-rank">#247</div>
+                                        <div style="color: #abb7c4; font-size: 13px;">Rank</div>
                                     </div>
                                 </div>
                             </div>
@@ -397,7 +397,7 @@ body {
                                                 <i class="ion-android-star"></i> {{ number_format($show['vote_average'] ?? 0, 1) }}
                                             </span>
                                             @if(!empty($show['first_air_date']))
-                                                <span style="color: #abb7c4; font-size: 11px;">
+                                                <span style="color: #abb7c4; font-size: 13px;">
                                                     {{ date('Y', strtotime($show['first_air_date'])) }}
                                                 </span>
                                             @endif
@@ -407,8 +407,8 @@ body {
                                                 data-show-name="{{ $show['name'] }}"
                                                 data-show-poster="{{ $show['poster_url'] ?? '' }}"
                                                 data-show-year="{{ !empty($show['first_air_date']) ? date('Y', strtotime($show['first_air_date'])) : '' }}"
-                                                style="background: #ec6eab; color: white; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; transition: all 0.3s ease; width: 100%;">
-                                            <i class="ion-ios-plus-outline"></i> Add to Watchlist
+                                                style="background: #ec6eab; color: white; border: none; padding: 6px 10px; border-radius: 3px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; width: auto; min-width: 32px;">
+                                            +
                                         </button>
                                     </div>
                                 </div>
@@ -547,16 +547,11 @@ body {
 }
 
 .tv-gamification .sb-title {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .gamification-card {
-    transition: all 0.3s ease;
-}
-
-.gamification-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(236, 110, 171, 0.3) !important;
+    transition: none;
 }
 
 .quiz-option {
@@ -564,12 +559,17 @@ body {
 }
 
 .quiz-option:hover:not(:disabled) {
-    border-color: #ec6eab !important;
-    background: #1a2332 !important;
+    border-color: #405266 !important;
+    background: #0d1b2a !important;
 }
 
 .badge-item {
     cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.badge-item:hover {
+    opacity: 0.8 !important;
 }
 
 /* Celebrity image styling */
@@ -756,7 +756,7 @@ $(document).ready(function() {
         // Disable button during request
         button.prop('disabled', true);
         const originalHtml = button.html();
-        button.html('<i class="ion-load-a"></i> Adding...');
+        button.html('...');
         
         // Make AJAX request to add to watchlist
         $.ajax({
@@ -771,7 +771,7 @@ $(document).ready(function() {
                 year: showYear
             },
             success: function(response) {
-                button.html('<i class="ion-checkmark"></i> Added!');
+                button.html('✓');
                 button.css('background', '#4CAF50');
                 
                 // Show success message
@@ -887,8 +887,7 @@ $(document).ready(function() {
             button.css({
                 'background': '#4CAF50',
                 'color': 'white',
-                'border-color': '#4CAF50',
-                'transform': 'scale(1.05)'
+                'border-color': '#4CAF50'
             });
             
             // Award points
@@ -896,14 +895,14 @@ $(document).ready(function() {
             userStreak += 1;
             localStorage.setItem('tvUserPoints', userPoints);
             localStorage.setItem('tvUserStreak', userStreak);
-            $('#user-points').text(userPoints).css('animation', 'pulse 0.5s ease');
-            $('#user-streak').text(userStreak).css('animation', 'pulse 0.5s ease');
+            $('#user-points').text(userPoints);
+            $('#user-streak').text(userStreak);
             
             resultDiv.show().css({
                 'background': 'rgba(76, 175, 80, 0.1)',
                 'color': '#4CAF50',
                 'border': '1px solid #4CAF50'
-            }).html('<i class="ion-checkmark-circled"></i> Correct! You earned 10 points. Frasier won 37 Emmy Awards!');
+            }).html('Correct! You earned 10 points. Frasier won 37 Emmy Awards!');
             
             // Check for trivia badge unlock
             if (userPoints >= 200) {
@@ -913,8 +912,7 @@ $(document).ready(function() {
             button.css({
                 'background': '#f44336',
                 'color': 'white',
-                'border-color': '#f44336',
-                'transform': 'scale(0.95)'
+                'border-color': '#f44336'
             });
             
             // Show correct answer
@@ -928,7 +926,7 @@ $(document).ready(function() {
                 'background': 'rgba(244, 67, 54, 0.1)',
                 'color': '#f44336',
                 'border': '1px solid #f44336'
-            }).html('<i class="ion-close-circled"></i> Incorrect. The correct answer is Frasier with 37 Emmy Awards.');
+            }).html('Incorrect. The correct answer is Frasier with 37 Emmy Awards.');
         }
         
         // Mark quiz as answered
@@ -939,10 +937,7 @@ $(document).ready(function() {
     function unlockBadge(badgeType) {
         const badge = $(`.badge-item[data-badge="${badgeType}"]`);
         if (badge.css('opacity') == '0.4') {
-            badge.css({
-                'opacity': '1',
-                'animation': 'badgeUnlock 0.6s ease'
-            });
+            badge.css('opacity', '1');
             
             // Show unlock notification
             const badgeNames = {
@@ -952,7 +947,7 @@ $(document).ready(function() {
                 'trivia': 'Trivia Master'
             };
             
-            showNotification('success', '🏆 Badge Unlocked: ' + badgeNames[badgeType] + '!');
+            showNotification('success', 'Achievement Unlocked: ' + badgeNames[badgeType]);
             localStorage.setItem('tvBadge_' + badgeType, 'unlocked');
         }
     }
@@ -963,90 +958,17 @@ $(document).ready(function() {
             $(`.badge-item[data-badge="${badgeType}"]`).css('opacity', '1');
         }
     });
-    
-    // Badge hover effects
-    $('.badge-item').hover(
-        function() {
-            if ($(this).css('opacity') == '1') {
-                $(this).css({
-                    'transform': 'scale(1.1) rotate(5deg)',
-                    'background': '#ec6eab'
-                });
-            }
-        },
-        function() {
-            $(this).css({
-                'transform': 'scale(1) rotate(0deg)',
-                'background': '#020d18'
-            });
-        }
-    );
-    
-    // Quiz option hover effects
-    $('.quiz-option').hover(
-        function() {
-            if (!$(this).prop('disabled')) {
-                $(this).css({
-                    'background': '#1a2332',
-                    'border-color': '#ec6eab',
-                    'transform': 'translateX(5px)'
-                });
-            }
-        },
-        function() {
-            if (!$(this).prop('disabled')) {
-                $(this).css({
-                    'background': '#020d18',
-                    'border-color': '#334155',
-                    'transform': 'translateX(0)'
-                });
-            }
-        }
-    );
 });
 
-// Add animation keyframes
+// Add simple styles
 const style = document.createElement('style');
 style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.2);
-        }
-    }
-    
-    @keyframes badgeUnlock {
-        0% {
-            transform: scale(0) rotate(0deg);
-        }
-        50% {
-            transform: scale(1.3) rotate(180deg);
-        }
-        100% {
-            transform: scale(1) rotate(360deg);
-        }
-    }
-    
     .watchlist-item {
-        transition: all 0.3s ease !important;
+        transition: all 0.2s ease !important;
     }
     
     .add-to-watchlist-btn:hover {
         background: #d5006f !important;
-        transform: scale(1.05);
     }
     
     .add-to-watchlist-btn:disabled {
@@ -1055,11 +977,11 @@ style.textContent = `
     }
     
     .quiz-option {
-        transition: all 0.3s ease !important;
+        transition: all 0.2s ease !important;
     }
     
     .badge-item {
-        transition: all 0.3s ease !important;
+        transition: opacity 0.2s ease !important;
     }
 `;
 document.head.appendChild(style);
