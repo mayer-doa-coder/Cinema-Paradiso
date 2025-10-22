@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $title)
+@section('name', $title)
 
 @push('styles')
 <style>
@@ -42,239 +42,1020 @@ body {
 							</a>
 						</li>
 						<li class="first">
-							<a class="btn btn-default lv1" href="{{ route('movies.index') }}">
-							Movies
-							</a>
-						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							TV Shows <i class="fa fa-angle-down" aria-hidden="true"></i>
-							</a>
-							<ul class="dropdown-menu level1">
+							<a class="btn btn-default lv1" href="{{ route('tv.index') }}">
+							TV Shows
+							<!-- <ul class="sub-menu">
 								<li><a href="{{ route('tv.index', ['category' => 'popular']) }}">Popular</a></li>
 								<li><a href="{{ route('tv.index', ['category' => 'top-rated']) }}">Top Rated</a></li>
 								<li><a href="{{ route('tv.index', ['category' => 'trending']) }}">Trending</a></li>
-								<li><a href="{{ route('tv.index', ['category' => 'airing-today']) }}">Airing Today</a></li>
 								<li><a href="{{ route('tv.index', ['category' => 'on-air']) }}">On Air</a></li>
-							</ul>
-						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							celebrities <i class="fa fa-angle-down" aria-hidden="true"></i>
+							</ul> -->
 							</a>
-							<ul class="dropdown-menu level1">
-								<li><a href="{{ route('celebrities') }}">Celebrity grid</a></li>
-								<li><a href="{{ route('celebritygrid01') }}">Celebrity grid 2</a></li>
-								<li><a href="{{ route('celebritygrid02') }}">Celebrity grid 3</a></li>
-								<li class="it-last"><a href="{{ route('celebritylist') }}">Celebrity list</a></li>
-							</ul>
 						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							news <i class="fa fa-angle-down" aria-hidden="true"></i>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('celebrities') }}">
+							Celebrities
 							</a>
-							<ul class="dropdown-menu level1">
-								<li><a href="{{ route('blog') }}">blog</a></li>
-								<li><a href="{{ route('bloggrid') }}">blog Grid</a></li>
-								<li class="it-last"><a href="{{ route('blogdetail') }}">blog Detail</a></li>
-							</ul>
 						</li>
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							community <i class="fa fa-angle-down" aria-hidden="true"></i>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('blog') }}">
+							News
 							</a>
-							<ul class="dropdown-menu level1">
-								<li><a href="{{ route('community') }}">Community</a></li>
-							</ul>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('community') }}">
+							Community
+							</a>
 						</li>
 					</ul>
-					<ul class="nav navbar-nav flex-child-menu menu-right">
-						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							<i class="fa fa-search" aria-hidden="true"></i>
-							</a>
-							<ul class="dropdown-menu level1">
-								<li class="form-container">
-									<form class="form-group" action="{{ route('tv.search') }}" method="GET">
-										<input type="text" name="q" class="form-control" placeholder="Search TV shows..." value="{{ request('q') }}">
-									</form>
-								</li>
-							</ul>
-						</li>
-						<li class="loginLink">
-							<a href="#" id="openModal">LOG In</a>
-						</li>
-						<li class="btn signupLink">
-							<a href="#" id="openModal">sign up</a>
-						</li>
+					<ul class="nav navbar-nav flex-child-menu menu-right">               
+						<li><a href="{{ route('help') }}">Help</a></li>
+						@auth
+							<li>
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
+									{{ Auth::user()->name }}
+								</a>
+							</li>
+						@else
+							<li class="loginLink"><a href="#">LOG In</a></li>
+							<li class="btn signupLink"><a href="#">sign up</a></li>
+						@endauth
 					</ul>
 				</div>
-			</div>
-		</nav>
+	    </nav>
+	    
+	    @include('partials._search')
 	</div>
 </header>
 <!-- END | Header -->
 
-<!-- Top Search Form for TV Shows -->
 <div class="hero hero3">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                @include('partials._search')
+                <!-- hero content -->
+                <div class="hero-ct">
+                    <h1>{{ $title }}</h1>
+                    <ul class="breadcumb">
+                        <li class="active"><a href="{{ route('home') }}">Home</a></li>
+                        <li><span class="ion-ios-arrow-right"></span> {{ $title }}</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="hero common-hero">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="hero-ct">
-					<h1>{{ $title }}</h1>
-					<ul class="breadcumb">
-						<li class="active"><a href="{{ route('home') }}">Home</a></li>
-						<li><span class="ion-ios-arrow-right"></span>TV Shows</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<div class="page-single">
+    <div class="container">
+        <div class="row ipad-width2" id="main-row">
+            <div class="col-md-8 col-sm-12 col-xs-12" id="main-content">
+                <!-- Modern Filter Bar -->
+                <div class="modern-filter-bar" style="padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <div class="filter-header" style="margin-bottom: 15px; color: #abb7c4; font-size: 14px;">
+                        Found <span style="color: #ec6eab; font-weight: bold;">{{ isset($pagination['total_results']) ? $pagination['total_results'] : count($tvShows) }} TV shows</span> in total
+                    </div>
+                    
+                    <form method="GET" action="{{ route('tv.index') }}" id="filter-form">
+                        <div class="filter-controls" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between;">
+                            <div class="filter-buttons" style="display: flex; flex-wrap: wrap; gap: 15px; flex: 1;">
+                                <!-- Year Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="year-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ request('year') ? request('year') : 'YEAR' }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="year-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; max-height: 250px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('tv.index', array_merge(request()->except('year'), ['page' => 1])) }}" class="dropdown-item {{ !request('year') ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">All Years</a>
+                                        @for($y = date('Y') + 1; $y >= 1980; $y--)
+                                            <a href="{{ route('tv.index', array_merge(request()->except('page'), ['year' => $y])) }}" class="dropdown-item {{ request('year') == $y ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">{{ $y }}</a>
+                                        @endfor
+                                    </div>
+                                </div>
 
-<div class="page-single movie_list">
-	<div class="container">
-		<div class="row ipad-width2">
-			<div class="col-md-8 col-sm-12 col-xs-12">
-				<div class="topbar-filter">
-					<p>Found <span id="pagination-info">{{ count($tvShows) }} TV shows</span> in total</p>
-					<label>Sort by:</label>
-					<select id="category-filter" onchange="window.location.href=this.value">
-						<option value="{{ route('tv.index', ['category' => 'popular']) }}" {{ $currentCategory == 'popular' ? 'selected' : '' }}>Popularity Descending</option>
-						<option value="{{ route('tv.index', ['category' => 'top-rated']) }}" {{ $currentCategory == 'top-rated' ? 'selected' : '' }}>Rating Descending</option>
-						<option value="{{ route('tv.index', ['category' => 'trending']) }}" {{ $currentCategory == 'trending' ? 'selected' : '' }}>Trending</option>
-						<option value="{{ route('tv.index', ['category' => 'airing-today']) }}" {{ $currentCategory == 'airing-today' ? 'selected' : '' }}>Airing Today</option>
-						<option value="{{ route('tv.index', ['category' => 'on-air']) }}" {{ $currentCategory == 'on-air' ? 'selected' : '' }}>On Air</option>
-					</select>
-				</div>
-				<div class="flex-wrap-movielist">
-					@forelse($tvShows as $tvShow)
-					<div class="movie-item-style-2 movie-item-style-1">
-						<img src="{{ $tvShow['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $tvShow['name'] ?? 'TV Show' }}">
-						<div class="hvr-inner">
-							<a href="{{ route('tv.show', $tvShow['id']) }}">Read more <i class="ion-android-arrow-dropright"></i></a>
-						</div>
-						<div class="mv-item-infor">
-							<h6><a href="{{ route('tv.show', $tvShow['id']) }}">{{ $tvShow['name'] ?? 'TV Show' }}</a></h6>
-							<p class="rate"><i class="ion-android-star"></i><span>{{ number_format($tvShow['vote_average'] ?? 0, 1) }}</span> /10</p>
-							<p class="describe">{{ Str::limit($tvShow['overview'] ?? 'No description available.', 120) }}</p>
-							<p class="run-time">First Air Date: {{ isset($tvShow['first_air_date']) ? \Carbon\Carbon::parse($tvShow['first_air_date'])->format('M d, Y') : 'Unknown' }}</p>
-							<p class="director">Network: {{ $tvShow['networks'][0]['name'] ?? 'Unknown' }}</p>
-						</div>
-					</div>
-					@empty
-					<div class="col-md-12">
-						<div class="no-results">
-							<h3>No TV shows found</h3>
-							<p>{{ $error ?? 'Try adjusting your filters or search terms.' }}</p>
-						</div>
-					</div>
-					@endforelse
-				</div>
-				
-				@if(isset($pagination) && !empty($pagination))
-				<div class="topbar-filter">
-					<label>Showing {{ count($tvShows) }} of {{ $pagination['total_results'] ?? 0 }} TV shows</label>
-					<div class="pagination2">
-						<span>Page {{ $pagination['page'] ?? 1 }} of {{ $pagination['total_pages'] ?? 1 }}</span>
-						@if(($pagination['page'] ?? 1) > 1)
-							<a href="{{ route('tv.index', ['category' => $currentCategory, 'page' => ($pagination['page'] - 1)]) }}"><i class="ion-arrow-left-b"></i></a>
-						@endif
-						@if(($pagination['page'] ?? 1) < ($pagination['total_pages'] ?? 1))
-							<a href="{{ route('tv.index', ['category' => $currentCategory, 'page' => ($pagination['page'] + 1)]) }}"><i class="ion-arrow-right-b"></i></a>
-						@endif
-					</div>
-				</div>
-				@endif
-			</div>
-			<div class="col-md-4 col-sm-12 col-xs-12">
-				<div class="sidebar">
-					<div class="searh-form">
-						<h4 class="sb-title">Search for TV Shows</h4>
-						<form class="form-style-1" action="{{ route('tv.search') }}" method="GET">
-							<div class="row">
-								<div class="col-md-12 form-it">
-									<label>TV Show name</label>
-									<input type="text" name="q" placeholder="Enter TV show name" value="{{ request('q') }}">
-								</div>
-								<div class="col-md-12 form-it">
-									<label>Genres</label>
-									<div class="group-ip">
-										<select name="genre" id="genre">
-											<option value="">Select Genre</option>
-											@foreach($genres ?? [] as $genre)
-												<option value="{{ $genre['id'] }}">{{ $genre['name'] }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-								<div class="col-md-12 ">
-									<input class="submit" type="submit" value="submit">
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="ads">
-						@if(isset($randomWallpaper) && !empty($randomWallpaper['backdrop_url']))
-							<div class="tv-wallpaper" style="position: relative; width: 336px; height: 296px; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-								<img src="{{ $randomWallpaper['backdrop_url'] }}" alt="{{ $randomWallpaper['name'] ?? 'TV Show Wallpaper' }}" 
-									 style="width: 100%; height: 100%; object-fit: cover;">
-								<div class="wallpaper-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 15px;">
-									<h5 style="margin: 0; font-size: 14px; font-weight: bold;">{{ $randomWallpaper['name'] ?? 'Featured TV Show' }}</h5>
-									@if(!empty($randomWallpaper['overview']))
-										<p style="margin: 5px 0 0; font-size: 11px; opacity: 0.9;">{{ Str::limit($randomWallpaper['overview'], 80) }}</p>
-									@endif
-								</div>
-							</div>
-						@else
-							<img src="{{ asset('images/uploads/ads1.png') }}" alt="" width="336" height="296">
-						@endif
-					</div>
-					<div class="celebrities">
-						<h4 class="sb-title">Popular TV Shows</h4>
-						@forelse($popular ?? [] as $show)
-						<div class="celeb-item">
-							<a href="{{ route('tv.show', $show['id']) }}">
-								<img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $show['name'] }}" width="70" height="70">
-							</a>
-							<div class="celeb-author">
-								<h6><a href="{{ route('tv.show', $show['id']) }}">{{ Str::limit($show['name'], 20) }}</a></h6>
-								<span>{{ number_format($show['vote_average'], 1) }}/10</span>
-							</div>
-						</div>
-						@empty
-						<p>No popular TV shows available.</p>
-						@endforelse
-						<a href="{{ route('tv.index', ['category' => 'popular']) }}" class="btn">See all TV shows<i class="ion-ios-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                                <!-- Rating Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="rating-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ request('rating') ? request('rating').'+' : 'RATING' }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="rating-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('tv.index', array_merge(request()->except('rating'), ['page' => 1])) }}" class="dropdown-item {{ !request('rating') ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">All Ratings</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['rating' => 9])) }}" class="dropdown-item {{ request('rating') == 9 ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">9+ Outstanding</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['rating' => 8])) }}" class="dropdown-item {{ request('rating') == 8 ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">8+ Excellent</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['rating' => 7])) }}" class="dropdown-item {{ request('rating') == 7 ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">7+ Great</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['rating' => 6])) }}" class="dropdown-item {{ request('rating') == 6 ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">6+ Good</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['rating' => 5])) }}" class="dropdown-item {{ request('rating') == 5 ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">5+ Average</a>
+                                    </div>
+                                </div>
+
+                                <!-- Category Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="category-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ ucfirst(str_replace('-', ' ', $currentCategory)) }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="category-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('tv.index', array_merge(request()->except(['category', 'page']))) }}" class="dropdown-item {{ !$currentCategory || $currentCategory == 'popular' ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">Popular</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['category' => 'top-rated'])) }}" class="dropdown-item {{ $currentCategory == 'top-rated' ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">Top Rated</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['category' => 'trending'])) }}" class="dropdown-item {{ $currentCategory == 'trending' ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">Trending</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['category' => 'airing-today'])) }}" class="dropdown-item {{ $currentCategory == 'airing-today' ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">Airing Today</a>
+                                        <a href="{{ route('tv.index', array_merge(request()->except('page'), ['category' => 'on-air'])) }}" class="dropdown-item {{ $currentCategory == 'on-air' ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">On Air</a>
+                                    </div>
+                                </div>
+
+                                <!-- Genre Filter -->
+                                <div class="filter-dropdown" style="position: relative;">
+                                    <button type="button" class="filter-btn" data-target="genre-dropdown" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease; min-width: 120px; justify-content: space-between;">
+                                        <span>{{ request('genre') ? collect($genres)->firstWhere('id', request('genre'))['name'] ?? 'GENRE' : 'GENRE' }}</span>
+                                        <i class="ion-ios-arrow-down" style="font-size: 12px; transition: transform 0.3s ease;"></i>
+                                    </button>
+                                    <div id="genre-dropdown" class="dropdown-content" style="position: absolute; top: 100%; left: 0; background: #1a2332; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; min-width: 200px; max-height: 250px; overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <a href="{{ route('tv.index', array_merge(request()->except('genre'), ['page' => 1])) }}" class="dropdown-item {{ !request('genre') ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">All Genres</a>
+                                        @foreach($genres as $genre)
+                                            <a href="{{ route('tv.index', array_merge(request()->except('page'), ['genre' => $genre['id']])) }}" class="dropdown-item {{ request('genre') == $genre['id'] ? 'active' : '' }}" style="display: block; padding: 12px 20px; color: #abb7c4; text-decoration: none; transition: background 0.2s ease;">{{ $genre['name'] }}</a>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Grid Toggle -->
+                                <div class="grid-toggle" style="margin-left: 15px;">
+                                    <button type="button" id="grid-toggle-btn" style="background: #020d18; color: #abb7c4; border: none; padding: 12px 15px; border-radius: 25px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
+                                        <i class="ion-grid" style="font-size: 16px;"></i>
+                                        <span>Full Grid</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Clear All Button -->
+                            @if(request()->hasAny(['genre', 'year', 'rating', 'category']))
+                                <div class="filter-clear" style="margin-left: auto;">
+                                    <a href="{{ route('tv.index') }}" style="background: #ec6eab; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; font-size: 14px; transition: all 0.3s ease;">Clear All</a>
+                                </div>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+
+                @if($error)
+                    <div class="alert alert-danger">
+                        <i class="ion-alert-circled"></i> {{ $error }}
+                    </div>
+                @endif
+
+                @if(!empty($tvShows))
+                    <div class="flex-wrap-movielist">
+                        @foreach($tvShows as $tvShow)
+                            <div class="movie-item-style-2 movie-item-style-1">
+                                <a href="{{ route('tv.show', $tvShow['id']) }}">
+                                    <img src="{{ $tvShow['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" 
+                                         alt="{{ $tvShow['name'] ?? 'TV Show Poster' }}">
+                                </a>
+                                <div class="mv-item-infor">
+                                    <h6><a href="{{ route('tv.show', $tvShow['id']) }}">{{ $tvShow['name'] ?? 'Untitled' }}</a></h6>
+                                    <p class="rate">
+                                        @php
+                                            $rating = round(($tvShow['vote_average'] ?? 0) / 2);
+                                        @endphp
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= $rating)
+                                                <i class="ion-android-star"></i>
+                                            @else
+                                                <i class="ion-android-star-outline"></i>
+                                            @endif
+                                        @endfor
+                                        <span class="fr">{{ number_format($tvShow['vote_average'] ?? 0, 1) }}/10</span>
+                                    </p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Pagination -->
+                    @if(isset($pagination) && ($pagination['total_pages'] ?? 1) > 1)
+                        <div class="topbar-filter">
+                            <div class="pagination2">
+                                @php
+                                    $paginationParams = array_filter([
+                                        'category' => $currentCategory,
+                                        'genre' => request('genre'),
+                                        'year' => request('year'),
+                                        'rating' => request('rating'),
+                                    ]);
+                                    $current_page = $pagination['page'] ?? 1;
+                                    $total_pages = $pagination['total_pages'] ?? 1;
+                                @endphp
+                                
+                                @if($current_page > 1)
+                                    <span><a href="{{ route('tv.index', array_merge($paginationParams, ['page' => $current_page - 1])) }}">
+                                        <i class="ion-arrow-left-b"></i></a></span>
+                                @endif
+
+                                @php
+                                    $start = max(1, $current_page - 2);
+                                    $end = min($total_pages, $current_page + 2);
+                                @endphp
+
+                                @for($i = $start; $i <= $end; $i++)
+                                    <span><a href="{{ route('tv.index', array_merge($paginationParams, ['page' => $i])) }}" 
+                                        class="{{ $i == $current_page ? 'active' : '' }}">{{ $i }}</a></span>
+                                @endfor
+
+                                @if($current_page < $total_pages)
+                                    <span><a href="{{ route('tv.index', array_merge($paginationParams, ['page' => $current_page + 1])) }}">
+                                        <i class="ion-arrow-right-b"></i></a></span>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                @else
+                    <div class="no-results">
+                        <h3>No TV shows found</h3>
+                        <p>Try adjusting your filters or check back later for new content.</p>
+                    </div>
+                @endif
+            </div>
+
+            <div class="col-md-4 col-sm-12 col-xs-12" id="sidebar-content">
+                <div class="sidebar">
+                    <div class="searh-form">
+                        <h4 class="sb-title">Search for TV Shows</h4>
+                        <form class="form-style-1" method="GET" action="{{ route('tv.search') }}">
+                            <div class="row">
+                                <div class="col-md-12 form-it">
+                                    <label>TV Show name</label>
+                                    <input type="text" name="q" placeholder="Enter keywords here" value="{{ request('q') }}">
+                                </div>
+                                <div class="col-md-12 form-it">
+                                    <input class="submit" type="submit" value="Search">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- TV Series Gamification Section -->
+                    <div class="tv-gamification">
+                        <h4 class="sb-title">🎬 TV Series Challenge</h4>
+                        <div class="gamification-card" style="background: linear-gradient(135deg, #0a1929 0%, #1a2332 100%); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(236, 110, 171, 0.2); border: 1px solid rgba(236, 110, 171, 0.1);">
+                            <!-- Daily Quiz Question -->
+                            <div class="quiz-section" style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                    <h5 style="color: #e9d736; margin: 0; font-size: 14px; font-weight: bold;">
+                                        <i class="ion-help-circled"></i> Daily Trivia
+                                    </h5>
+                                    <span style="background: #ec6eab; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                                        +10 Points
+                                    </span>
+                                </div>
+                                <p id="quiz-question" style="color: #abb7c4; font-size: 13px; line-height: 1.6; margin-bottom: 15px;">
+                                    Which TV series holds the record for most Emmy Awards won by a comedy series?
+                                </p>
+                                <div class="quiz-options" style="display: flex; flex-direction: column; gap: 8px;">
+                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                        A) Friends
+                                    </button>
+                                    <button class="quiz-option" data-answer="correct" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                        B) Frasier
+                                    </button>
+                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                        C) The Office
+                                    </button>
+                                    <button class="quiz-option" data-answer="wrong" style="background: #020d18; color: #abb7c4; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: left; font-size: 12px;">
+                                        D) Modern Family
+                                    </button>
+                                </div>
+                                <div id="quiz-result" style="margin-top: 12px; padding: 10px; border-radius: 8px; display: none; font-size: 12px;"></div>
+                            </div>
+
+                            <!-- Achievements Badge -->
+                            <div class="achievements-section" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                                <h5 style="color: #ffffff; margin: 0 0 12px 0; font-size: 13px; font-weight: bold;">
+                                    <i class="ion-trophy"></i> Your Badges
+                                </h5>
+                                <div class="badges-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                                    <div class="badge-item" data-badge="binge" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                        <div style="font-size: 24px; margin-bottom: 4px;">📺</div>
+                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Binge Watcher</span>
+                                    </div>
+                                    <div class="badge-item" data-badge="critic" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; opacity: 0.4;">
+                                        <div style="font-size: 24px; margin-bottom: 4px;">⭐</div>
+                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Top Critic</span>
+                                    </div>
+                                    <div class="badge-item" data-badge="explorer" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; opacity: 0.4;">
+                                        <div style="font-size: 24px; margin-bottom: 4px;">🌍</div>
+                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Genre Explorer</span>
+                                    </div>
+                                    <div class="badge-item" data-badge="trivia" style="text-align: center; padding: 10px; background: #020d18; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; opacity: 0.4;">
+                                        <div style="font-size: 24px; margin-bottom: 4px;">🎯</div>
+                                        <span style="font-size: 9px; color: #abb7c4; display: block;">Trivia Master</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stats Display -->
+                            <div class="stats-section" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                                <div style="display: flex; justify-content: space-around; text-align: center;">
+                                    <div>
+                                        <div style="color: #e9d736; font-size: 20px; font-weight: bold;" id="user-points">150</div>
+                                        <div style="color: #abb7c4; font-size: 10px;">Points</div>
+                                    </div>
+                                    <div>
+                                        <div style="color: #ec6eab; font-size: 20px; font-weight: bold;" id="user-streak">5</div>
+                                        <div style="color: #abb7c4; font-size: 10px;">Day Streak</div>
+                                    </div>
+                                    <div>
+                                        <div style="color: #4CAF50; font-size: 20px; font-weight: bold;" id="user-rank">#247</div>
+                                        <div style="color: #abb7c4; font-size: 10px;">Rank</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @auth
+                    <!-- Quick Watchlist Feature -->
+                    <div class="quick-watchlist">
+                        <h4 class="sb-title">Quick Add to Watchlist</h4>
+                        <p style="color: #abb7c4; font-size: 13px; margin-bottom: 15px;">Trending shows you might like</p>
+                        @if(!empty($tvShows) && count($tvShows) > 0)
+                            @foreach(array_slice($tvShows, 0, 4) as $show)
+                                <div class="watchlist-item" style="display: flex; align-items: center; margin-bottom: 15px; padding: 10px; border-radius: 8px; background: #020d18; transition: all 0.3s ease;">
+                                    <a href="{{ route('tv.show', $show['id']) }}" style="flex-shrink: 0;">
+                                        <img src="{{ $show['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" 
+                                             alt="{{ $show['name'] }}" 
+                                             width="60" height="85" 
+                                             style="object-fit: cover; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                                    </a>
+                                    <div style="flex: 1; margin-left: 12px; min-width: 0;">
+                                        <h6 style="margin: 0 0 5px 0; font-size: 13px; line-height: 1.3;">
+                                            <a href="{{ route('tv.show', $show['id']) }}" style="color: #ffffff;">
+                                                {{ Str::limit($show['name'], 30) }}
+                                            </a>
+                                        </h6>
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                            <span style="color: #e9d736; font-size: 12px;">
+                                                <i class="ion-android-star"></i> {{ number_format($show['vote_average'] ?? 0, 1) }}
+                                            </span>
+                                            @if(!empty($show['first_air_date']))
+                                                <span style="color: #abb7c4; font-size: 11px;">
+                                                    {{ date('Y', strtotime($show['first_air_date'])) }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <button class="add-to-watchlist-btn" 
+                                                data-show-id="{{ $show['id'] }}"
+                                                data-show-name="{{ $show['name'] }}"
+                                                style="background: #ec6eab; color: white; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; transition: all 0.3s ease; width: 100%;">
+                                            <i class="ion-ios-plus-outline"></i> Add to Watchlist
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                        <a href="{{ route('user.profile') }}" class="btn" style="margin-top: 10px;">View My Watchlist<i class="ion-ios-arrow-right"></i></a>
+                    </div>
+                    @else
+                    <!-- Login Prompt for Watchlist -->
+                    <div class="quick-watchlist">
+                        <h4 class="sb-title">Quick Add to Watchlist</h4>
+                        <div style="background: #020d18; padding: 20px; border-radius: 8px; text-align: center;">
+                            <i class="ion-ios-list-outline" style="font-size: 48px; color: #ec6eab; margin-bottom: 15px;"></i>
+                            <p style="color: #abb7c4; font-size: 13px; margin-bottom: 15px;">
+                                Sign in to save TV shows to your watchlist and never miss an episode!
+                            </p>
+                            <a href="#" class="btn loginLink" style="background: #ec6eab; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: inline-block;">
+                                <i class="ion-log-in"></i> Login to Continue
+                            </a>
+                        </div>
+                    </div>
+                    @endauth
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
-@push('scripts')
+@section('scripts')
+<style>
+/* Filter dropdown responsive styles */
+@media (max-width: 768px) {
+    .filter-controls {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .filter-buttons {
+        justify-content: center !important;
+        margin-bottom: 15px;
+    }
+    .filter-search {
+        justify-content: center !important;
+    }
+    .search-input-wrapper input {
+        width: 200px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-buttons {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .filter-dropdown {
+        width: 100% !important;
+        max-width: 250px;
+    }
+    .filter-btn {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
+}
+
+/* Hover effects */
+.filter-btn:hover {
+    background: #020d18 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.dropdown-item:hover {
+    background: #ec6eab !important;
+    color: white !important;
+}
+
+.dropdown-item.active {
+    background: #ec6eab !important;
+    color: white !important;
+}
+
+.search-input-wrapper input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(221, 0, 63, 0.3);
+}
+
+/* Dropdown animations */
+.dropdown-content.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+.filter-btn.active .ion-ios-arrow-down {
+    transform: rotate(180deg);
+}
+
+/* Grid Toggle Styles */
+#grid-toggle-btn:hover {
+    background: #ec6eab !important;
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+#grid-toggle-btn.active {
+    background: #ec6eab !important;
+    color: white !important;
+}
+
+/* Full Grid Layout */
+.full-grid-mode #main-content {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.full-grid-mode #sidebar-content {
+    display: none !important;
+}
+
+.full-grid-mode .flex-wrap-movielist {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)) !important;
+    gap: 20px !important;
+    justify-items: center !important;
+}
+
+.full-grid-mode .movie-item-style-2 {
+    width: 185px !important;
+    margin-bottom: 0 !important;
+}
+
+/* Gamification Section Styling */
+.tv-gamification {
+    margin-bottom: 30px;
+}
+
+.tv-gamification .sb-title {
+    margin-bottom: 15px;
+}
+
+.gamification-card {
+    transition: all 0.3s ease;
+}
+
+.gamification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(236, 110, 171, 0.3) !important;
+}
+
+.quiz-option {
+    font-family: inherit;
+}
+
+.quiz-option:hover:not(:disabled) {
+    border-color: #ec6eab !important;
+    background: #1a2332 !important;
+}
+
+.badge-item {
+    cursor: pointer;
+}
+
+/* Celebrity image styling */
+.celebrities .celeb-item img {
+    border-radius: 100% !important;
+    object-fit: cover !important;
+    width: 70px !important;
+    height: 70px !important;
+}
+
+.celebrities .celeb-item img:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(236, 110, 171, 0.3) !important;
+}
+
+.celebrities .celeb-item {
+    transition: all 0.3s ease;
+}
+
+.celebrities .celeb-item:hover {
+    transform: translateY(-2px);
+}
+</style>
+
 <script>
+// Filter dropdown functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle pagination info update
-    const paginationInfo = document.getElementById('pagination-info');
-    if (paginationInfo) {
-        const tvShows = document.querySelectorAll('.movie-item-style-2');
-        if (tvShows.length === 0) {
-            paginationInfo.textContent = '0 TV shows';
+    // Handle dropdown toggles
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const dropdownContents = document.querySelectorAll('.dropdown-content');
+    
+    // Grid toggle functionality
+    const gridToggleBtn = document.getElementById('grid-toggle-btn');
+    const mainRow = document.getElementById('main-row');
+    let isFullGrid = false;
+    
+    // Load grid preference from localStorage
+    const savedGridMode = localStorage.getItem('tvGridMode');
+    if (savedGridMode === 'full') {
+        toggleGridMode();
+    }
+    
+    if (gridToggleBtn) {
+        gridToggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleGridMode();
+        });
+    }
+    
+    function toggleGridMode() {
+        isFullGrid = !isFullGrid;
+        
+        if (isFullGrid) {
+            mainRow.classList.add('full-grid-mode');
+            gridToggleBtn.classList.add('active');
+            gridToggleBtn.querySelector('span').textContent = 'Exit Grid';
+            gridToggleBtn.querySelector('i').className = 'ion-arrow-shrink';
+            localStorage.setItem('tvGridMode', 'full');
+        } else {
+            mainRow.classList.remove('full-grid-mode');
+            gridToggleBtn.classList.remove('active');
+            gridToggleBtn.querySelector('span').textContent = 'Full Grid';
+            gridToggleBtn.querySelector('i').className = 'ion-grid';
+            localStorage.setItem('tvGridMode', 'normal');
         }
     }
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const targetId = this.getAttribute('data-target');
+            const targetDropdown = document.getElementById(targetId);
+            const isActive = this.classList.contains('active');
+            
+            // Close all dropdowns
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            dropdownContents.forEach(dropdown => dropdown.classList.remove('show'));
+            
+            // Toggle current dropdown
+            if (!isActive && targetDropdown) {
+                this.classList.add('active');
+                targetDropdown.classList.add('show');
+            }
+        });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.filter-dropdown')) {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            dropdownContents.forEach(dropdown => dropdown.classList.remove('show'));
+        }
+    });
+    
+    // Handle search input focus effects
+    const searchInput = document.querySelector('.search-input-wrapper input');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.02)';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+        });
+        
+        // Handle Enter key for search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.closest('form').submit();
+            }
+        });
+    }
+    
+    // Legacy search functionality for header search
+    const searchIcon = document.getElementById('search-icon');
+    const headerSearchInput = document.getElementById('search-query');
+    const searchType = document.getElementById('search-type');
+    
+    function performHeaderSearch() {
+        if (!headerSearchInput || !searchType) return;
+        
+        const query = headerSearchInput.value.trim();
+        const type = searchType.value;
+        
+        if (query) {
+            if (type === 'movies') {
+                const searchUrl = `{{ route('tv.search') }}?q=${encodeURIComponent(query)}`;
+                window.location.href = searchUrl;
+            } else {
+                // For TV shows, redirect to home search
+                const searchUrl = `{{ route('home.search') }}?q=${encodeURIComponent(query)}&type=${type}`;
+                window.location.href = searchUrl;
+            }
+        }
+    }
+    
+    // Search on icon click
+    if (searchIcon) {
+        searchIcon.addEventListener('click', performHeaderSearch);
+    }
+    
+    // Search on Enter key press for header search
+    if (headerSearchInput) {
+        headerSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performHeaderSearch();
+            }
+        });
+    }
+    
+    // Smooth animations for filter buttons
+    filterButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
 });
+
+// Initialize TV show grid functionality
+$(document).ready(function() {
+    // Quick Add to Watchlist functionality
+    $('.add-to-watchlist-btn').on('click', function(e) {
+        e.preventDefault();
+        const button = $(this);
+        const showId = button.data('show-id');
+        const showName = button.data('show-name');
+        
+        // Check if user is authenticated
+        @guest
+            alert('Please login to add shows to your watchlist');
+            return;
+        @endguest
+        
+        // Disable button during request
+        button.prop('disabled', true);
+        const originalHtml = button.html();
+        button.html('<i class="ion-load-a"></i> Adding...');
+        
+        // Make AJAX request to add to watchlist
+        $.ajax({
+            url: '{{ route("user.watchlist.add") }}',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                media_id: showId,
+                media_type: 'tv',
+                title: showName
+            },
+            success: function(response) {
+                button.html('<i class="ion-checkmark"></i> Added!');
+                button.css('background', '#4CAF50');
+                
+                // Show success message
+                showNotification('success', showName + ' added to your watchlist!');
+                
+                // Revert button after 2 seconds
+                setTimeout(function() {
+                    button.html(originalHtml);
+                    button.css('background', '#ec6eab');
+                    button.prop('disabled', false);
+                }, 2000);
+            },
+            error: function(xhr) {
+                let errorMsg = 'Failed to add to watchlist';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                
+                button.html(originalHtml);
+                button.prop('disabled', false);
+                showNotification('error', errorMsg);
+            }
+        });
+    });
+    
+    // Notification function
+    function showNotification(type, message) {
+        const notificationClass = type === 'success' ? 'success' : 'error';
+        const icon = type === 'success' ? 'ion-checkmark-circled' : 'ion-alert-circled';
+        const bgColor = type === 'success' ? '#4CAF50' : '#f44336';
+        
+        const notification = $('<div>')
+            .css({
+                'position': 'fixed',
+                'top': '20px',
+                'right': '20px',
+                'background': bgColor,
+                'color': 'white',
+                'padding': '15px 25px',
+                'border-radius': '8px',
+                'box-shadow': '0 4px 15px rgba(0,0,0,0.3)',
+                'z-index': 9999,
+                'display': 'flex',
+                'align-items': 'center',
+                'gap': '10px',
+                'animation': 'slideInRight 0.3s ease'
+            })
+            .html('<i class="' + icon + '" style="font-size: 20px;"></i>' + message);
+        
+        $('body').append(notification);
+        
+        setTimeout(function() {
+            notification.fadeOut(300, function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+    
+    // Hover effects for watchlist items
+    $('.watchlist-item').hover(
+        function() {
+            $(this).css({
+                'background': '#0a1929',
+                'transform': 'translateX(5px)'
+            });
+        },
+        function() {
+            $(this).css({
+                'background': '#020d18',
+                'transform': 'translateX(0)'
+            });
+        }
+    );
+
+    // ===========================================
+    // GAMIFICATION FEATURES
+    // ===========================================
+    
+    // TV Series Quiz Functionality
+    let quizAnswered = localStorage.getItem('tvQuizAnswered_' + new Date().toDateString());
+    let userPoints = parseInt(localStorage.getItem('tvUserPoints')) || 150;
+    let userStreak = parseInt(localStorage.getItem('tvUserStreak')) || 5;
+    
+    // Update stats display
+    $('#user-points').text(userPoints);
+    $('#user-streak').text(userStreak);
+    
+    // Disable quiz if already answered today
+    if (quizAnswered === 'true') {
+        $('.quiz-option').prop('disabled', true).css({
+            'opacity': '0.5',
+            'cursor': 'not-allowed'
+        });
+        $('#quiz-result').show().css({
+            'background': '#0a1929',
+            'color': '#e9d736',
+            'border': '1px solid #e9d736'
+        }).html('<i class="ion-checkmark-circled"></i> You\'ve completed today\'s quiz! Come back tomorrow for more.');
+    }
+    
+    // Handle quiz option clicks
+    $('.quiz-option').on('click', function() {
+        if (quizAnswered === 'true') return;
+        
+        const button = $(this);
+        const answer = button.data('answer');
+        const resultDiv = $('#quiz-result');
+        
+        // Disable all options
+        $('.quiz-option').prop('disabled', true).css('pointer-events', 'none');
+        
+        if (answer === 'correct') {
+            button.css({
+                'background': '#4CAF50',
+                'color': 'white',
+                'border-color': '#4CAF50',
+                'transform': 'scale(1.05)'
+            });
+            
+            // Award points
+            userPoints += 10;
+            userStreak += 1;
+            localStorage.setItem('tvUserPoints', userPoints);
+            localStorage.setItem('tvUserStreak', userStreak);
+            $('#user-points').text(userPoints).css('animation', 'pulse 0.5s ease');
+            $('#user-streak').text(userStreak).css('animation', 'pulse 0.5s ease');
+            
+            resultDiv.show().css({
+                'background': 'rgba(76, 175, 80, 0.1)',
+                'color': '#4CAF50',
+                'border': '1px solid #4CAF50'
+            }).html('<i class="ion-checkmark-circled"></i> Correct! You earned 10 points. Frasier won 37 Emmy Awards!');
+            
+            // Check for trivia badge unlock
+            if (userPoints >= 200) {
+                unlockBadge('trivia');
+            }
+        } else {
+            button.css({
+                'background': '#f44336',
+                'color': 'white',
+                'border-color': '#f44336',
+                'transform': 'scale(0.95)'
+            });
+            
+            // Show correct answer
+            $('.quiz-option[data-answer="correct"]').css({
+                'background': '#4CAF50',
+                'color': 'white',
+                'border-color': '#4CAF50'
+            });
+            
+            resultDiv.show().css({
+                'background': 'rgba(244, 67, 54, 0.1)',
+                'color': '#f44336',
+                'border': '1px solid #f44336'
+            }).html('<i class="ion-close-circled"></i> Incorrect. The correct answer is Frasier with 37 Emmy Awards.');
+        }
+        
+        // Mark quiz as answered
+        localStorage.setItem('tvQuizAnswered_' + new Date().toDateString(), 'true');
+    });
+    
+    // Badge unlock function
+    function unlockBadge(badgeType) {
+        const badge = $(`.badge-item[data-badge="${badgeType}"]`);
+        if (badge.css('opacity') == '0.4') {
+            badge.css({
+                'opacity': '1',
+                'animation': 'badgeUnlock 0.6s ease'
+            });
+            
+            // Show unlock notification
+            const badgeNames = {
+                'binge': 'Binge Watcher',
+                'critic': 'Top Critic',
+                'explorer': 'Genre Explorer',
+                'trivia': 'Trivia Master'
+            };
+            
+            showNotification('success', '🏆 Badge Unlocked: ' + badgeNames[badgeType] + '!');
+            localStorage.setItem('tvBadge_' + badgeType, 'unlocked');
+        }
+    }
+    
+    // Load unlocked badges
+    ['binge', 'critic', 'explorer', 'trivia'].forEach(function(badgeType) {
+        if (localStorage.getItem('tvBadge_' + badgeType) === 'unlocked') {
+            $(`.badge-item[data-badge="${badgeType}"]`).css('opacity', '1');
+        }
+    });
+    
+    // Badge hover effects
+    $('.badge-item').hover(
+        function() {
+            if ($(this).css('opacity') == '1') {
+                $(this).css({
+                    'transform': 'scale(1.1) rotate(5deg)',
+                    'background': '#ec6eab'
+                });
+            }
+        },
+        function() {
+            $(this).css({
+                'transform': 'scale(1) rotate(0deg)',
+                'background': '#020d18'
+            });
+        }
+    );
+    
+    // Quiz option hover effects
+    $('.quiz-option').hover(
+        function() {
+            if (!$(this).prop('disabled')) {
+                $(this).css({
+                    'background': '#1a2332',
+                    'border-color': '#ec6eab',
+                    'transform': 'translateX(5px)'
+                });
+            }
+        },
+        function() {
+            if (!$(this).prop('disabled')) {
+                $(this).css({
+                    'background': '#020d18',
+                    'border-color': '#334155',
+                    'transform': 'translateX(0)'
+                });
+            }
+        }
+    );
+});
+
+// Add animation keyframes
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+    }
+    
+    @keyframes badgeUnlock {
+        0% {
+            transform: scale(0) rotate(0deg);
+        }
+        50% {
+            transform: scale(1.3) rotate(180deg);
+        }
+        100% {
+            transform: scale(1) rotate(360deg);
+        }
+    }
+    
+    .watchlist-item {
+        transition: all 0.3s ease !important;
+    }
+    
+    .add-to-watchlist-btn:hover {
+        background: #d5006f !important;
+        transform: scale(1.05);
+    }
+    
+    .add-to-watchlist-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    
+    .quiz-option {
+        transition: all 0.3s ease !important;
+    }
+    
+    .badge-item {
+        transition: all 0.3s ease !important;
+    }
+`;
+document.head.appendChild(style);
 </script>
-@endpush
+@endsection

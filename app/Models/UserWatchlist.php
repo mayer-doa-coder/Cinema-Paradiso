@@ -15,6 +15,7 @@ class UserWatchlist extends Model
         'movie_title',
         'movie_poster',
         'release_year',
+        'media_type',
     ];
 
     public function user(): BelongsTo

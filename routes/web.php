@@ -98,6 +98,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [UserController::class, 'updateAvatar'])->name('user.avatar.update');
     Route::delete('/profile/avatar', [UserController::class, 'deleteAvatar'])->name('user.avatar.delete');
     Route::get('/profile/watchlist', [UserController::class, 'watchlist'])->name('user.watchlist');
+    Route::post('/profile/watchlist/add', [UserController::class, 'addToWatchlist'])->name('user.watchlist.add');
+    Route::delete('/profile/watchlist/{id}', [UserController::class, 'removeFromWatchlist'])->name('user.watchlist.remove');
     Route::get('/profile/reviews', [UserController::class, 'reviews'])->name('user.reviews');
     Route::get('/profile/movies', [UserController::class, 'movies'])->name('user.movies');
     Route::get('/profile/list', [UserController::class, 'list'])->name('user.list');

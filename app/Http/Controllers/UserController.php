@@ -230,4 +230,69 @@ class UserController extends Controller
 
         return back()->with('success', 'Avatar deleted successfully!');
     }
+
+    /**
+     * Add a movie or TV show to the user's watchlist.
+     */
+    public function addToWatchlist(Request $request)
+    {
+        $validated = $request->validate([
+            'media_id' => 'required|integer',
+            'media_type' => 'required|in:movie,tv',
+            'title' => 'nullable|string|max:255',
+        ]);
+
+        $user = Auth::user();
+
+        // Check if already in watchlist using movie_id field (works for both movies and TV)
+        $exists = UserWatchlist::where('user_id', $user->id)
+            ->where('movie_id', $validated['media_id'])
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This item is already in your watchlist.'
+            ], 400);
+        }
+
+        // Add to watchlist (using movie_id field for both movies and TV shows)
+        UserWatchlist::create([
+            'user_id' => $user->id,
+            'movie_id' => $validated['media_id'],
+            'movie_title' => $validated['title'] ?? 'Untitled',
+            'media_type' => $validated['media_type'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Added to watchlist successfully!'
+        ]);
+    }
+
+    /**
+     * Remove a movie or TV show from the user's watchlist.
+     */
+    public function removeFromWatchlist($id)
+    {
+        $user = Auth::user();
+
+        $watchlistItem = UserWatchlist::where('user_id', $user->id)
+            ->where('id', $id)
+            ->first();
+
+        if (!$watchlistItem) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found in your watchlist.'
+            ], 404);
+        }
+
+        $watchlistItem->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Removed from watchlist successfully!'
+        ]);
+    }
 }
