@@ -107,8 +107,8 @@ class User extends Authenticatable
             if (filter_var($this->avatar, FILTER_VALIDATE_URL)) {
                 return $this->avatar;
             }
-            // If it's a local file
-            return asset('storage/avatars/' . $this->avatar);
+            // If it's a local file (stored as 'avatars/filename.jpg')
+            return asset('storage/' . $this->avatar);
         }
         
         // Default avatar with user's initials

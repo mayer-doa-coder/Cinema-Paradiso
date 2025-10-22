@@ -42,32 +42,48 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ========== Avatar Upload Functionality ==========
-    const avatarInput = document.getElementById('avatar-input');
-    const avatarPreview = document.getElementById('avatar-preview');
-    const avatarForm = document.getElementById('avatar-form');
-    const changeAvatarBtn = document.getElementById('change-avatar-btn');
-    const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
-    const avatarDeleteForm = document.getElementById('avatar-delete-form');
-    
-    // Handle change avatar button click
-    if (changeAvatarBtn && avatarInput) {
-        changeAvatarBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!this.disabled) {
-                avatarInput.click();
-            }
-        });
+(function() {
+    // Use IIFE to avoid conflicts and ensure single execution
+    if (window.avatarUploadInitialized) {
+        return; // Already initialized, don't run again
     }
+    window.avatarUploadInitialized = true;
     
-    // Preview image and auto-submit when file is selected
-    if (avatarInput && avatarForm) {
-        avatarInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            
-            if (file && changeAvatarBtn && !changeAvatarBtn.disabled) {
+    document.addEventListener('DOMContentLoaded', function() {
+        // ========== Avatar Upload Functionality ==========
+        const avatarInput = document.getElementById('avatar-input');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const avatarForm = document.getElementById('avatar-form');
+        const changeAvatarBtn = document.getElementById('change-avatar-btn');
+        const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
+        const avatarDeleteForm = document.getElementById('avatar-delete-form');
+        
+        let isUploading = false;
+        
+        // Handle change avatar button click
+        if (changeAvatarBtn && avatarInput) {
+            changeAvatarBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!isUploading) {
+                    avatarInput.click();
+                }
+            }, { once: false });
+        }
+        
+        // Handle file selection and auto-submit
+        if (avatarInput && avatarForm) {
+            avatarInput.addEventListener('change', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Exit if already uploading or no file selected
+                if (isUploading || !this.files || this.files.length === 0) {
+                    return;
+                }
+                
+                const file = this.files[0];
+                
                 // Validate file size (2MB max)
                 if (file.size > 2048 * 1024) {
                     alert('Image size must not exceed 2MB');
@@ -83,47 +99,55 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Disable button immediately to prevent double click
-                changeAvatarBtn.disabled = true;
-                changeAvatarBtn.textContent = 'Uploading...';
-                changeAvatarBtn.style.opacity = '0.6';
-                changeAvatarBtn.style.cursor = 'not-allowed';
+                // Set uploading flag
+                isUploading = true;
+                
+                // Disable button
+                if (changeAvatarBtn) {
+                    changeAvatarBtn.disabled = true;
+                    changeAvatarBtn.textContent = 'Uploading...';
+                    changeAvatarBtn.style.opacity = '0.6';
+                    changeAvatarBtn.style.cursor = 'not-allowed';
+                }
                 
                 // Preview the image
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    avatarPreview.src = event.target.result;
+                    if (avatarPreview) {
+                        avatarPreview.src = event.target.result;
+                    }
                 };
                 reader.readAsDataURL(file);
                 
-                // Submit form
+                // Submit form after a short delay
                 setTimeout(function() {
                     avatarForm.submit();
-                }, 200);
-            }
-        });
-    }
-    
-    // Handle delete avatar button
-    if (deleteAvatarBtn && avatarDeleteForm) {
-        deleteAvatarBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            if (!this.disabled && confirm('Are you sure you want to delete your avatar?')) {
-                // Disable button immediately
-                this.disabled = true;
-                this.textContent = 'Deleting...';
-                this.style.opacity = '0.6';
-                this.style.cursor = 'not-allowed';
+                }, 300);
                 
-                // Submit form
-                setTimeout(function() {
-                    avatarDeleteForm.submit();
-                }, 200);
-            }
-        });
-    }
-});
+            }, { once: false });
+        }
+        
+        // Handle delete avatar button
+        if (deleteAvatarBtn && avatarDeleteForm) {
+            deleteAvatarBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (!this.disabled && confirm('Are you sure you want to delete your avatar?')) {
+                    // Disable button immediately
+                    this.disabled = true;
+                    this.textContent = 'Deleting...';
+                    this.style.opacity = '0.6';
+                    this.style.cursor = 'not-allowed';
+                    
+                    // Submit form
+                    setTimeout(function() {
+                        avatarDeleteForm.submit();
+                    }, 200);
+                }
+            });
+        }
+    });
+})(); // End of IIFE
 </script>
 @endpush
