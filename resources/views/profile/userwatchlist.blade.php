@@ -160,38 +160,20 @@ body {
     width: 100%;
     height: 270px;
     object-fit: cover;
+    cursor: pointer;
 }
-.movie-item-style-2.style-3 .hvr-inner {
+.movie-item-style-2.style-3 .mv-item-infor {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(2, 13, 24, 0.95) 0%, rgba(2, 13, 24, 0.85) 50%, transparent 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
-.movie-item-style-2.style-3:hover .hvr-inner {
+.movie-item-style-2.style-3:hover .mv-item-infor {
     opacity: 1;
-}
-.movie-item-style-2.style-3 .hvr-inner a {
-    color: #fff;
-    font-size: 14px;
-    text-decoration: none;
-    padding: 10px 20px;
-    background: #eb70ac;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-.movie-item-style-2.style-3 .hvr-inner a:hover {
-    background: #d55a92;
-}
-.movie-item-style-2.style-3 .mv-item-infor {
-    padding: 15px;
-    background: #0b1a2a;
 }
 .movie-item-style-2.style-3 .mv-item-infor h6 {
     margin: 0 0 8px 0;
@@ -200,22 +182,25 @@ body {
     color: #fff;
     text-decoration: none;
     font-size: 14px;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 .movie-item-style-2.style-3 .mv-item-infor h6 a:hover {
-    color: #e9d736;
+    color: #dcf836;
 }
 .movie-item-style-2.style-3 .mv-item-infor p {
-    color: #abb7c4;
-    font-size: 13px;
+    color: #dcf836;
+    font-size: 12px;
     margin: 0;
+    font-weight: 500;
 }
 .topbar-filter {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #405266;
 }
 .topbar-filter label {
@@ -360,21 +345,20 @@ body {
 					<div class="flex-wrap-movielist grid-fav">
 						@foreach($watchlist as $item)
 							<div class="movie-item-style-2 movie-item-style-1 style-3">
-								<img src="{{ $item->movie_poster ?: asset('images/uploads/mv1.jpg') }}" alt="{{ $item->movie_title }}">
-								<div class="hvr-inner">
-									<a href="{{ route('movies.show', $item->movie_id) }}">View Details</a>
-								</div>
-								<div class="mv-item-infor">
-									<h6>
-										<a href="{{ route('movies.show', $item->movie_id) }}">
-											{{ $item->movie_title }}
-											@if($item->release_year)
-												<span>({{ $item->release_year }})</span>
-											@endif
-										</a>
-									</h6>
-									<p>Added {{ $item->created_at->diffForHumans() }}</p>
-								</div>
+								<a href="{{ route('movies.show', $item->movie_id) }}" style="display: block; position: relative;">
+									<img src="{{ $item->movie_poster ?: asset('images/uploads/mv1.jpg') }}" alt="{{ $item->movie_title }}">
+									<div class="mv-item-infor">
+										<h6>
+											<a href="{{ route('movies.show', $item->movie_id) }}">
+												{{ $item->movie_title }}
+												@if($item->release_year)
+													<span>({{ $item->release_year }})</span>
+												@endif
+											</a>
+										</h6>
+										<p>Added {{ $item->created_at->diffForHumans() }}</p>
+									</div>
+								</a>
 							</div>
 						@endforeach
 					</div>

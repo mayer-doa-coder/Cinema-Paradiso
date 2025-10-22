@@ -117,7 +117,8 @@ body {
     justify-content: center;
     gap: 10px;
     margin-bottom: 30px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #405266;
 }
 .topbar-filter p {
@@ -190,11 +191,14 @@ body {
     font-size: 13px;
     margin: 10px 0 5px 0;
     text-transform: uppercase;
+    display: inline;
+    margin-right: 8px;
 }
 .movie-item-style-2.userrate .mv-item-infor p.rate {
     color: #e9d736;
     font-size: 18px;
     margin-bottom: 15px;
+    display: inline;
 }
 .movie-item-style-2.userrate .mv-item-infor p.rate i {
     margin-right: 5px;
@@ -212,6 +216,24 @@ body {
     line-height: 1.8;
     font-size: 14px;
 }
+.movie-item-style-2.userrate .mv-item-infor .review-text {
+    color: #abb7c4;
+    line-height: 1.8;
+    font-size: 14px;
+    display: inline;
+}
+.rating-line,
+.review-line {
+    margin-bottom: 15px;
+}
+.rewatch-icon {
+    color: #eb70ac;
+    font-size: 20px;
+    margin-left: 10px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
 .review-title {
     color: #fff;
     font-size: 16px;
@@ -227,6 +249,7 @@ body {
     font-size: 12px;
     font-weight: bold;
     margin-left: 10px;
+    visibility: hidden;
 }
 .pagination2 {
     margin-left: auto;
@@ -377,14 +400,18 @@ body {
 										@endif
 									</a>
 									@if($review->watched_before)
-										<span class="watched-badge">Watched Before</span>
+										<i class="ion-refresh rewatch-icon" title="Rewatched"></i>
 									@endif
 								</h6>
-								<p class="time sm-text">Your rating:</p>
-								<p class="rate"><i class="ion-android-star"></i><span>{{ $review->rating }}</span> /10</p>
-								<p class="time sm-text">Your review:</p>
+								<div class="rating-line">
+									<p class="time sm-text">Your rating:</p>
+									<p class="rate"><i class="ion-android-star"></i><span>{{ $review->rating }}</span> /10</p>
+								</div>
 								<p class="time sm">{{ $review->created_at->format('d F Y') }}</p>
-								<p>{{ $review->review }}</p>
+								<div class="review-line">
+									<p class="time sm-text">Your review:</p>
+									<p class="review-text">{{ $review->review }}</p>
+								</div>
 							</div>
 						</div>
 					@endforeach

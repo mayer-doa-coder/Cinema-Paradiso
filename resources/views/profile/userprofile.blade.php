@@ -423,7 +423,7 @@ body {
 										<div style="position: relative; border-radius: 5px; overflow: hidden; border: 2px solid #405266; transition: all 0.3s ease;">
 											<img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" style="width: 100%; height: 180px; object-fit: cover; display: block;">
 											<button type="button" class="remove-movie" style="position: absolute; top: 5px; right: 5px; background: rgba(235, 112, 172, 0.9); color: #fff; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
-												×
+											
 											</button>
 											<div style="padding: 8px; background: rgba(2, 13, 24, 0.95);">
 												<p style="color: #fff; font-size: 12px; margin: 0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $movie->movie_title }}</p>
