@@ -67,13 +67,6 @@
                <div class="error-message" id="login-error" style="display: none; color: red; margin-top: 10px;"></div>
            </div>
         </form>
-        <div class="row">
-            <p>Or via social</p>
-            <div class="social-btn-2">
-                <a class="fb" href="#"><i class="ion-social-facebook"></i>Facebook</a>
-                <a class="tw" href="#"><i class="ion-social-twitter"></i>twitter</a>
-            </div>
-        </div>
     </div>
 </div>
 <!--end of login form popup-->
@@ -110,6 +103,7 @@
                     <input type="password" name="password" id="signup-password" placeholder="" required="required" />
                 </label>
                 <p class="password-requirements">Password must contain at least 8 characters.</p>
+
             </div>
              <div class="row">
                 <label for="signup-password-confirmation">

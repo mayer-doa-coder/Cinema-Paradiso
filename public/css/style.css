@@ -6906,6 +6906,8 @@ p.ceb-single {
   padding: 50px;
   border: 1px solid #020d18;
   height: auto;
+  max-height: 90vh;
+  overflow-y: auto;
   background-color:  #020d18;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -7074,6 +7076,55 @@ p.ceb-single {
 .overlay .login-content .social-btn-2 .tw {
   background-color: #00b9ef;
 }
+
+/* Signup form specific styles */
+#signup-content .login-content {
+  padding: 30px 40px;
+}
+
+#signup-content .login-content h3 {
+  margin-bottom: 25px;
+  font-size: 28px;
+}
+
+#signup-content .login-content label {
+  margin-bottom: 15px;
+}
+
+#signup-content .login-content label textarea {
+  font-family: TiemposTextWeb, Georgia, serif, ColorEmoji;
+  font-size: 14px;
+  color: #222222;
+  font-weight: bold;
+  text-transform: capitalize;
+  padding: 8px 10px;
+  width: 100%;
+  border: none;
+  margin-top: 10px;
+  background-color: #ffffff;
+  border-radius: 3px;
+  resize: vertical;
+}
+
+#signup-content .login-content button {
+  margin-top: 10px;
+}
+
+@media (max-width: 767px) {
+  #signup-content .login-content {
+    padding: 20px 25px;
+  }
+  
+  #signup-content .login-content h3 {
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+  
+  #signup-content .login-content label {
+    margin-bottom: 10px;
+  }
+}
+
 .slider {
   background: url('../images/uploads/superman-blue-hj.jpg') no-repeat;
   background-position: center center;
