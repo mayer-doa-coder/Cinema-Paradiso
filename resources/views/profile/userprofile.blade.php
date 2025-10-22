@@ -171,6 +171,67 @@ body {
     background: #eb70ac;
     color: #0b1a2a;
 }
+.movie-card:hover > div {
+    border-color: #dcf836 !important;
+    transform: translateY(-2px);
+}
+.movie-card .remove-movie:hover {
+    background: #eb70ac !important;
+    transform: scale(1.1);
+}
+.movie-search-item {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #405266;
+}
+.movie-search-item:last-child {
+    border-bottom: none;
+}
+.movie-search-item:hover {
+    background: #020d18;
+}
+.movie-search-item img {
+    width: 50px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+.movie-search-item .movie-info {
+    flex: 1;
+}
+.movie-search-item .movie-info h5 {
+    color: #fff;
+    font-size: 14px;
+    margin: 0 0 5px 0;
+    font-weight: 500;
+}
+.movie-search-item .movie-info p {
+    color: #abb7c4;
+    font-size: 12px;
+    margin: 0;
+}
+.form-style-1 form.favorites {
+    margin-bottom: 40px;
+}
+#selected-movies {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+}
+@media (max-width: 992px) {
+    #selected-movies {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 576px) {
+    #selected-movies {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 </style>
 @endpush
 
@@ -335,6 +396,58 @@ body {
 							</div>
 						</div>	
 					</form>
+					
+					<form action="{{ route('user.favorites.update') }}" method="POST" class="favorites" id="favorite-movies">
+						@csrf
+						<h4>Top 5 Favorite Movies</h4>
+						<p style="color: #abb7c4; margin-bottom: 20px; font-size: 14px;">
+							These movies will be displayed on your community profile. Search and select up to 5 movies.
+						</p>
+						
+						<div class="row">
+							<div class="col-md-12 form-it">
+								<label>Search Movies</label>
+								<div style="position: relative;">
+									<input type="text" id="movie-search" placeholder="Type to search movies..." autocomplete="off">
+									<div id="movie-search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: #0b1a2a; border: 1px solid #405266; border-radius: 3px; max-height: 300px; overflow-y: auto; display: none; z-index: 1000;">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row" style="margin-top: 20px;">
+							<div class="col-md-12">
+								<div id="selected-movies" style="margin-bottom: 20px;">
+									@foreach(Auth::user()->favoriteMovies()->limit(5)->get() as $movie)
+									<div class="movie-card" data-movie-id="{{ $movie->movie_id }}">
+										<div style="position: relative; border-radius: 5px; overflow: hidden; border: 2px solid #405266; transition: all 0.3s ease;">
+											<img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" style="width: 100%; height: 180px; object-fit: cover; display: block;">
+											<button type="button" class="remove-movie" style="position: absolute; top: 5px; right: 5px; background: rgba(235, 112, 172, 0.9); color: #fff; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+												×
+											</button>
+											<div style="padding: 8px; background: rgba(2, 13, 24, 0.95);">
+												<p style="color: #fff; font-size: 12px; margin: 0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $movie->movie_title }}</p>
+											</div>
+										</div>
+										<input type="hidden" name="favorite_movies[]" value="{{ $movie->movie_id }}">
+										<input type="hidden" name="movie_titles[]" value="{{ $movie->movie_title }}">
+										<input type="hidden" name="movie_posters[]" value="{{ $movie->movie_poster }}">
+									</div>
+									@endforeach
+								</div>
+								<p id="movie-limit-message" style="color: #405266; font-size: 13px; margin-bottom: 20px;">
+									<span id="movie-count">{{ Auth::user()->favoriteMovies()->count() }}</span> / 5 movies selected
+								</p>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-12">
+								<input class="submit" type="submit" value="Favorite">
+							</div>
+						</div>	
+					</form>
+					
 					<form action="{{ route('user.password.update') }}" method="POST" class="password" id="change-password">
 						@csrf
 						<h4>Change password</h4>
@@ -427,6 +540,167 @@ document.addEventListener('DOMContentLoaded', function() {
     countrySelect.addEventListener('change', function() {
         updateStates(this.value);
     });
+    
+    // ========== Movie Search & Selection ==========
+    const movieSearch = document.getElementById('movie-search');
+    const searchResults = document.getElementById('movie-search-results');
+    const selectedMoviesContainer = document.getElementById('selected-movies');
+    const movieCountDisplay = document.getElementById('movie-count');
+    let searchTimeout;
+    const MAX_MOVIES = 5;
+    
+    // Get currently selected movie IDs
+    function getSelectedMovieIds() {
+        const movieCards = selectedMoviesContainer.querySelectorAll('.movie-card');
+        return Array.from(movieCards).map(card => card.dataset.movieId);
+    }
+    
+    // Update movie count display
+    function updateMovieCount() {
+        const count = selectedMoviesContainer.querySelectorAll('.movie-card').length;
+        movieCountDisplay.textContent = count;
+        
+        // Disable search if max reached
+        if (count >= MAX_MOVIES) {
+            movieSearch.disabled = true;
+            movieSearch.placeholder = 'Maximum 5 movies selected';
+        } else {
+            movieSearch.disabled = false;
+            movieSearch.placeholder = 'Type to search movies...';
+        }
+    }
+    
+    // Search movies using TMDb API
+    movieSearch.addEventListener('input', function() {
+        const query = this.value.trim();
+        
+        clearTimeout(searchTimeout);
+        
+        if (query.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+        
+        searchTimeout = setTimeout(() => {
+            fetch(`https://api.themoviedb.org/3/search/movie?api_key={{ config('services.tmdb.api_key') }}&query=${encodeURIComponent(query)}&language=en-US&page=1`)
+                .then(response => response.json())
+                .then(data => {
+                    displaySearchResults(data.results);
+                })
+                .catch(error => {
+                    console.error('Error searching movies:', error);
+                });
+        }, 300);
+    });
+    
+    // Display search results
+    function displaySearchResults(movies) {
+        if (!movies || movies.length === 0) {
+            searchResults.innerHTML = '<div style="padding: 15px; color: #abb7c4; text-align: center;">No movies found</div>';
+            searchResults.style.display = 'block';
+            return;
+        }
+        
+        const selectedIds = getSelectedMovieIds();
+        
+        searchResults.innerHTML = movies.slice(0, 10).map(movie => {
+            const isSelected = selectedIds.includes(movie.id.toString());
+            const posterPath = movie.poster_path 
+                ? `https://image.tmdb.org/t/p/w92${movie.poster_path}`
+                : '{{ asset("images/uploads/no-image.png") }}';
+            
+            return `
+                <div class="movie-search-item ${isSelected ? 'disabled' : ''}" 
+                     data-movie-id="${movie.id}"
+                     data-movie-title="${movie.title.replace(/"/g, '&quot;')}"
+                     data-movie-poster="${movie.poster_path || ''}"
+                     style="${isSelected ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                    <img src="${posterPath}" alt="${movie.title}">
+                    <div class="movie-info">
+                        <h5>${movie.title}</h5>
+                        <p>${movie.release_date ? movie.release_date.substring(0, 4) : 'N/A'} ${isSelected ? '(Already selected)' : ''}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        searchResults.style.display = 'block';
+        
+        // Add click handlers
+        searchResults.querySelectorAll('.movie-search-item:not(.disabled)').forEach(item => {
+            item.addEventListener('click', function() {
+                addMovie(this);
+            });
+        });
+    }
+    
+    // Add movie to favorites
+    function addMovie(element) {
+        const currentCount = selectedMoviesContainer.querySelectorAll('.movie-card').length;
+        
+        if (currentCount >= MAX_MOVIES) {
+            alert('You can only select up to 5 favorite movies.');
+            return;
+        }
+        
+        const movieId = element.dataset.movieId;
+        const movieTitle = element.dataset.movieTitle;
+        const moviePoster = element.dataset.moviePoster;
+        const posterUrl = moviePoster 
+            ? `https://image.tmdb.org/t/p/w500${moviePoster}`
+            : '{{ asset("images/uploads/no-image.png") }}';
+        
+        // Create movie card
+        const movieCard = document.createElement('div');
+        movieCard.className = 'movie-card';
+        movieCard.dataset.movieId = movieId;
+        movieCard.innerHTML = `
+            <div style="position: relative; border-radius: 5px; overflow: hidden; border: 2px solid #405266; transition: all 0.3s ease;">
+                <img src="${posterUrl}" alt="${movieTitle}" style="width: 100%; height: 180px; object-fit: cover; display: block;">
+                <button type="button" class="remove-movie" style="position: absolute; top: 5px; right: 5px; background: rgba(235, 112, 172, 0.9); color: #fff; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                    ×
+                </button>
+                <div style="padding: 8px; background: rgba(2, 13, 24, 0.95);">
+                    <p style="color: #fff; font-size: 12px; margin: 0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${movieTitle}</p>
+                </div>
+            </div>
+            <input type="hidden" name="favorite_movies[]" value="${movieId}">
+            <input type="hidden" name="movie_titles[]" value="${movieTitle}">
+            <input type="hidden" name="movie_posters[]" value="${moviePoster}">
+        `;
+        
+        selectedMoviesContainer.appendChild(movieCard);
+        
+        // Add remove handler
+        movieCard.querySelector('.remove-movie').addEventListener('click', function() {
+            movieCard.remove();
+            updateMovieCount();
+        });
+        
+        // Clear search
+        movieSearch.value = '';
+        searchResults.style.display = 'none';
+        
+        updateMovieCount();
+    }
+    
+    // Add remove handlers to existing movies
+    document.querySelectorAll('.remove-movie').forEach(button => {
+        button.addEventListener('click', function() {
+            this.closest('.movie-card').remove();
+            updateMovieCount();
+        });
+    });
+    
+    // Hide search results when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!movieSearch.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
+    
+    // Initialize movie count
+    updateMovieCount();
 });
 </script>
 @endpush

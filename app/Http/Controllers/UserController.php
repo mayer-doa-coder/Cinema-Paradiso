@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\UserMovie;
 use App\Models\UserWatchlist;
 use App\Models\UserMovieReview;
+use App\Models\UserFavoriteMovie;
 
 class UserController extends Controller
 {
@@ -100,6 +101,39 @@ class UserController extends Controller
 
         // Redirect to home with a flag to show login popup
         return redirect()->route('home')->with('password_changed', true)->with('message', 'Password changed successfully! Please login with your new password.');
+    }
+
+    /**
+     * Update user's favorite movies.
+     */
+    public function updateFavorites(Request $request)
+    {
+        $request->validate([
+            'favorite_movies' => 'nullable|array|max:5',
+            'favorite_movies.*' => 'required|integer',
+            'movie_titles' => 'nullable|array|max:5',
+            'movie_titles.*' => 'required|string',
+            'movie_posters' => 'nullable|array|max:5',
+        ]);
+
+        $user = Auth::user();
+        
+        // Delete all existing favorite movies for the user
+        UserFavoriteMovie::where('user_id', $user->id)->delete();
+        
+        // Add new favorite movies
+        if ($request->has('favorite_movies') && is_array($request->favorite_movies)) {
+            foreach ($request->favorite_movies as $index => $movieId) {
+                UserFavoriteMovie::create([
+                    'user_id' => $user->id,
+                    'movie_id' => $movieId,
+                    'movie_title' => $request->movie_titles[$index] ?? '',
+                    'movie_poster' => $request->movie_posters[$index] ?? null,
+                ]);
+            }
+        }
+
+        return redirect()->route('user.profile')->with('success', 'Favorite movies updated successfully!');
     }
 
     /**
