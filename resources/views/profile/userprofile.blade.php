@@ -98,12 +98,17 @@ body {
     display: block !important;
     border-radius: 3px !important;
     transition: all 0.3s ease !important;
-    text-transform: none !important;
-    font-weight: normal !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    font-size: 13px !important;
 }
-.user-fav ul li.active a,
+.user-fav ul li.active a {
+    color: #dcf836 !important;
+    background: transparent !important;
+}
 .user-fav ul li a:hover {
-    color: #e9d736 !important;
+    color: #dcf836 !important;
     background: transparent !important;
 }
 .form-style-1.user-pro {

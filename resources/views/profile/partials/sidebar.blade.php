@@ -19,21 +19,21 @@
 	<div class="user-fav">
 		<p>Account Details</p>
 		<ul>
-			<li class="{{ Request::routeIs('user.profile') ? 'active' : '' }}"><a href="{{ route('user.profile') }}">Profile</a></li>
-			<li class="{{ Request::routeIs('user.watchlist') ? 'active' : '' }}"><a href="{{ route('user.watchlist') }}">Watchlist</a></li>
-			<li class="{{ Request::routeIs('user.reviews') ? 'active' : '' }}"><a href="{{ route('user.reviews') }}">Reviews</a></li>
-			<li class="{{ Request::routeIs('user.movies') ? 'active' : '' }}"><a href="{{ route('user.movies') }}">Movies</a></li>
-			<li class="{{ Request::routeIs('user.list') ? 'active' : '' }}"><a href="{{ route('user.list') }}">List</a></li>
+			<li class="{{ Request::routeIs('user.profile') ? 'active' : '' }}"><a href="{{ route('user.profile') }}">PROFILE</a></li>
+			<li class="{{ Request::routeIs('user.watchlist') ? 'active' : '' }}"><a href="{{ route('user.watchlist') }}">WATCHLIST</a></li>
+			<li class="{{ Request::routeIs('user.reviews') ? 'active' : '' }}"><a href="{{ route('user.reviews') }}">REVIEWS</a></li>
+			<li class="{{ Request::routeIs('user.movies') ? 'active' : '' }}"><a href="{{ route('user.movies') }}">MOVIES</a></li>
+			<li class="{{ Request::routeIs('user.list') ? 'active' : '' }}"><a href="{{ route('user.list') }}">LIST</a></li>
 		</ul>
 	</div>
 	<div class="user-fav">
 		<p>Others</p>
 		<ul>
-			<li><a href="#change-password" onclick="if(document.querySelector('.password')) { document.querySelector('.password').scrollIntoView({behavior: 'smooth'}); }">Change password</a></li>
+			<li><a href="#change-password" onclick="if(document.querySelector('.password')) { document.querySelector('.password').scrollIntoView({behavior: 'smooth'}); }">CHANGE PASSWORD</a></li>
 			<li>
 				<form action="{{ route('auth.logout') }}" method="POST" style="display: inline;">
 					@csrf
-					<a href="#" onclick="event.preventDefault(); this.closest('form').submit();" style="color: #abb7c4;">Log out</a>
+					<a href="#" onclick="event.preventDefault(); this.closest('form').submit();" style="color: #abb7c4; text-transform: uppercase;">LOG OUT</a>
 				</form>
 			</li>
 		</ul>

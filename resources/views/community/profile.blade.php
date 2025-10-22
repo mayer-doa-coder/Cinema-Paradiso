@@ -2,52 +2,83 @@
 
 @section('title', $user->name . ' - Community Profile')
 
-@section('content')
-
 @push('styles')
 <style>
-/* Remove white border/outline from navigation buttons */
-header .navbar-default .navbar-nav li a,
-header .navbar-default .navbar-nav li.btn a,
-header .navbar-default .navbar-nav li a:focus,
-header .navbar-default .navbar-nav li a:active,
-header .navbar-default .navbar-nav li.btn a:focus,
-header .navbar-default .navbar-nav li.btn a:active {
-    outline: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    background-color: transparent !important;
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #020d18 !important;
 }
 
-/* Specific fix for sign up button */
-header .navbar-default .navbar-nav li.btn a {
-    background-color: #ec6eab !important;
+.ht-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
-/* Maintain hover effects */
-header .navbar-default .navbar-nav li a:hover {
-    color: #e9d736 !important;
+/* Hero Section */
+.user-hero {
+    background: url('{{ asset('images/uploads/user-hero-bg.jpg') }}') no-repeat center;
+    background-size: cover;
+    padding: 60px 0 40px;
+    position: relative;
+    margin-top: 0;
 }
 
-header .navbar-default .navbar-nav li.btn a:hover {
-    background-color: #d55a98 !important;
+.user-hero:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(11, 26, 42, 0.95), rgba(2, 13, 24, 0.95));
 }
 
-/* Remove focus ring from all buttons and links */
+.user-hero .hero-ct {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.user-hero h1 {
+    color: #ffffff;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.user-hero .breadcumb {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.user-hero .breadcumb li {
+    color: #abb7c4;
+}
+
+.user-hero .breadcumb li a {
+    color: #dcf836;
+}
+
+/* Main Content Area */
+.page-single {
+    background: #020d18;
+    padding: 40px 0;
+}
+
+/* Remove white border/outline */
 *:focus {
-    outline: none !important;
-}
-
-button:focus,
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
     outline: none !important;
     box-shadow: none !important;
 }
 </style>
 @endpush
+
+@section('content')
 
 <!-- BEGIN | Header -->
 <header class="ht-header">
@@ -122,80 +153,19 @@ textarea:focus {
 </header>
 <!-- END | Header -->
 
-<div class="hero mv-single-hero">
+<div class="hero user-hero">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <!-- User Profile Header -->
-                <div class="profile-header">
-                    <div class="profile-avatar-container">
-                        <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="profile-avatar-circle">
-                        @if($user->last_active && $user->last_active->gt(now()->subHours(24)))
-                            <span class="profile-online-indicator"></span>
-                        @endif
-                    </div>
-                    
-                    <div class="profile-info">
-                        <h1 class="profile-name">{{ $user->name }}</h1>
-                        <p class="profile-username">@{{ $user->username }}</p>
-                        
-                        @if($user->location)
-                            <p class="profile-location">
-                                <i class="ion-location"></i> {{ $user->location }}
-                            </p>
-                        @endif
-                        
-                        @if($user->platform)
-                            <p class="profile-platform">
-                                <i class="ion-link"></i> {{ ucfirst($user->platform) }}
-                                @if($user->platform_username)
-                                    ({{ $user->platform_username }})
-                                @endif
-                            </p>
-                        @endif
-                        
-                        @if($user->bio)
-                            <p class="profile-bio">{{ $user->bio }}</p>
-                        @endif
-                        
-                        <div class="profile-stats">
-                            <div class="stat-box">
-                                <span class="stat-number">{{ $stats['popularity_score'] }}</span>
-                                <span class="stat-label">Popularity Points</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number">{{ $stats['followers_count'] }}</span>
-                                <span class="stat-label">Followers</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number">{{ $stats['following_count'] }}</span>
-                                <span class="stat-label">Following</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number">{{ $stats['movies_watched'] }}</span>
-                                <span class="stat-label">Movies Watched</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number">{{ $stats['reviews_count'] }}</span>
-                                <span class="stat-label">Reviews</span>
-                            </div>
-                        </div>
-                        
-                        <div class="profile-meta">
-                            <p><strong>Member since:</strong> {{ $stats['member_since'] }}</p>
-                            <p><strong>Last active:</strong> {{ $stats['last_active'] }}</p>
-                        </div>
-                        
-                        @if($user->social_links)
-                            <div class="social-links">
-                                @foreach($user->social_links as $platform => $url)
-                                    <a href="{{ $url }}" target="_blank" class="social-link">
-                                        <i class="ion-social-{{ strtolower($platform) }}"></i>
-                                    </a>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
+                <div class="hero-ct">
+                    <h1>{{ $user->name }}'s Profile</h1>
+                    <ul class="breadcumb">
+                        <li class="active"><a href="{{ route('home') }}">Home</a></li>
+                        <li><span class="ion-ios-arrow-right"></span></li>
+                        <li><a href="{{ route('community') }}">Community</a></li>
+                        <li><span class="ion-ios-arrow-right"></span></li>
+                        <li>{{ $user->username }}</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -204,57 +174,134 @@ textarea:focus {
 
 <div class="page-single">
     <div class="container">
-        <div class="row ipad-width2">
-            <div class="col-md-8 col-sm-12 col-xs-12">
+        <div class="row ipad-width">
+            <div class="col-md-3 col-sm-12 col-xs-12">
+                <!-- Sidebar with User Info -->
+                <div class="user-information">
+                    <div class="user-img">
+                        <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}">
+                        @if($user->last_active && $user->last_active->gt(now()->subHours(24)))
+                            <div class="online-status" style="width: 20px; height: 20px; background: #4caf50; border-radius: 50%; position: absolute; bottom: 70px; right: calc(50% - 60px); border: 3px solid #0b1a2a;"></div>
+                        @endif
+                        <h3 style="color: #ffffff; margin: 10px 0 5px;">{{ $user->name }}</h3>
+                        <p style="color: #dcf836; margin: 0;">@{{ $user->username }}</p>
+                    </div>
+                    
+                    <div class="user-fav">
+                        <p>Profile Information</p>
+                        <ul>
+                            @if($user->location)
+                                <li><i class="ion-location"></i> {{ $user->location }}</li>
+                            @endif
+                            @if($user->platform)
+                                <li><i class="ion-link"></i> {{ ucfirst($user->platform) }}
+                                    @if($user->platform_username)
+                                        ({{ $user->platform_username }})
+                                    @endif
+                                </li>
+                            @endif
+                            <li><i class="ion-calendar"></i> Member since {{ $stats['member_since'] }}</li>
+                            <li><i class="ion-clock"></i> Last active {{ $stats['last_active'] }}</li>
+                        </ul>
+                    </div>
+                    
+                    @if($user->bio)
+                        <div class="user-fav">
+                            <p>Bio</p>
+                            <p style="color: #abb7c4; font-style: italic; padding: 10px 15px; line-height: 1.6;">{{ $user->bio }}</p>
+                        </div>
+                    @endif
+                    
+                    <div class="user-fav">
+                        <p>Statistics</p>
+                        <ul>
+                            <li><i class="ion-trophy"></i> Popularity: {{ $stats['popularity_score'] }} points</li>
+                            <li><i class="ion-ios-people"></i> Followers: {{ $stats['followers_count'] }}</li>
+                            <li><i class="ion-person-stalker"></i> Following: {{ $stats['following_count'] }}</li>
+                            <li><i class="ion-ios-film"></i> Movies Watched: {{ $stats['movies_watched'] }}</li>
+                            <li><i class="ion-compose"></i> Reviews: {{ $stats['reviews_count'] }}</li>
+                        </ul>
+                    </div>
+                    
+                    @if($user->social_links)
+                        <div class="user-fav">
+                            <p>Social Links</p>
+                            <div style="text-align: center; padding: 10px;">
+                                @foreach($user->social_links as $platform => $url)
+                                    <a href="{{ $url }}" target="_blank" style="display: inline-block; margin: 5px; color: #dcf836; font-size: 24px; transition: color 0.3s;">
+                                        <i class="ion-social-{{ strtolower($platform) }}"></i>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                    
+                    <div class="user-fav" style="border-top: 1px solid #405266; padding-top: 20px; margin-top: 20px;">
+                        <a href="{{ route('community') }}" class="redbtn" style="display: block; text-align: center; padding: 12px; background: #eb70ac; color: #fff; border-radius: 5px; text-decoration: none; transition: all 0.3s;">
+                            <i class="ion-arrow-left-c"></i> Back to Community
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-12 col-xs-12">
                 @if($error)
-                    <div class="alert alert-danger">{{ $error }}</div>
+                    <div class="alert alert-danger" style="background: #eb70ac; color: #fff; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #eb70ac;">
+                        {{ $error }}
+                    </div>
                 @endif
                 
-                <!-- Navigation Tabs -->
-                <div class="profile-tabs">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#favorite-movies" data-toggle="tab">Favorite Movies</a></li>
-                        <li><a href="#recent-activity" data-toggle="tab">Recent Activity</a></li>
-                        <li><a href="#reviews" data-toggle="tab">Reviews</a></li>
+                <div class="profile-content-wrapper">
+                    <!-- Navigation Tabs -->
+                    <ul class="profile-tabs-nav">
+                        <li class="active"><a href="#favorite-movies" data-toggle="tab"><i class="ion-heart"></i> Favorite Movies</a></li>
+                        <li><a href="#recent-activity" data-toggle="tab"><i class="ion-ios-pulse"></i> Recent Activity</a></li>
+                        <li><a href="#reviews" data-toggle="tab"><i class="ion-compose"></i> Reviews</a></li>
                     </ul>
                     
-                    <div class="tab-content">
+                    <div class="tab-content"
                         <!-- Favorite Movies Tab -->
                         <div class="tab-pane active" id="favorite-movies">
-                            <div class="profile-section">
-                                <h3>Favorite Movies ({{ $favoriteMovies->total() }})</h3>
+                            <div class="tab-section">
+                                <h3 class="section-title">
+                                    <i class="ion-heart"></i> Favorite Movies 
+                                    <span class="count-badge">{{ $favoriteMovies->total() }}</span>
+                                </h3>
                                 
                                 @if($favoriteMovies->count() > 0)
-                                    <div class="favorite-movies-grid">
+                                    <div class="movies-grid">
                                         @foreach($favoriteMovies as $movie)
-                                            <div class="favorite-movie-card">
-                                                <div class="movie-poster">
-                                                    @if($movie->movie_poster)
-                                                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}">
-                                                    @else
-                                                        <div class="movie-poster-placeholder">
-                                                            {{ substr($movie->movie_title, 0, 2) }}
-                                                        </div>
-                                                    @endif
-                                                    
-                                                    @if($movie->user_rating)
-                                                        <div class="user-rating">
-                                                            <i class="ion-star"></i> {{ $movie->user_rating }}
-                                                        </div>
-                                                    @endif
-                                                </div>
+                                            <div class="movie-item-card">
+                                                <a href="{{ route('movies.show', $movie->movie_id) }}" class="movie-poster-link">
+                                                    <div class="movie-poster-container">
+                                                        @if($movie->movie_poster)
+                                                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" loading="lazy">
+                                                        @else
+                                                            <div class="movie-poster-placeholder">
+                                                                {{ substr($movie->movie_title, 0, 2) }}
+                                                            </div>
+                                                        @endif
+                                                        
+                                                        @if($movie->user_rating)
+                                                            <div class="rating-badge">
+                                                                <i class="ion-star"></i> {{ number_format($movie->user_rating, 1) }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </a>
                                                 
-                                                <div class="movie-info">
-                                                    <h4>{{ $movie->movie_title }}</h4>
+                                                <div class="movie-details">
+                                                    <h4 class="movie-title">
+                                                        <a href="{{ route('movies.show', $movie->movie_id) }}">{{ $movie->movie_title }}</a>
+                                                    </h4>
                                                     
                                                     @if($movie->user_review)
-                                                        <p class="user-review">{{ Str::limit($movie->user_review, 100) }}</p>
+                                                        <p class="movie-review">{{ Str::limit($movie->user_review, 120) }}</p>
                                                     @endif
                                                     
                                                     @if($movie->watched_at)
-                                                        <p class="watched-date">
+                                                        <p class="movie-date">
                                                             <i class="ion-calendar"></i> 
-                                                            Watched {{ $movie->watched_at->format('M d, Y') }}
+                                                            {{ $movie->watched_at->format('M d, Y') }}
                                                         </p>
                                                     @endif
                                                 </div>
@@ -262,14 +309,14 @@ textarea:focus {
                                         @endforeach
                                     </div>
                                     
-                                    <!-- Pagination -->
                                     @if($favoriteMovies->hasPages())
-                                        <div class="favorite-movies-pagination">
+                                        <div class="pagination-container">
                                             {{ $favoriteMovies->links() }}
                                         </div>
                                     @endif
                                 @else
-                                    <div class="no-content">
+                                    <div class="no-content-message">
+                                        <i class="ion-ios-film-outline"></i>
                                         <p>{{ $user->name }} hasn't added any favorite movies yet.</p>
                                     </div>
                                 @endif
@@ -278,14 +325,16 @@ textarea:focus {
                         
                         <!-- Recent Activity Tab -->
                         <div class="tab-pane" id="recent-activity">
-                            <div class="profile-section">
-                                <h3>Recent Activity</h3>
+                            <div class="tab-section">
+                                <h3 class="section-title">
+                                    <i class="ion-ios-pulse"></i> Recent Activity
+                                </h3>
                                 
                                 @if($recentActivities->count() > 0)
-                                    <div class="activity-timeline">
+                                    <div class="activity-list">
                                         @foreach($recentActivities as $activity)
-                                            <div class="activity-item">
-                                                <div class="activity-icon">
+                                            <div class="activity-card">
+                                                <div class="activity-icon-wrapper">
                                                     @switch($activity->activity_type)
                                                         @case('favorite')
                                                             <i class="ion-heart"></i>
@@ -299,45 +348,58 @@ textarea:focus {
                                                         @case('movie_watched')
                                                             <i class="ion-play"></i>
                                                             @break
+                                                        @case('login')
+                                                            <i class="ion-log-in"></i>
+                                                            @break
+                                                        @case('profile_update')
+                                                            <i class="ion-edit"></i>
+                                                            @break
                                                         @default
-                                                            <i class="ion-activity"></i>
+                                                            <i class="ion-ios-pulse"></i>
                                                     @endswitch
                                                 </div>
                                                 
-                                                <div class="activity-content">
-                                                    <div class="activity-description">
+                                                <div class="activity-info">
+                                                    <div class="activity-text">
                                                         @switch($activity->activity_type)
                                                             @case('favorite')
-                                                                Added a movie to favorites
+                                                                <strong>Added a movie to favorites</strong>
                                                                 @break
                                                             @case('review')
-                                                                Wrote a movie review
+                                                                <strong>Wrote a movie review</strong>
                                                                 @break
                                                             @case('follow')
-                                                                Started following someone
+                                                                <strong>Started following someone</strong>
                                                                 @break
                                                             @case('movie_watched')
-                                                                Watched a movie
+                                                                <strong>Watched a movie</strong>
+                                                                @break
+                                                            @case('login')
+                                                                <strong>Logged in</strong>
+                                                                @break
+                                                            @case('profile_update')
+                                                                <strong>Updated profile</strong>
                                                                 @break
                                                             @default
-                                                                {{ ucfirst(str_replace('_', ' ', $activity->activity_type)) }}
+                                                                <strong>{{ ucfirst(str_replace('_', ' ', $activity->activity_type)) }}</strong>
                                                         @endswitch
                                                         
                                                         @if($activity->activity_data && isset($activity->activity_data['movie_title']))
-                                                            - <strong>{{ $activity->activity_data['movie_title'] }}</strong>
+                                                            <span class="activity-movie">{{ $activity->activity_data['movie_title'] }}</span>
                                                         @endif
                                                     </div>
                                                     
-                                                    <div class="activity-time">
-                                                        {{ $activity->created_at->diffForHumans() }}
-                                                        <span class="activity-points">+{{ $activity->points }} points</span>
+                                                    <div class="activity-meta">
+                                                        <span class="activity-time">{{ $activity->created_at->diffForHumans() }}</span>
+                                                        <span class="activity-points"><i class="ion-trophy"></i> +{{ $activity->points }} pts</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 @else
-                                    <div class="no-content">
+                                    <div class="no-content-message">
+                                        <i class="ion-ios-pulse-outline"></i>
                                         <p>No recent activity to show.</p>
                                     </div>
                                 @endif
@@ -346,8 +408,10 @@ textarea:focus {
                         
                         <!-- Reviews Tab -->
                         <div class="tab-pane" id="reviews">
-                            <div class="profile-section">
-                                <h3>Movie Reviews</h3>
+                            <div class="tab-section">
+                                <h3 class="section-title">
+                                    <i class="ion-compose"></i> Movie Reviews
+                                </h3>
                                 
                                 @php
                                     $reviewedMovies = $favoriteMovies->filter(function($movie) {
@@ -356,42 +420,61 @@ textarea:focus {
                                 @endphp
                                 
                                 @if($reviewedMovies->count() > 0)
-                                    <div class="reviews-list">
+                                    <div class="reviews-container">
                                         @foreach($reviewedMovies as $movie)
-                                            <div class="review-card">
-                                                <div class="review-movie">
-                                                    @if($movie->movie_poster)
-                                                        <img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" class="review-poster">
-                                                    @endif
+                                            <div class="review-item">
+                                                <div class="review-header">
+                                                    <div class="review-poster-wrapper">
+                                                        @if($movie->movie_poster)
+                                                            <a href="{{ route('movies.show', $movie->movie_id) }}">
+                                                                <img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" class="review-poster-img">
+                                                            </a>
+                                                        @else
+                                                            <div class="review-poster-placeholder">
+                                                                {{ substr($movie->movie_title, 0, 2) }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                     
-                                                    <div class="review-movie-info">
-                                                        <h4>{{ $movie->movie_title }}</h4>
+                                                    <div class="review-movie-details">
+                                                        <h4 class="review-movie-title">
+                                                            <a href="{{ route('movies.show', $movie->movie_id) }}">{{ $movie->movie_title }}</a>
+                                                        </h4>
                                                         @if($movie->user_rating)
-                                                            <div class="review-rating">
-                                                                @for($i = 1; $i <= 5; $i++)
-                                                                    <i class="ion-star{{ $i <= $movie->user_rating ? '' : '-outline' }}"></i>
+                                                            <div class="review-stars">
+                                                                @for($i = 1; $i <= 10; $i++)
+                                                                    @if($i <= $movie->user_rating)
+                                                                        <i class="ion-star" style="color: #dcf836;"></i>
+                                                                    @else
+                                                                        <i class="ion-star-outline" style="color: #405266;"></i>
+                                                                    @endif
                                                                 @endfor
-                                                                <span>{{ $movie->user_rating }}/5</span>
+                                                                <span class="rating-value">{{ number_format($movie->user_rating, 1) }}/10</span>
                                                             </div>
                                                         @endif
                                                     </div>
                                                 </div>
                                                 
-                                                <div class="review-content">
-                                                    <p>{{ $movie->user_review }}</p>
+                                                <div class="review-body">
+                                                    <p class="review-text">{{ $movie->user_review }}</p>
                                                     
-                                                    <div class="review-meta">
+                                                    <div class="review-footer">
                                                         @if($movie->watched_at)
-                                                            <span>Watched {{ $movie->watched_at->format('M d, Y') }}</span>
+                                                            <span class="review-date">
+                                                                <i class="ion-calendar"></i> Watched {{ $movie->watched_at->format('M d, Y') }}
+                                                            </span>
                                                         @endif
-                                                        <span>Added {{ $movie->created_at->diffForHumans() }}</span>
+                                                        <span class="review-added">
+                                                            <i class="ion-clock"></i> Added {{ $movie->created_at->diffForHumans() }}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 @else
-                                    <div class="no-content">
+                                    <div class="no-content-message">
+                                        <i class="ion-compose-outline"></i>
                                         <p>{{ $user->name }} hasn't written any movie reviews yet.</p>
                                     </div>
                                 @endif
@@ -400,427 +483,612 @@ textarea:focus {
                     </div>
                 </div>
             </div>
-            
-            <!-- Sidebar -->
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <div class="sidebar">
-                    <!-- Dynamic Wallpaper -->
-                    <div class="ads">
-                        @if(isset($randomWallpaper) && !empty($randomWallpaper['backdrop_url']))
-                            <div class="movie-wallpaper" style="position: relative; width: 336px; height: 296px; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-                                <img src="{{ $randomWallpaper['backdrop_url'] }}" alt="{{ $randomWallpaper['title'] ?? 'Movie Wallpaper' }}" 
-                                     style="width: 100%; height: 100%; object-fit: cover;">
-                                <div class="wallpaper-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 15px;">
-                                    <h5 style="margin: 0; font-size: 14px; font-weight: bold;">{{ $randomWallpaper['title'] ?? 'Featured Movie' }}</h5>
-                                    @if(!empty($randomWallpaper['overview']))
-                                        <p style="margin: 5px 0 0; font-size: 11px; opacity: 0.9;">{{ $randomWallpaper['overview'] }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                        @else
-                            <img src="{{ asset('images/uploads/ads1.png') }}" alt="" width="336" height="296">
-                        @endif
-                    </div>
-                    
-                    <!-- Quick Stats -->
-                    <div class="profile-quick-stats">
-                        <h4 class="sb-title">Profile Statistics</h4>
-                        <div class="quick-stat">
-                            <span class="quick-stat-label">Popularity Rank</span>
-                            <span class="quick-stat-value">#{{ $user->popularity_score }}</span>
-                        </div>
-                        <div class="quick-stat">
-                            <span class="quick-stat-label">Movies This Month</span>
-                            <span class="quick-stat-value">{{ $favoriteMovies->where('created_at', '>=', now()->subMonth())->count() }}</span>
-                        </div>
-                        <div class="quick-stat">
-                            <span class="quick-stat-label">Reviews This Year</span>
-                            <span class="quick-stat-value">{{ $favoriteMovies->where('created_at', '>=', now()->subYear())->whereNotNull('user_review')->count() }}</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Back to Community -->
-                    <div class="back-to-community">
-                        <a href="{{ route('community') }}" class="btn btn-primary btn-block">
-                            <i class="ion-arrow-left-c"></i> Back to Community
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
 <style>
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    padding: 40px 0;
-    color: white;
+/* Sidebar User Information */
+.user-information {
+    background: #0b1a2a !important;
+    padding: 0 !important;
+    border-radius: 5px !important;
+    border: 1px solid #405266 !important;
+    margin-bottom: 30px;
 }
 
-.profile-avatar-container {
+.user-img {
+    text-align: center !important;
+    padding: 30px 20px !important;
+    background: linear-gradient(135deg, #0b1a2a, #020d18);
+    border-radius: 5px 5px 0 0;
     position: relative;
 }
 
-.profile-avatar-circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 5px solid #dcf836;
-    object-fit: cover;
+.user-img img {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 50% !important;
+    margin-bottom: 15px !important;
+    object-fit: cover !important;
+    border: 4px solid #dcf836 !important;
+    box-shadow: 0 4px 15px rgba(220, 248, 54, 0.3);
 }
 
-.profile-online-indicator {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 25px;
-    height: 25px;
-    background: #4caf50;
-    border-radius: 50%;
-    border: 4px solid #020d18;
+.user-img h3 {
+    font-size: 20px !important;
+    margin: 10px 0 5px !important;
+    font-weight: 700 !important;
 }
 
-.profile-info {
-    flex: 1;
+.user-img p {
+    font-size: 14px !important;
+    margin: 0 !important;
 }
 
-.profile-name {
-    font-size: 2.5em;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #ffffff;
+.user-fav {
+    margin: 0 !important;
+    border-top: 1px solid #405266 !important;
+    padding: 0 !important;
 }
 
-.profile-username {
-    font-size: 1.2em;
-    color: #abb7c4;
-    margin-bottom: 10px;
+.user-fav p:first-child {
+    color: #3e9fd8 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-align: left !important;
+    margin: 0 !important;
+    padding: 15px 20px !important;
+    background: rgba(62, 159, 216, 0.1);
+    text-transform: uppercase !important;
+    letter-spacing: 1px;
 }
 
-.profile-location, .profile-platform {
-    color: #abb7c4;
-    margin: 5px 0;
+.user-fav ul {
+    list-style: none !important;
+    padding: 15px 20px !important;
+    margin: 0 !important;
 }
 
-.profile-bio {
-    font-size: 1.1em;
-    margin: 15px 0;
-    font-style: italic;
-    color: #abb7c4;
-}
-
-.profile-stats {
+.user-fav ul li {
+    margin-bottom: 12px !important;
+    color: #abb7c4 !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid rgba(64, 82, 102, 0.3) !important;
+    font-size: 13px !important;
     display: flex;
-    gap: 20px;
-    margin: 20px 0;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
 }
 
-.stat-box {
-    text-align: center;
+.user-fav ul li:last-child {
+    border-bottom: none !important;
+}
+
+.user-fav ul li i {
+    color: #dcf836 !important;
+    font-size: 16px !important;
+    width: 20px;
+}
+
+.user-fav .redbtn {
+    background: #eb70ac !important;
+    color: #fff !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.user-fav .redbtn:hover {
+    background: #d55a98 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(235, 112, 172, 0.4);
+}
+
+/* Main Content Wrapper */
+.profile-content-wrapper {
     background: #0b1a2a;
-    padding: 15px;
     border-radius: 5px;
-    min-width: 90px;
+    padding: 0;
     border: 1px solid #405266;
 }
 
-.stat-number {
-    display: block;
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #dcf836;
-}
-
-.stat-label {
-    display: block;
-    font-size: 0.8em;
-    color: #abb7c4;
-    text-transform: uppercase;
-    margin-top: 5px;
-}
-
-.profile-meta {
-    margin: 15px 0;
-    font-size: 0.9em;
-    color: #abb7c4;
-}
-
-.profile-meta strong {
-    color: #ffffff;
-}
-
-.social-links {
-    margin-top: 15px;
-}
-
-.social-link {
-    display: inline-block;
-    margin-right: 15px;
-    color: #dcf836;
-    font-size: 1.5em;
-    transition: color 0.3s;
-}
-
-.social-link:hover {
-    color: #dd003f;
-}
-
-.profile-tabs {
-    margin-top: 30px;
-}
-
-.profile-tabs .nav-tabs {
+/* Tabs Navigation */
+.profile-tabs-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    background: #020d18;
+    border-radius: 5px 5px 0 0;
     border-bottom: 2px solid #405266;
 }
 
-.profile-tabs .nav-tabs > li > a {
+.profile-tabs-nav li {
+    flex: 1;
+    text-align: center;
+}
+
+.profile-tabs-nav li a {
+    display: block;
+    padding: 18px 20px;
     color: #abb7c4;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-}
-
-.profile-tabs .nav-tabs > li.active > a,
-.profile-tabs .nav-tabs > li.active > a:hover,
-.profile-tabs .nav-tabs > li.active > a:focus {
-    color: #dcf836;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid #dcf836;
-}
-
-.profile-tabs .nav-tabs > li > a:hover {
-    background-color: transparent;
-    border-bottom: 2px solid #abb7c4;
-}
-
-.profile-section h3 {
-    color: #ffffff;
-    margin-bottom: 20px;
+    text-decoration: none;
     font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    position: relative;
 }
 
-.favorite-movies-grid {
+.profile-tabs-nav li a i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.profile-tabs-nav li a:hover {
+    color: #dcf836;
+    background: rgba(220, 248, 54, 0.05);
+}
+
+.profile-tabs-nav li.active a {
+    color: #dcf836;
+    border-bottom-color: #dcf836;
+    background: rgba(220, 248, 54, 0.1);
+}
+
+/* Tab Content */
+.tab-content {
+    padding: 0;
+}
+
+.tab-section {
+    padding: 30px;
+}
+
+.section-title {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #405266;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: #dcf836;
+    font-size: 24px;
+}
+
+.count-badge {
+    background: #eb70ac;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-left: auto;
+}
+
+/* Movies Grid */
+.movies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
     margin-top: 20px;
 }
 
-.favorite-movie-card {
-    background: #0b1a2a;
-    border-radius: 5px;
+.movie-item-card {
+    background: #020d18;
+    border-radius: 8px;
     overflow: hidden;
     border: 1px solid #405266;
-    transition: transform 0.3s, border-color 0.3s;
+    transition: all 0.3s ease;
 }
 
-.favorite-movie-card:hover {
-    transform: translateY(-3px);
+.movie-item-card:hover {
+    transform: translateY(-5px);
     border-color: #dcf836;
+    box-shadow: 0 8px 20px rgba(220, 248, 54, 0.2);
 }
 
-.movie-poster {
+.movie-poster-link {
+    display: block;
     position: relative;
-    height: 200px;
 }
 
-.movie-poster img {
+.movie-poster-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 150%;
+    overflow: hidden;
+    background: #020d18;
+}
+
+.movie-poster-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.movie-item-card:hover .movie-poster-container img {
+    transform: scale(1.05);
 }
 
 .movie-poster-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: #dd003f;
+    background: linear-gradient(135deg, #eb70ac, #dd003f);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2em;
+    font-size: 32px;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
-.user-rating {
+.rating-badge {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(2, 13, 24, 0.9);
+    background: rgba(2, 13, 24, 0.95);
     color: #dcf836;
-    padding: 6px 10px;
-    border-radius: 3px;
-    font-size: 0.85em;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 13px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-.movie-info {
+.rating-badge i {
+    font-size: 14px;
+}
+
+.movie-details {
     padding: 15px;
 }
 
-.movie-info h4 {
+.movie-title {
     margin: 0 0 10px 0;
-    font-size: 1.1em;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.movie-title a {
     color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-.user-review {
-    font-size: 0.9em;
+.movie-title a:hover {
+    color: #dcf836;
+}
+
+.movie-review {
+    font-size: 12px;
     color: #abb7c4;
-    font-style: italic;
+    line-height: 1.5;
     margin: 8px 0;
+    font-style: italic;
 }
 
-.watched-date {
-    font-size: 0.8em;
-    color: #abb7c4;
-    margin: 5px 0 0 0;
+.movie-date {
+    font-size: 11px;
+    color: #7a8a9e;
+    margin: 8px 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.activity-timeline {
+.movie-date i {
+    color: #3e9fd8;
+}
+}
+
+/* Activity List */
+.activity-list {
     margin-top: 20px;
 }
 
-.activity-item {
+.activity-card {
     display: flex;
     align-items: flex-start;
     gap: 15px;
-    padding: 15px;
-    background: #0b1a2a;
+    padding: 20px;
+    background: #020d18;
     border: 1px solid #405266;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-bottom: 15px;
+    transition: all 0.3s ease;
 }
 
-.activity-icon {
-    width: 40px;
-    height: 40px;
-    background: #dd003f;
+.activity-card:hover {
+    border-color: #3e9fd8;
+    background: rgba(62, 159, 216, 0.05);
+}
+
+.activity-icon-wrapper {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #eb70ac, #dd003f);
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2em;
+    font-size: 20px;
     flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(235, 112, 172, 0.3);
 }
 
-.activity-content {
+.activity-info {
     flex: 1;
 }
 
-.activity-description {
-    font-weight: 500;
-    margin-bottom: 5px;
+.activity-text {
+    margin-bottom: 8px;
     color: #ffffff;
+    font-size: 14px;
+}
+
+.activity-text strong {
+    color: #dcf836;
+    font-weight: 600;
+}
+
+.activity-movie {
+    display: block;
+    color: #abb7c4;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.activity-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 12px;
 }
 
 .activity-time {
-    font-size: 0.8em;
-    color: #abb7c4;
+    color: #7a8a9e;
 }
 
 .activity-points {
     color: #dcf836;
-    font-weight: bold;
-    margin-left: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.reviews-list {
+.activity-points i {
+    color: #eb70ac;
+}
+
+/* Reviews Container */
+.reviews-container {
     margin-top: 20px;
 }
 
-.review-card {
-    background: white;
+.review-item {
+    background: #020d18;
+    border: 1px solid #405266;
     border-radius: 8px;
-    padding: 20px;
+    padding: 25px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
-.review-movie {
+.review-item:hover {
+    border-color: #dcf836;
+    box-shadow: 0 4px 15px rgba(220, 248, 54, 0.1);
+}
+
+.review-header {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #405266;
 }
 
-.review-poster {
-    width: 60px;
-    height: 90px;
+.review-poster-wrapper {
+    flex-shrink: 0;
+}
+
+.review-poster-img {
+    width: 80px;
+    height: 120px;
     border-radius: 5px;
     object-fit: cover;
+    border: 1px solid #405266;
+    transition: transform 0.3s ease;
 }
 
-.review-movie-info h4 {
+.review-poster-img:hover {
+    transform: scale(1.05);
+}
+
+.review-poster-placeholder {
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(135deg, #eb70ac, #dd003f);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.review-movie-details {
+    flex: 1;
+}
+
+.review-movie-title {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.review-movie-title a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.review-movie-title a:hover {
+    color: #dcf836;
+}
+
+.review-stars {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-top: 8px;
+}
+
+.review-stars i {
+    font-size: 14px;
+}
+
+.rating-value {
+    margin-left: 10px;
+    color: #dcf836;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.review-body {
+    color: #abb7c4;
+}
+
+.review-text {
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    color: #abb7c4;
+}
+
+.review-footer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 12px;
+    color: #7a8a9e;
+    padding-top: 15px;
+    border-top: 1px solid rgba(64, 82, 102, 0.3);
+}
+
+.review-date,
+.review-added {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.review-footer i {
+    color: #3e9fd8;
+}
+
+/* No Content Message */
+.no-content-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7a8a9e;
+}
+
+.no-content-message i {
+    font-size: 64px;
+    color: #405266;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.no-content-message p {
+    font-size: 16px;
     margin: 0;
 }
 
-.review-rating {
-    margin-top: 5px;
-    color: #ffc107;
-}
-
-.review-content p {
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.review-meta {
-    font-size: 0.8em;
-    color: #666;
-}
-
-.profile-quick-stats {
+/* Pagination */
+.pagination-container {
     margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #405266;
 }
 
-.quick-stat {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
+/* Responsive Design */
+@media (max-width: 991px) {
+    .movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
 }
 
-.quick-stat-label {
-    color: #666;
-}
-
-.quick-stat-value {
-    font-weight: bold;
-    color: #dd2c00;
-}
-
-.back-to-community {
-    margin-top: 30px;
-}
-
-.no-content {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-}
-
-@media (max-width: 768px) {
-    .profile-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
+@media (max-width: 767px) {
+    .user-information {
+        margin-bottom: 20px;
     }
     
-    .profile-stats {
-        justify-content: center;
+    .profile-tabs-nav {
+        flex-direction: column;
+    }
+    
+    .profile-tabs-nav li {
+        border-bottom: 1px solid #405266;
+    }
+    
+    .profile-tabs-nav li:last-child {
+        border-bottom: none;
+    }
+    
+    .tab-section {
+        padding: 20px 15px;
+    }
+    
+    .section-title {
+        font-size: 18px;
         flex-wrap: wrap;
     }
     
-    .favorite-movies-grid {
-        grid-template-columns: 1fr;
+    .movies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .activity-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .activity-meta {
+        flex-direction: column;
+        gap: 8px;
     }
 }
 </style>
