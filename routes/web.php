@@ -11,6 +11,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMovieController;
+use App\Http\Controllers\UserTVShowController;
 
 // Home route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -125,6 +126,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/movies/watchlist', [UserMovieController::class, 'toggleWatchlist'])->name('movies.watchlist');
     Route::post('/movies/review', [UserMovieController::class, 'submitReview'])->name('movies.review');
     Route::get('/movies/{movieId}/status', [UserMovieController::class, 'getMovieStatus'])->name('movies.status');
+    
+    // User TV Show Interactions
+    Route::post('/tv/add', [UserTVShowController::class, 'addShow'])->name('tv.add');
+    Route::post('/tv/like', [UserTVShowController::class, 'toggleLike'])->name('tv.like');
+    Route::post('/tv/watchlist', [UserTVShowController::class, 'toggleWatchlist'])->name('tv.watchlist');
+    Route::post('/tv/review', [UserTVShowController::class, 'submitReview'])->name('tv.review');
+    Route::get('/tv/{showId}/status', [UserTVShowController::class, 'getShowStatus'])->name('tv.status');
 });
 Route::middleware('auth')->group(function () {
     // Example protected routes

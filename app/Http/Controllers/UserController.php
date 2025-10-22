@@ -240,6 +240,8 @@ class UserController extends Controller
             'media_id' => 'required|integer',
             'media_type' => 'required|in:movie,tv',
             'title' => 'nullable|string|max:255',
+            'poster' => 'nullable|string',
+            'year' => 'nullable|integer',
         ]);
 
         $user = Auth::user();
@@ -261,6 +263,8 @@ class UserController extends Controller
             'user_id' => $user->id,
             'movie_id' => $validated['media_id'],
             'movie_title' => $validated['title'] ?? 'Untitled',
+            'movie_poster' => $validated['poster'] ?? null,
+            'release_year' => $validated['year'] ?? null,
             'media_type' => $validated['media_type'],
         ]);
 

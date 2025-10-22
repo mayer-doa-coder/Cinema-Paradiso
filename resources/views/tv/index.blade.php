@@ -405,6 +405,8 @@ body {
                                         <button class="add-to-watchlist-btn" 
                                                 data-show-id="{{ $show['id'] }}"
                                                 data-show-name="{{ $show['name'] }}"
+                                                data-show-poster="{{ $show['poster_url'] ?? '' }}"
+                                                data-show-year="{{ !empty($show['first_air_date']) ? date('Y', strtotime($show['first_air_date'])) : '' }}"
                                                 style="background: #ec6eab; color: white; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; transition: all 0.3s ease; width: 100%;">
                                             <i class="ion-ios-plus-outline"></i> Add to Watchlist
                                         </button>
@@ -742,6 +744,8 @@ $(document).ready(function() {
         const button = $(this);
         const showId = button.data('show-id');
         const showName = button.data('show-name');
+        const showPoster = button.data('show-poster');
+        const showYear = button.data('show-year');
         
         // Check if user is authenticated
         @guest
@@ -762,7 +766,9 @@ $(document).ready(function() {
                 _token: '{{ csrf_token() }}',
                 media_id: showId,
                 media_type: 'tv',
-                title: showName
+                title: showName,
+                poster: showPoster,
+                year: showYear
             },
             success: function(response) {
                 button.html('<i class="ion-checkmark"></i> Added!');

@@ -1540,7 +1540,7 @@ function addShowToCollection(event) {
     
     const data = {
         show_id: showData.id,
-        show_name: showData.name,
+        show_title: showData.name,
         show_poster: showData.poster,
         rating: userRating,
         first_air_year: showData.year,
@@ -1725,11 +1725,11 @@ function submitReview() {
     
     const data = {
         show_id: showData.id,
-        show_name: showData.name,
+        show_title: showData.name,
         show_poster: showData.poster,
         rating: userRating,
         watched_before: watchedBefore,
-        review: reviewText,
+        review_text: reviewText,
         first_air_year: showData.year,
         _token: '{{ csrf_token() }}'
     };
