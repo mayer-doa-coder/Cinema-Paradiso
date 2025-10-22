@@ -142,59 +142,32 @@ body {
 }
 .flex-wrap-movielist.grid-fav {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
 }
 .movie-item-style-2.style-3 {
     position: relative;
-    border-radius: 8px;
+    border-radius: 5px;
     overflow: hidden;
-    transition: transform 0.3s ease;
     background: #0b1a2a;
 }
-.movie-item-style-2.style-3:hover {
-    transform: translateY(-5px);
+.movie-item-style-2.style-3 .poster-link {
+    display: block;
+    position: relative;
 }
 .movie-item-style-2.style-3 img {
     width: 100%;
-    height: 270px;
+    height: 250px;
     object-fit: cover;
-}
-.movie-item-style-2.style-3 .hvr-inner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.movie-item-style-2.style-3:hover .hvr-inner {
-    opacity: 1;
-}
-.movie-item-style-2.style-3 .hvr-inner a {
-    color: #fff;
-    font-size: 14px;
-    text-decoration: none;
-    padding: 10px 20px;
-    background: #eb70ac;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-.movie-item-style-2.style-3 .hvr-inner a:hover {
-    background: #d55a92;
+    display: block;
 }
 .movie-item-style-2.style-3 .mv-item-infor {
-    padding: 15px;
+    padding-left: 5px;
     background: #0b1a2a;
 }
 .movie-item-style-2.style-3 .mv-item-infor h6 {
-    margin: 0 0 8px 0;
+    margin: 0 0 5px 0;
 }
 .movie-item-style-2.style-3 .mv-item-infor h6 a {
     color: #fff;
@@ -387,10 +360,9 @@ body {
 										<i class="ion-heart"></i>
 									</div>
 								@endif
-								<img src="{{ $movie->movie_poster ?: asset('images/uploads/mv1.jpg') }}" alt="{{ $movie->movie_title }}">
-								<div class="hvr-inner">
-									<a href="{{ route('movies.show', $movie->movie_id) }}">View Details</a>
-								</div>
+								<a href="{{ route('movies.show', $movie->movie_id) }}" class="poster-link">
+									<img src="{{ $movie->movie_poster ?: asset('images/uploads/mv1.jpg') }}" alt="{{ $movie->movie_title }}">
+								</a>
 								<div class="mv-item-infor">
 									<h6>
 										<a href="{{ route('movies.show', $movie->movie_id) }}">
