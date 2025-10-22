@@ -433,7 +433,7 @@ html, body {
 }
 
 .name-badge:hover {
-    border-color: #dcf836;
+    border-color: #e9d736;
     background: rgba(220, 248, 54, 0.1);
     transform: translateY(-1px);
 }
@@ -446,7 +446,7 @@ html, body {
 }
 
 .name-badge:hover a {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 /* Overview Details Layout */
@@ -832,7 +832,7 @@ html, body {
 						<li><a href="{{ route('help') }}">Help</a></li>
 						@auth
 							<li>
-								<a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
 									{{ Auth::user()->name }}
 								</a>
 							</li>
@@ -927,7 +927,7 @@ html, body {
 									<i class="ion-ios-star-outline star-icon" data-rating="{{ $i }}" onclick="rateMovie({{ $i }})"></i>
 								@endfor
 							</div>
-							<span id="currentRating" style="margin-left: 10px; color: #dcf836;"></span>
+							<span id="currentRating" style="margin-left: 10px; color: #e9d736;"></span>
 						</div>
 					</div>
 					<div class="movie-tabs">
@@ -1106,7 +1106,7 @@ html, body {
 													@endphp
 													{{ $shortContent }}
 													@if($isLong)
-														<a href="{{ $review['url'] ?? '#' }}" target="_blank" style="color: #dcf836;">Read full review</a>
+														<a href="{{ $review['url'] ?? '#' }}" target="_blank" style="color: #e9d736;">Read full review</a>
 													@endif
 												</p>
 											</div>
@@ -1631,7 +1631,7 @@ function openReviewModal(event) {
     
     modal.innerHTML = `
         <div style="background: #0b1a2a; padding: 30px; border-radius: 10px; max-width: 600px; width: 90%;">
-            <h2 style="color: #dcf836; margin-bottom: 20px;">Write Your Review</h2>
+            <h2 style="color: #e9d736; margin-bottom: 20px;">Write Your Review</h2>
             <p style="color: #fff; margin-bottom: 15px;">Your Rating: ${userRating}/10</p>
             
             <div style="margin-bottom: 20px;">
@@ -1747,7 +1747,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .star-icon {
     cursor: pointer;
     transition: all 0.3s ease;
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .star-icon:hover {

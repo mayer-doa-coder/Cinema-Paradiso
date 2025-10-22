@@ -4,6 +4,14 @@
 
 @push('styles')
 <style>
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.ht-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
 .user-hero {
     background: url('{{ asset('images/uploads/user-bg.jpg') }}') no-repeat center;
     background-size: cover;
@@ -24,69 +32,79 @@
     z-index: 2;
 }
 .user-information {
-    background: #0b1a2a;
-    padding: 20px;
-    border-radius: 5px;
-    border: 1px solid #405266;
+    background: #0b1a2a !important;
+    padding: 20px !important;
+    border-radius: 5px !important;
+    border: 1px solid #405266 !important;
+    margin-top: 0 !important;
 }
 .user-img {
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: center !important;
+    margin-bottom: 30px !important;
+    padding: 0 !important;
 }
 .user-img img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 15px;
-    object-fit: cover;
-    border: 3px solid #dcf836;
+    width: 150px !important;
+    height: 150px !important;
+    border-radius: 50% !important;
+    margin-bottom: 15px !important;
+    object-fit: cover !important;
+    border: 3px solid #e9d736 !important;
 }
 .user-img .redbtn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: #eb70ac;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all 0.3s ease;
+    background: #eb70ac !important;
+    color: #fff !important;
+    padding: 8px 20px !important;
+    border-radius: 5px !important;
+    display: inline-block !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    cursor: pointer !important;
 }
 .user-img .redbtn:hover {
-    background: #d55a92;
+    background: #eb70ac !important;
+    color: #0b1a2a !important;
+}
+.user-information ul {
+    padding: 0 !important;
 }
 .user-fav {
-    margin-bottom: 25px;
+    margin-bottom: 20px !important;
+    border-top: none !important;
+    padding: 0 !important;
 }
 .user-fav p {
-    color: #dcf836;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-transform: uppercase;
+    color: #3e9fd8 !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    text-align: left !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 10px !important;
+    padding-left: 0 !important;
+    border-bottom: 1px solid #405266 !important;
+    text-transform: none !important;
 }
 .user-fav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 .user-fav ul li {
-    margin-bottom: 10px;
+    margin-bottom: 8px !important;
 }
 .user-fav ul li a {
-    color: #abb7c4;
-    text-decoration: none;
-    display: block;
-    padding: 8px 15px;
-    border-radius: 3px;
-    transition: all 0.3s ease;
+    color: #abb7c4 !important;
+    padding: 8px 15px !important;
+    display: block !important;
+    border-radius: 3px !important;
+    transition: all 0.3s ease !important;
+    text-transform: none !important;
+    font-weight: normal !important;
 }
+.user-fav ul li.active a,
 .user-fav ul li a:hover {
-    background: #020d18;
-    color: #dcf836;
-}
-.user-fav ul li.active a {
-    background: #020d18;
-    color: #dcf836;
-    border-left: 3px solid #eb70ac;
+    color: #e9d736 !important;
+    background: transparent !important;
 }
 .topbar-filter.user {
     display: flex;
@@ -102,7 +120,7 @@
     margin-right: 20px;
 }
 .topbar-filter.user p span {
-    color: #dcf836;
+    color: #e9d736;
     font-weight: bold;
 }
 .topbar-filter.user label {
@@ -180,7 +198,7 @@
     transition: color 0.3s ease;
 }
 .movie-item-style-2.style-3 .mv-item-infor h6 a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 .movie-item-style-2.style-3 .mv-item-infor p {
     color: #abb7c4;
@@ -254,37 +272,7 @@
 	<div class="container">
 		<div class="row ipad-width2">
 			<div class="col-md-3 col-sm-12 col-xs-12">
-				<div class="user-information">
-					<div class="user-img">
-						<a href="{{ route('user.profile') }}">
-							<img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/uploads/user-img.png') }}" alt="User Avatar">
-						</a>
-						<a href="{{ route('user.profile') }}" class="redbtn">Change avatar</a>
-					</div>
-					<div class="user-fav">
-						<p>Account Details</p>
-						<ul>
-							<li><a href="{{ route('user.profile') }}">Profile</a></li>
-							<li class="active"><a href="{{ route('user.watchlist') }}">Watchlist</a></li>
-							<li><a href="{{ route('user.reviews') }}">Reviews</a></li>
-							<li><a href="{{ route('user.movies') }}">Movies</a></li>
-							<li><a href="{{ route('user.list') }}">List</a></li>
-						</ul>
-					</div>
-					<div class="user-fav">
-						<p>Others</p>
-						<ul>
-							<li>
-								<form action="{{ route('auth.logout') }}" method="POST" style="display: inline;">
-									@csrf
-									<button type="submit" style="background: none; border: none; color: #abb7c4; cursor: pointer; padding: 8px 15px; display: block; width: 100%; text-align: left; border-radius: 3px; transition: all 0.3s ease;">
-										Log out
-									</button>
-								</form>
-							</li>
-						</ul>
-					</div>
-				</div>
+				@include('profile.partials.sidebar')
 			</div>
 			<div class="col-md-9 col-sm-12 col-xs-12">
 				<div class="topbar-filter user">
@@ -336,7 +324,7 @@
 				@else
 					<div style="text-align: center; padding: 100px 20px; color: #fff;">
 						<i class="ion-bookmark" style="font-size: 80px; color: #405266; margin-bottom: 20px;"></i>
-						<h2 style="color: #dcf836; margin-bottom: 15px;">No Movies in Watchlist</h2>
+						<h2 style="color: #e9d736; margin-bottom: 15px;">No Movies in Watchlist</h2>
 						<p style="color: #abb7c4; margin-bottom: 30px;">Add movies to your watchlist to watch them later!</p>
 						<a href="{{ route('movies.index') }}" class="redbtn" style="display: inline-block; padding: 12px 30px; background: #eb70ac; color: #fff; text-decoration: none; border-radius: 5px;">Browse Movies</a>
 					</div>

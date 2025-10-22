@@ -32,66 +32,79 @@ body {
     z-index: 2;
 }
 .user-information {
-    background: #0b1a2a;
-    padding: 20px;
-    border-radius: 5px;
-    border: 1px solid #405266;
+    background: #0b1a2a !important;
+    padding: 20px !important;
+    border-radius: 5px !important;
+    border: 1px solid #405266 !important;
+    margin-top: 0 !important;
 }
 .user-img {
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: center !important;
+    margin-bottom: 30px !important;
+    padding: 0 !important;
 }
 .user-img img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 15px;
-    object-fit: cover;
-    border: 3px solid #dcf836;
+    width: 150px !important;
+    height: 150px !important;
+    border-radius: 50% !important;
+    margin-bottom: 15px !important;
+    object-fit: cover !important;
+    border: 3px solid #e9d736 !important;
 }
 .user-img .redbtn {
-    background: #eb70ac;
-    color: #fff;
-    padding: 8px 20px;
-    border-radius: 5px;
-    display: inline-block;
-    transition: all 0.3s ease;
+    background: #eb70ac !important;
+    color: #fff !important;
+    padding: 8px 20px !important;
+    border-radius: 5px !important;
+    display: inline-block !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    cursor: pointer !important;
 }
 .user-img .redbtn:hover {
-    background: #eb70ac;
-    color: #0b1a2a;
+    background: #eb70ac !important;
+    color: #0b1a2a !important;
+}
+.user-information ul {
+    padding: 0 !important;
 }
 .user-fav {
-    margin-bottom: 20px;
+    margin-bottom: 20px !important;
+    border-top: none !important;
+    padding: 0 !important;
 }
 .user-fav p {
-    color: #3e9fd8;
-    font-weight: 600;
-    font-size: 16px;
+    color: #3e9fd8 !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
     text-align: left !important;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    margin-bottom: 10px !important;
+    padding-bottom: 10px !important;
     padding-left: 0 !important;
-    border-bottom: 1px solid #405266;
+    border-bottom: 1px solid #405266 !important;
+    text-transform: none !important;
 }
 .user-fav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 .user-fav ul li {
-    margin-bottom: 8px;
+    margin-bottom: 8px !important;
 }
 .user-fav ul li a {
-    color: #abb7c4;
-    padding: 8px 15px;
-    display: block;
-    border-radius: 3px;
-    transition: all 0.3s ease;
+    color: #abb7c4 !important;
+    padding: 8px 15px !important;
+    display: block !important;
+    border-radius: 3px !important;
+    transition: all 0.3s ease !important;
+    text-transform: none !important;
+    font-weight: normal !important;
 }
 .user-fav ul li.active a,
 .user-fav ul li a:hover {
-    color: #dcf836;
+    color: #e9d736 !important;
+    background: transparent !important;
 }
 .form-style-1.user-pro {
     padding: 30px;
@@ -126,7 +139,7 @@ body {
 }
 .form-it input:focus,
 .form-it select:focus {
-    border-color: #dcf836;
+    border-color: #e9d736;
     outline: none;
 }
 .form-it input::placeholder {
@@ -244,47 +257,7 @@ body {
 	<div class="container">
 		<div class="row ipad-width">
 			<div class="col-md-3 col-sm-12 col-xs-12">
-				<div class="user-information">
-					<div class="user-img">
-						<img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) . '?v=' . time() : asset('images/uploads/user-img.png') }}" alt="User Avatar" id="avatar-preview"><br>
-						
-						<form action="{{ route('user.avatar.update') }}" method="POST" enctype="multipart/form-data" id="avatar-form" class="avatar-upload-form">
-							<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<input type="file" name="avatar" id="avatar-input" accept="image/jpeg,image/png,image/jpg,image/gif" style="display: none;">
-							<button type="button" class="redbtn" id="change-avatar-btn">Change avatar</button>
-						</form>
-						
-						@if(Auth::user()->avatar)
-							<form action="{{ route('user.avatar.delete') }}" method="POST" style="margin-top: 10px;" id="avatar-delete-form" class="avatar-delete-form">
-								<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<input type="hidden" name="_method" value="DELETE">
-								<button type="button" class="redbtn" id="delete-avatar-btn" style="background: #405266; border: none; cursor: pointer;">Remove avatar</button>
-							</form>
-						@endif
-					</div>
-					<div class="user-fav">
-						<p>Account Details</p>
-						<ul>
-							<li class="active"><a href="{{ route('user.profile') }}">Profile</a></li>
-							<li><a href="{{ route('user.watchlist') }}">Watchlist</a></li>
-							<li><a href="{{ route('user.reviews') }}">Reviews</a></li>
-							<li><a href="{{ route('user.movies') }}">Movies</a></li>
-							<li><a href="{{ route('user.list') }}">List</a></li>
-						</ul>
-					</div>
-					<div class="user-fav">
-						<p>Others</p>
-						<ul>
-							<li><a href="#change-password" onclick="document.querySelector('.password').scrollIntoView({behavior: 'smooth'})">Change password</a></li>
-							<li>
-								<form action="{{ route('auth.logout') }}" method="POST" style="display: inline;">
-									@csrf
-									<a href="#" onclick="event.preventDefault(); this.closest('form').submit();" style="color: #abb7c4;">Log out</a>
-								</form>
-							</li>
-						</ul>
-					</div>
-				</div>
+				@include('profile.partials.sidebar')
 			</div>
 			<div class="col-md-9 col-sm-12 col-xs-12">
 				<div class="form-style-1 user-pro">
@@ -449,88 +422,6 @@ document.addEventListener('DOMContentLoaded', function() {
     countrySelect.addEventListener('change', function() {
         updateStates(this.value);
     });
-    
-    // ========== Avatar Upload Functionality ==========
-    const avatarInput = document.getElementById('avatar-input');
-    const avatarPreview = document.getElementById('avatar-preview');
-    const avatarForm = document.getElementById('avatar-form');
-    const changeAvatarBtn = document.getElementById('change-avatar-btn');
-    const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
-    const avatarDeleteForm = document.getElementById('avatar-delete-form');
-    
-    // Handle change avatar button click
-    if (changeAvatarBtn && avatarInput) {
-        changeAvatarBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!this.disabled) {
-                avatarInput.click();
-            }
-        });
-    }
-    
-    // Preview image and auto-submit when file is selected
-    if (avatarInput && avatarForm) {
-        avatarInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            
-            if (file && changeAvatarBtn && !changeAvatarBtn.disabled) {
-                // Validate file size (2MB max)
-                if (file.size > 2048 * 1024) {
-                    alert('Image size must not exceed 2MB');
-                    this.value = '';
-                    return;
-                }
-                
-                // Validate file type
-                const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Only JPEG, PNG, JPG, and GIF images are allowed');
-                    this.value = '';
-                    return;
-                }
-                
-                // Disable button immediately to prevent double click
-                changeAvatarBtn.disabled = true;
-                changeAvatarBtn.textContent = 'Uploading...';
-                changeAvatarBtn.style.opacity = '0.6';
-                changeAvatarBtn.style.cursor = 'not-allowed';
-                
-                // Preview the image
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    avatarPreview.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-                
-                // Submit form
-                setTimeout(function() {
-                    avatarForm.submit();
-                }, 200);
-            }
-        });
-    }
-    
-    // Handle delete avatar button
-    if (deleteAvatarBtn && avatarDeleteForm) {
-        deleteAvatarBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            if (!this.disabled && confirm('Are you sure you want to delete your avatar?')) {
-                // Disable button immediately
-                this.disabled = true;
-                this.textContent = 'Deleting...';
-                this.style.opacity = '0.6';
-                this.style.cursor = 'not-allowed';
-                
-                // Submit form
-                setTimeout(function() {
-                    avatarDeleteForm.submit();
-                }, 200);
-            }
-        });
-    }
 });
 </script>
 @endpush
