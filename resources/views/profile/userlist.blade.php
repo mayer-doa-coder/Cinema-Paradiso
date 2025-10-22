@@ -94,10 +94,10 @@ body {
     font-size: 13px;
 }
 .user-fav ul li.active a {
-    color: #dcf836;
+    color: #e9d736;
 }
 .user-fav ul li a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 .list-container {
     background: #0b1a2a;
@@ -143,7 +143,7 @@ body {
 }
 .list-item:hover {
     background: rgba(15, 33, 51, 0.8);
-    border-color: #dcf836;
+    border-color: #e9d736;
 }
 .list-item-header {
     display: flex;
@@ -163,7 +163,7 @@ body {
     transition: color 0.3s ease;
 }
 .list-item-title a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 .list-item-meta {
     color: #abb7c4;
@@ -178,7 +178,7 @@ body {
 }
 .list-tag {
     background: #405266;
-    color: #dcf836;
+    color: #e9d736;
     padding: 4px 12px;
     border-radius: 15px;
     font-size: 11px;
@@ -282,7 +282,7 @@ body {
     transition: all 0.3s ease;
 }
 .list-movie-poster:hover {
-    border-color: #dcf836;
+    border-color: #e9d736;
     transform: translateY(-3px);
 }
 .list-movie-poster img {
@@ -332,7 +332,7 @@ body {
     transition: color 0.3s ease;
 }
 .close:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 .form-group {
     margin-bottom: 20px;
@@ -356,7 +356,7 @@ body {
 }
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #dcf836;
+    border-color: #e9d736;
     outline: none;
 }
 .form-group textarea {
@@ -544,7 +544,7 @@ body {
 						<li><a href="{{ route('help') }}">Help</a></li>
 						@auth
 							<li>
-								<a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
 									{{ Auth::user()->name }}
 								</a>
 							</li>

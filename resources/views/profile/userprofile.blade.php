@@ -104,11 +104,11 @@ body {
     font-size: 13px !important;
 }
 .user-fav ul li.active a {
-    color: #dcf836 !important;
+    color: #e9d736 !important;
     background: transparent !important;
 }
 .user-fav ul li a:hover {
-    color: #dcf836 !important;
+    color: #e9d736 !important;
     background: transparent !important;
 }
 .form-style-1.user-pro {
@@ -172,7 +172,7 @@ body {
     color: #0b1a2a;
 }
 .movie-card:hover > div {
-    border-color: #dcf836 !important;
+    border-color: #e9d736 !important;
     transform: translateY(-2px);
 }
 .movie-card .remove-movie:hover {
@@ -286,7 +286,7 @@ body {
 						<li><a href="{{ route('help') }}">Help</a></li>
 						@auth
 							<li>
-								<a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
 									{{ Auth::user()->name }}
 								</a>
 							</li>

@@ -61,7 +61,7 @@ body {
 }
 
 .user-hero .breadcumb li a {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 /* Main Content Area */
@@ -136,7 +136,7 @@ body {
                         <li><a href="{{ route('help') }}">Help</a></li>
                         @auth
                             <li>
-                                <a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+                                <a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
                                     {{ Auth::user()->name }}
                                 </a>
                             </li>
@@ -184,7 +184,7 @@ body {
                             <div class="online-status" style="width: 20px; height: 20px; background: #4caf50; border-radius: 50%; position: absolute; bottom: 70px; right: calc(50% - 60px); border: 3px solid #0b1a2a;"></div>
                         @endif
                         <h3 style="color: #ffffff; margin: 10px 0 5px;">{{ $user->name }}</h3>
-                        <p style="color: #dcf836; margin: 0;">@{{ $user->username }}</p>
+                        <p style="color: #e9d736; margin: 0;">@{{ $user->username }}</p>
                     </div>
                     
                     <div class="user-fav">
@@ -228,7 +228,7 @@ body {
                             <p>Social Links</p>
                             <div style="text-align: center; padding: 10px;">
                                 @foreach($user->social_links as $platform => $url)
-                                    <a href="{{ $url }}" target="_blank" style="display: inline-block; margin: 5px; color: #dcf836; font-size: 24px; transition: color 0.3s;">
+                                    <a href="{{ $url }}" target="_blank" style="display: inline-block; margin: 5px; color: #e9d736; font-size: 24px; transition: color 0.3s;">
                                         <i class="ion-social-{{ strtolower($platform) }}"></i>
                                     </a>
                                 @endforeach
@@ -444,7 +444,7 @@ body {
                                                             <div class="review-stars">
                                                                 @for($i = 1; $i <= 10; $i++)
                                                                     @if($i <= $movie->user_rating)
-                                                                        <i class="ion-star" style="color: #dcf836;"></i>
+                                                                        <i class="ion-star" style="color: #e9d736;"></i>
                                                                     @else
                                                                         <i class="ion-star-outline" style="color: #405266;"></i>
                                                                     @endif
@@ -511,7 +511,7 @@ body {
     border-radius: 50% !important;
     margin-bottom: 15px !important;
     object-fit: cover !important;
-    border: 4px solid #dcf836 !important;
+    border: 4px solid #e9d736 !important;
     box-shadow: 0 4px 15px rgba(220, 248, 54, 0.3);
 }
 
@@ -566,7 +566,7 @@ body {
 }
 
 .user-fav ul li i {
-    color: #dcf836 !important;
+    color: #e9d736 !important;
     font-size: 16px !important;
     width: 20px;
 }
@@ -628,13 +628,13 @@ body {
 }
 
 .profile-tabs-nav li a:hover {
-    color: #dcf836;
+    color: #e9d736;
     background: rgba(220, 248, 54, 0.05);
 }
 
 .profile-tabs-nav li.active a {
-    color: #dcf836;
-    border-bottom-color: #dcf836;
+    color: #e9d736;
+    border-bottom-color: #e9d736;
     background: rgba(220, 248, 54, 0.1);
 }
 
@@ -660,7 +660,7 @@ body {
 }
 
 .section-title i {
-    color: #dcf836;
+    color: #e9d736;
     font-size: 24px;
 }
 
@@ -691,7 +691,7 @@ body {
 
 .movie-item-card:hover {
     transform: translateY(-5px);
-    border-color: #dcf836;
+    border-color: #e9d736;
     box-shadow: 0 8px 20px rgba(220, 248, 54, 0.2);
 }
 
@@ -743,7 +743,7 @@ body {
     top: 10px;
     right: 10px;
     background: rgba(2, 13, 24, 0.95);
-    color: #dcf836;
+    color: #e9d736;
     padding: 6px 12px;
     border-radius: 5px;
     font-size: 13px;
@@ -775,7 +775,7 @@ body {
 }
 
 .movie-title a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .movie-review {
@@ -847,7 +847,7 @@ body {
 }
 
 .activity-text strong {
-    color: #dcf836;
+    color: #e9d736;
     font-weight: 600;
 }
 
@@ -870,7 +870,7 @@ body {
 }
 
 .activity-points {
-    color: #dcf836;
+    color: #e9d736;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -896,7 +896,7 @@ body {
 }
 
 .review-item:hover {
-    border-color: #dcf836;
+    border-color: #e9d736;
     box-shadow: 0 4px 15px rgba(220, 248, 54, 0.1);
 }
 
@@ -956,7 +956,7 @@ body {
 }
 
 .review-movie-title a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .review-stars {
@@ -972,7 +972,7 @@ body {
 
 .rating-value {
     margin-left: 10px;
-    color: #dcf836;
+    color: #e9d736;
     font-weight: 600;
     font-size: 14px;
 }

@@ -104,11 +104,11 @@ body {
     font-size: 13px !important;
 }
 .user-fav ul li.active a {
-    color: #dcf836 !important;
+    color: #e9d736 !important;
     background: transparent !important;
 }
 .user-fav ul li a:hover {
-    color: #dcf836 !important;
+    color: #e9d736 !important;
     background: transparent !important;
 }
 .topbar-filter.user {
@@ -186,10 +186,10 @@ body {
     transition: color 0.3s ease;
 }
 .movie-item-style-2.style-3 .mv-item-infor h6 a:hover {
-    color: #dcf836;
+    color: #e9d736;
 }
 .movie-item-style-2.style-3 .mv-item-infor p {
-    color: #dcf836;
+    color: #e9d736;
     font-size: 12px;
     margin: 0;
     font-weight: 500;
@@ -292,7 +292,7 @@ body {
 						<li><a href="{{ route('help') }}">Help</a></li>
 						@auth
 							<li>
-								<a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
 									{{ Auth::user()->name }}
 								</a>
 							</li>

@@ -109,7 +109,7 @@ textarea:focus {
                         <li><a href="{{ route('help') }}">Help</a></li>
                         @auth
                             <li>
-                                <a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+                                <a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
                                     {{ Auth::user()->name }}
                                 </a>
                             </li>
@@ -263,7 +263,7 @@ textarea:focus {
                     <div class="popular-categories">
                         <h4 class="sb-title">Quick Links</h4>
                         <ul class="category-list">
-                            <li><a href="{{ route('celebrities') }}?sort=popularity"><i class="ion-star" style="color: #dcf836; margin-right: 8px;"></i>Most Popular</a></li>
+                            <li><a href="{{ route('celebrities') }}?sort=popularity"><i class="ion-star" style="color: #e9d736; margin-right: 8px;"></i>Most Popular</a></li>
                             <li><a href="{{ route('movies.index') }}"><i class="ion-ios-film" style="color: #eb70ac; margin-right: 8px;"></i>Browse Movies</a></li>
                             <li><a href="{{ route('community') }}"><i class="ion-person-stalker" style="color: #4bb4f0; margin-right: 8px;"></i>Join Community</a></li>
                         </ul>

@@ -105,7 +105,7 @@ textarea:focus {
                         <li><a href="{{ route('help') }}">Help</a></li>
                         @auth
                             <li>
-                                <a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+                                <a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
                                     {{ Auth::user()->name }}
                                 </a>
                             </li>
@@ -321,7 +321,7 @@ textarea:focus {
     display: block;
     font-size: 2em;
     font-weight: bold;
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .stat-label {
@@ -354,7 +354,7 @@ textarea:focus {
 }
 
 .sort-container .form-control:focus {
-    border-color: #dcf836;
+    border-color: #e9d736;
     outline: none;
 }
 
@@ -375,7 +375,7 @@ textarea:focus {
 
 .user-card:hover {
     transform: translateY(-3px);
-    border-color: #dcf836;
+    border-color: #e9d736;
     box-shadow: 0 4px 12px rgba(220, 248, 54, 0.1);
 }
 
@@ -439,7 +439,7 @@ textarea:focus {
 }
 
 .user-card-link:hover .user-name {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .user-username {
@@ -463,7 +463,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #dcf836;
+    color: #e9d736;
     font-size: 0.85em;
     font-weight: 600;
 }
@@ -502,7 +502,7 @@ textarea:focus {
 
 .favorite-movie-item-compact:hover {
     transform: scale(1.15);
-    border-color: #dcf836;
+    border-color: #e9d736;
     box-shadow: 0 2px 8px rgba(220, 248, 54, 0.3);
     z-index: 10;
 }
@@ -540,7 +540,7 @@ textarea:focus {
 }
 
 .community-guidelines h4 {
-    color: #dcf836;
+    color: #e9d736;
     margin-bottom: 15px;
 }
 

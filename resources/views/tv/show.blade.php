@@ -1819,7 +1819,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .ion-ios-star {
-    color: #dcf836 !important;
+    color: #e9d736 !important;
 }
 
 .ion-ios-star-outline {
