@@ -11,7 +11,6 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMovieController;
-use App\Http\Controllers\UserTVShowController;
 
 // Home route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -99,11 +98,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [UserController::class, 'updateAvatar'])->name('user.avatar.update');
     Route::delete('/profile/avatar', [UserController::class, 'deleteAvatar'])->name('user.avatar.delete');
     Route::get('/profile/watchlist', [UserController::class, 'watchlist'])->name('user.watchlist');
-    Route::post('/profile/watchlist/add', [UserController::class, 'addToWatchlist'])->name('user.watchlist.add');
-    Route::delete('/profile/watchlist/{id}', [UserController::class, 'removeFromWatchlist'])->name('user.watchlist.remove');
     Route::get('/profile/reviews', [UserController::class, 'reviews'])->name('user.reviews');
     Route::get('/profile/movies', [UserController::class, 'movies'])->name('user.movies');
     Route::get('/profile/list', [UserController::class, 'list'])->name('user.list');
+    Route::get('/profile/following', [UserController::class, 'following'])->name('user.following');
+    Route::get('/profile/followers', [UserController::class, 'followers'])->name('user.followers');
+    Route::post('/profile/follow/{userId}', [UserController::class, 'follow'])->name('user.follow');
+    Route::post('/profile/unfollow/{userId}', [UserController::class, 'unfollow'])->name('user.unfollow');
 });
 
 // Authentication routes
@@ -126,13 +127,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/movies/watchlist', [UserMovieController::class, 'toggleWatchlist'])->name('movies.watchlist');
     Route::post('/movies/review', [UserMovieController::class, 'submitReview'])->name('movies.review');
     Route::get('/movies/{movieId}/status', [UserMovieController::class, 'getMovieStatus'])->name('movies.status');
-    
-    // User TV Show Interactions
-    Route::post('/tv/add', [UserTVShowController::class, 'addShow'])->name('tv.add');
-    Route::post('/tv/like', [UserTVShowController::class, 'toggleLike'])->name('tv.like');
-    Route::post('/tv/watchlist', [UserTVShowController::class, 'toggleWatchlist'])->name('tv.watchlist');
-    Route::post('/tv/review', [UserTVShowController::class, 'submitReview'])->name('tv.review');
-    Route::get('/tv/{showId}/status', [UserTVShowController::class, 'getShowStatus'])->name('tv.status');
 });
 Route::middleware('auth')->group(function () {
     // Example protected routes

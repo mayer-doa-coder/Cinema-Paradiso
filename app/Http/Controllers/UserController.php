@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 use App\Models\UserMovie;
 use App\Models\UserWatchlist;
 use App\Models\UserMovieReview;
 use App\Models\UserFavoriteMovie;
+use App\Models\UserFollower;
 
 class UserController extends Controller
 {
@@ -232,71 +234,105 @@ class UserController extends Controller
     }
 
     /**
-     * Add a movie or TV show to the user's watchlist.
+     * Show the following page
      */
-    public function addToWatchlist(Request $request)
+    public function following()
     {
-        $validated = $request->validate([
-            'media_id' => 'required|integer',
-            'media_type' => 'required|in:movie,tv',
-            'title' => 'nullable|string|max:255',
-            'poster' => 'nullable|string',
-            'year' => 'nullable|integer',
-        ]);
-
         $user = Auth::user();
+        
+        // Get users that the current user is following
+        $following = User::whereIn('id', function($query) use ($user) {
+            $query->select('following_id')
+                  ->from('user_followers')
+                  ->where('follower_id', $user->id);
+        })->get();
+        
+        return view('profile.following', compact('user', 'following'));
+    }
 
-        // Check if already in watchlist using movie_id field (works for both movies and TV)
-        $exists = UserWatchlist::where('user_id', $user->id)
-            ->where('movie_id', $validated['media_id'])
-            ->exists();
+    /**
+     * Show the followers page
+     */
+    public function followers()
+    {
+        $user = Auth::user();
+        
+        // Get users who are following the current user
+        $followers = User::whereIn('id', function($query) use ($user) {
+            $query->select('follower_id')
+                  ->from('user_followers')
+                  ->where('following_id', $user->id);
+        })->get();
+        
+        // Get list of users that current user is following (for follow-back check)
+        $followingIds = UserFollower::where('follower_id', $user->id)
+                                    ->pluck('following_id')
+                                    ->toArray();
+        
+        return view('profile.followers', compact('user', 'followers', 'followingIds'));
+    }
 
-        if ($exists) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This item is already in your watchlist.'
-            ], 400);
+    /**
+     * Follow a user
+     */
+    public function follow(Request $request, $userId)
+    {
+        $currentUser = Auth::user();
+        
+        // Prevent following yourself
+        if ($currentUser->id == $userId) {
+            return response()->json(['success' => false, 'message' => 'You cannot follow yourself'], 400);
         }
-
-        // Add to watchlist (using movie_id field for both movies and TV shows)
-        UserWatchlist::create([
-            'user_id' => $user->id,
-            'movie_id' => $validated['media_id'],
-            'movie_title' => $validated['title'] ?? 'Untitled',
-            'movie_poster' => $validated['poster'] ?? null,
-            'release_year' => $validated['year'] ?? null,
-            'media_type' => $validated['media_type'],
+        
+        // Check if user exists
+        $userToFollow = User::find($userId);
+        if (!$userToFollow) {
+            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        }
+        
+        // Check if already following
+        $existingFollow = UserFollower::where('follower_id', $currentUser->id)
+                                      ->where('following_id', $userId)
+                                      ->first();
+        
+        if ($existingFollow) {
+            return response()->json(['success' => false, 'message' => 'Already following this user'], 400);
+        }
+        
+        // Create the follow relationship
+        UserFollower::create([
+            'follower_id' => $currentUser->id,
+            'following_id' => $userId
         ]);
-
+        
         return response()->json([
-            'success' => true,
-            'message' => 'Added to watchlist successfully!'
+            'success' => true, 
+            'message' => 'Successfully followed ' . $userToFollow->name,
+            'followers_count' => $userToFollow->followers()->count()
         ]);
     }
 
     /**
-     * Remove a movie or TV show from the user's watchlist.
+     * Unfollow a user
      */
-    public function removeFromWatchlist($id)
+    public function unfollow(Request $request, $userId)
     {
-        $user = Auth::user();
-
-        $watchlistItem = UserWatchlist::where('user_id', $user->id)
-            ->where('id', $id)
-            ->first();
-
-        if (!$watchlistItem) {
+        $currentUser = Auth::user();
+        
+        // Find and delete the follow relationship
+        $deleted = UserFollower::where('follower_id', $currentUser->id)
+                               ->where('following_id', $userId)
+                               ->delete();
+        
+        if ($deleted) {
+            $userToUnfollow = User::find($userId);
             return response()->json([
-                'success' => false,
-                'message' => 'Item not found in your watchlist.'
-            ], 404);
+                'success' => true, 
+                'message' => 'Successfully unfollowed ' . ($userToUnfollow ? $userToUnfollow->name : 'user'),
+                'followers_count' => $userToUnfollow ? $userToUnfollow->followers()->count() : 0
+            ]);
         }
-
-        $watchlistItem->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Removed from watchlist successfully!'
-        ]);
+        
+        return response()->json(['success' => false, 'message' => 'Not following this user'], 400);
     }
 }

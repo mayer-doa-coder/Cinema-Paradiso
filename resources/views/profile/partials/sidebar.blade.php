@@ -27,6 +27,21 @@
 		</ul>
 	</div>
 	<div class="user-fav">
+		<p>Community</p>
+		<ul>
+			<li class="{{ Request::routeIs('user.following') ? 'active' : '' }}">
+				<a href="{{ route('user.following') }}">
+					FOLLOWING <span style="color: #3e9fd8; font-weight: bold;">({{ Auth::user()->following()->count() }})</span>
+				</a>
+			</li>
+			<li class="{{ Request::routeIs('user.followers') ? 'active' : '' }}">
+				<a href="{{ route('user.followers') }}">
+					FOLLOWERS <span style="color: #3e9fd8; font-weight: bold;">({{ Auth::user()->followers()->count() }})</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="user-fav">
 		<p>Others</p>
 		<ul>
 			<li><a href="#change-password" onclick="if(document.querySelector('.password')) { document.querySelector('.password').scrollIntoView({behavior: 'smooth'}); }">CHANGE PASSWORD</a></li>
@@ -42,48 +57,32 @@
 
 @push('scripts')
 <script>
-(function() {
-    // Use IIFE to avoid conflicts and ensure single execution
-    if (window.avatarUploadInitialized) {
-        return; // Already initialized, don't run again
-    }
-    window.avatarUploadInitialized = true;
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== Avatar Upload Functionality ==========
+    const avatarInput = document.getElementById('avatar-input');
+    const avatarPreview = document.getElementById('avatar-preview');
+    const avatarForm = document.getElementById('avatar-form');
+    const changeAvatarBtn = document.getElementById('change-avatar-btn');
+    const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
+    const avatarDeleteForm = document.getElementById('avatar-delete-form');
     
-    document.addEventListener('DOMContentLoaded', function() {
-        // ========== Avatar Upload Functionality ==========
-        const avatarInput = document.getElementById('avatar-input');
-        const avatarPreview = document.getElementById('avatar-preview');
-        const avatarForm = document.getElementById('avatar-form');
-        const changeAvatarBtn = document.getElementById('change-avatar-btn');
-        const deleteAvatarBtn = document.getElementById('delete-avatar-btn');
-        const avatarDeleteForm = document.getElementById('avatar-delete-form');
-        
-        let isUploading = false;
-        
-        // Handle change avatar button click
-        if (changeAvatarBtn && avatarInput) {
-            changeAvatarBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (!isUploading) {
-                    avatarInput.click();
-                }
-            }, { once: false });
-        }
-        
-        // Handle file selection and auto-submit
-        if (avatarInput && avatarForm) {
-            avatarInput.addEventListener('change', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Exit if already uploading or no file selected
-                if (isUploading || !this.files || this.files.length === 0) {
-                    return;
-                }
-                
-                const file = this.files[0];
-                
+    // Handle change avatar button click
+    if (changeAvatarBtn && avatarInput) {
+        changeAvatarBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!this.disabled) {
+                avatarInput.click();
+            }
+        });
+    }
+    
+    // Preview image and auto-submit when file is selected
+    if (avatarInput && avatarForm) {
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file && changeAvatarBtn && !changeAvatarBtn.disabled) {
                 // Validate file size (2MB max)
                 if (file.size > 2048 * 1024) {
                     alert('Image size must not exceed 2MB');
@@ -99,55 +98,47 @@
                     return;
                 }
                 
-                // Set uploading flag
-                isUploading = true;
-                
-                // Disable button
-                if (changeAvatarBtn) {
-                    changeAvatarBtn.disabled = true;
-                    changeAvatarBtn.textContent = 'Uploading...';
-                    changeAvatarBtn.style.opacity = '0.6';
-                    changeAvatarBtn.style.cursor = 'not-allowed';
-                }
+                // Disable button immediately to prevent double click
+                changeAvatarBtn.disabled = true;
+                changeAvatarBtn.textContent = 'Uploading...';
+                changeAvatarBtn.style.opacity = '0.6';
+                changeAvatarBtn.style.cursor = 'not-allowed';
                 
                 // Preview the image
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    if (avatarPreview) {
-                        avatarPreview.src = event.target.result;
-                    }
+                    avatarPreview.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
                 
-                // Submit form after a short delay
+                // Submit form
                 setTimeout(function() {
                     avatarForm.submit();
-                }, 300);
+                }, 200);
+            }
+        });
+    }
+    
+    // Handle delete avatar button
+    if (deleteAvatarBtn && avatarDeleteForm) {
+        deleteAvatarBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!this.disabled && confirm('Are you sure you want to delete your avatar?')) {
+                // Disable button immediately
+                this.disabled = true;
+                this.textContent = 'Deleting...';
+                this.style.opacity = '0.6';
+                this.style.cursor = 'not-allowed';
                 
-            }, { once: false });
-        }
-        
-        // Handle delete avatar button
-        if (deleteAvatarBtn && avatarDeleteForm) {
-            deleteAvatarBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                if (!this.disabled && confirm('Are you sure you want to delete your avatar?')) {
-                    // Disable button immediately
-                    this.disabled = true;
-                    this.textContent = 'Deleting...';
-                    this.style.opacity = '0.6';
-                    this.style.cursor = 'not-allowed';
-                    
-                    // Submit form
-                    setTimeout(function() {
-                        avatarDeleteForm.submit();
-                    }, 200);
-                }
-            });
-        }
-    });
-})(); // End of IIFE
+                // Submit form
+                setTimeout(function() {
+                    avatarDeleteForm.submit();
+                }, 200);
+            }
+        });
+    }
+});
 </script>
 @endpush
