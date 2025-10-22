@@ -444,7 +444,7 @@ html, body {
 }
 
 .name-badge:hover {
-    border-color: #dcf836;
+    border-color: #e9d736;
     background: rgba(220, 248, 54, 0.1);
     transform: translateY(-1px);
 }
@@ -457,7 +457,7 @@ html, body {
 }
 
 .name-badge:hover a {
-    color: #dcf836;
+    color: #e9d736;
 }
 
 /* Overview Details Layout */
@@ -795,6 +795,34 @@ html, body {
     .mv-item-infor p {
         font-size: 11px;
     }
+    
+    .episode-item {
+        width: 100% !important;
+    }
+    
+    .episode-poster {
+        width: 120px !important;
+        height: 70px !important;
+    }
+}
+
+/* Episode hover effects */
+.episode-item {
+    transition: all 0.3s ease;
+}
+
+.episode-item:hover {
+    background: rgba(15, 33, 51, 0.8) !important;
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.episode-poster img {
+    transition: transform 0.3s ease;
+}
+
+.episode-item:hover .episode-poster img {
+    transform: scale(1.05);
 }
 </style>
 @endpush
@@ -850,7 +878,7 @@ html, body {
 						<li><a href="{{ route('help') }}">Help</a></li>
 						@auth
 							<li>
-								<a href="{{ route('user.profile') }}" style="color: #dcf836; font-weight: 500;">
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
 									{{ Auth::user()->name }}
 								</a>
 							</li>
@@ -945,7 +973,7 @@ html, body {
 									<i class="ion-ios-star-outline star-icon" data-rating="{{ $i }}" onclick="rateShow({{ $i }})"></i>
 								@endfor
 							</div>
-							<span id="currentRating" style="margin-left: 10px; color: #dcf836;"></span>
+							<span id="currentRating" style="margin-left: 10px; color: #e9d736;"></span>
 						</div>
 					</div>
 					<div class="movie-tabs">
@@ -955,7 +983,7 @@ html, body {
 								<li><a href="#reviews"> Reviews</a></li>
 								<li><a href="#cast">  Cast & Crew </a></li>
 								<li><a href="#media"> Media</a></li> 
-								<li><a href="#showsrelated"> Related Shows</a></li>                        
+								<li><a href="#seasons"> Seasons</a></li>                        
 							</ul>
 						    <div class="tab-content">
 						        <div id="overview" class="tab active">
@@ -1132,7 +1160,7 @@ html, body {
 													@endphp
 													{{ $shortContent }}
 													@if($isLong)
-														<a href="{{ $review['url'] ?? '#' }}" target="_blank" style="color: #dcf836;">Read full review</a>
+														<a href="{{ $review['url'] ?? '#' }}" target="_blank" style="color: #e9d736;">Read full review</a>
 													@endif
 												</p>
 											</div>
@@ -1257,69 +1285,130 @@ html, body {
 										@endif
 						        	</div>
 					       	 	</div>
-					       	 	<div id="showsrelated" class="tab">
+					       	 	<div id="seasons" class="tab">
 					       	 		<div class="row">
-					       	 			<h3>Related TV Shows To</h3>
+					       	 			<h3>Seasons & Episodes of</h3>
 					       	 			<h2>{{ $tvShow['name'] ?? 'This TV Show' }}</h2>
 					       	 			<div class="topbar-filter">
-											<p>Found <span>{{ isset($similar) ? count($similar) : 0 }} TV shows</span> in total</p>
-											<label>Filter by:</label>
-											<select id="relatedShowsFilter">
-												<option value="all">All Related</option>
-												<option value="rating">Highest Rated</option>
-												<option value="recent">Most Recent</option>
-											</select>
+											<p>Found <span>{{ isset($tvShow['number_of_seasons']) ? $tvShow['number_of_seasons'] : 0 }} seasons</span> with <span>{{ isset($tvShow['number_of_episodes']) ? $tvShow['number_of_episodes'] : 0 }} episodes</span> in total</p>
 										</div>
 										
-										@if(isset($similar) && count($similar) > 0)
-											<div id="relatedShowsContainer">
-												@foreach($similar as $related)
-												<div class="movie-item-style-2" data-rating="{{ $related['vote_average'] ?? 0 }}" data-date="{{ $related['first_air_date'] ?? '' }}">
-													<img src="{{ isset($related['poster_path']) ? 'https://image.tmdb.org/t/p/w300' . $related['poster_path'] : asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $related['name'] }}">
-													<div class="mv-item-infor">
-														<h6><a href="{{ route('tv.show', ['id' => $related['id']]) }}">{{ $related['name'] }} <span>({{ isset($related['first_air_date']) ? date('Y', strtotime($related['first_air_date'])) : 'N/A' }})</span></a></h6>
-														<p class="rate"><i class="ion-android-star"></i><span>{{ number_format($related['vote_average'] ?? 0, 1) }}</span> /10</p>
-														<p class="describe">{{ Str::limit($related['overview'] ?? 'No description available.', 200) }}</p>
-														<p class="run-time">First Aired: {{ isset($related['first_air_date']) ? date('j M Y', strtotime($related['first_air_date'])) : 'Unknown' }}</p>
-														@if(isset($related['genre_ids']) && is_array($related['genre_ids']))
-															@php
-																$tvGenres = [
-																	10759 => 'Action & Adventure',
-																	16 => 'Animation',
-																	35 => 'Comedy',
-																	80 => 'Crime',
-																	99 => 'Documentary',
-																	18 => 'Drama',
-																	10751 => 'Family',
-																	10762 => 'Kids',
-																	9648 => 'Mystery',
-																	10763 => 'News',
-																	10764 => 'Reality',
-																	10765 => 'Sci-Fi & Fantasy',
-																	10766 => 'Soap',
-																	10767 => 'Talk',
-																	10768 => 'War & Politics',
-																	37 => 'Western'
-																];
-																$showGenres = collect($related['genre_ids'])->slice(0, 3)->map(function($id) use ($tvGenres) {
-																	return $tvGenres[$id] ?? null;
-																})->filter();
-															@endphp
-															@if($showGenres->count() > 0)
-															<p>Genres: 
-																@foreach($showGenres as $genreId => $genreName)
-																	<a href="{{ route('tv.genre', ['genreId' => $genreId]) }}">{{ $genreName }}</a>@if(!$loop->last), @endif
-																@endforeach
+										@if(isset($seasons) && count($seasons) > 0)
+											<div id="seasonsContainer">
+												@foreach($seasons as $season)
+													@if($season['season_number'] > 0)
+													<div class="season-block" style="margin-bottom: 30px; background: rgba(35, 58, 80, 0.3); padding: 20px; border-radius: 8px;">
+														<div class="season-header" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(64, 82, 102, 0.3);">
+															<h4 style="color: #e9d736; margin: 0 0 5px 0; font-size: 18px; font-weight: bold;">
+																Season {{ $season['season_number'] }}
+															</h4>
+															<p style="margin: 0; color: #abb7c4; font-size: 14px;">
+																{{ $season['episode_count'] ?? 0 }} Episodes
+																@if(isset($season['air_date']) && $season['air_date'])
+																	| First Aired: {{ date('F j, Y', strtotime($season['air_date'])) }}
+																@endif
+															</p>
+															@if(isset($season['overview']) && $season['overview'])
+															<p style="margin: 10px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5;">
+																{{ Str::limit($season['overview'], 150) }}
 															</p>
 															@endif
+														</div>
+														
+														@if(isset($season['episodes']) && count($season['episodes']) > 0)
+														<div class="episodes-list" style="display: grid; gap: 20px;">
+															@foreach($season['episodes'] as $episode)
+															<div class="episode-item" style="display: flex; gap: 15px; padding: 15px; background: rgba(15, 33, 51, 0.5); border-radius: 8px; transition: all 0.3s ease;">
+																<div class="episode-poster" style="flex-shrink: 0; width: 150px; height: 85px; position: relative; border-radius: 6px; overflow: hidden; background: linear-gradient(135deg, #0f2133 0%, #1a3a52 100%);">
+																	@if(isset($episode['still_path']) && $episode['still_path'])
+																		<img src="https://image.tmdb.org/t/p/w300{{ $episode['still_path'] }}" 
+																			 alt="{{ $episode['name'] }}"
+																			 style="width: 100%; height: 100%; object-fit: cover;">
+																		<div class="episode-number-badge" style="position: absolute; top: 5px; left: 5px; background: rgba(0, 0, 0, 0.8); color: #e9d736; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">
+																			E{{ $episode['episode_number'] }}
+																		</div>
+																	@else
+																		<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; flex-direction: column; gap: 5px;">
+																			<span style="color: #e9d736; font-weight: bold; font-size: 24px;">E{{ $episode['episode_number'] }}</span>
+																			<i class="ion-videocamera" style="color: #4a5f7f; font-size: 20px;"></i>
+																		</div>
+																	@endif
+																</div>
+																<div class="episode-info" style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;">
+																	<h6 style="margin: 0 0 8px 0; color: #ffffff; font-size: 15px; font-weight: 600; line-height: 1.3;">
+																		{{ $episode['name'] }}
+																	</h6>
+																	<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+																		@if(isset($episode['air_date']) && $episode['air_date'])
+																		<p style="margin: 0; color: #d4d4d4; font-size: 13px;">
+																			{{ date('M j, Y', strtotime($episode['air_date'])) }}
+																		</p>
+																		@endif
+																		@if(isset($episode['runtime']) && $episode['runtime'])
+																		<span style="color: #b0b0b0; font-size: 13px;">
+																			| {{ $episode['runtime'] }} min
+																		</span>
+																		@endif
+																		@if(isset($episode['vote_average']) && $episode['vote_average'] > 0)
+																		<div style="display: flex; align-items: center; gap: 4px; margin-left: auto;">
+																			<i class="ion-android-star" style="color: #f5c518; font-size: 15px;"></i>
+																			<span style="color: #f5c518; font-weight: bold; font-size: 13px;">
+																				{{ number_format($episode['vote_average'], 1) }}
+																			</span>
+																		</div>
+																		@endif
+																	</div>
+																	@if(isset($episode['overview']) && $episode['overview'])
+																	<p style="margin: 0; color: #cccccc; font-size: 13px; line-height: 1.5;">
+																		{{ Str::limit($episode['overview'], 150) }}
+																	</p>
+																	@endif
+																</div>
+															</div>
+															@endforeach
+														</div>
+														@else
+														<p style="text-align: center; color: #abb7c4; padding: 20px 0;">No episode information available for this season.</p>
 														@endif
 													</div>
-												</div>
+													@endif
+												@endforeach
+											</div>
+										@elseif(isset($tvShow['seasons']) && count($tvShow['seasons']) > 0)
+											<div id="seasonsContainer">
+												@foreach($tvShow['seasons'] as $season)
+													@if($season['season_number'] > 0)
+													<div class="season-block" style="margin-bottom: 30px; background: rgba(35, 58, 80, 0.3); padding: 20px; border-radius: 8px;">
+														<div class="season-header" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(64, 82, 102, 0.3);">
+															<h4 style="color: #e9d736; margin: 0 0 5px 0; font-size: 18px; font-weight: bold;">
+																<a href="{{ route('tv.season', [$tvShow['id'], $season['season_number']]) }}" style="color: #e9d736; text-decoration: none;">
+																	Season {{ $season['season_number'] }}
+																</a>
+															</h4>
+															<p style="margin: 0; color: #abb7c4; font-size: 14px;">
+																{{ $season['episode_count'] ?? 0 }} Episodes
+																@if(isset($season['air_date']) && $season['air_date'])
+																	| First Aired: {{ date('F j, Y', strtotime($season['air_date'])) }}
+																@endif
+															</p>
+															@if(isset($season['overview']) && $season['overview'])
+															<p style="margin: 10px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5;">
+																{{ Str::limit($season['overview'], 150) }}
+															</p>
+															@endif
+														</div>
+														<p style="text-align: center; color: #abb7c4; padding: 10px 0;">
+															<a href="{{ route('tv.season', [$tvShow['id'], $season['season_number']]) }}" style="color: #3e9fd8; text-decoration: none; font-size: 13px;">
+																Click to view all episodes →
+															</a>
+														</p>
+													</div>
+													@endif
 												@endforeach
 											</div>
 										@else
 											<div class="no-results" style="text-align: center; padding: 40px 0; color: #abb7c4;">
-												<p>No related TV shows found at the moment.</p>
+												<p>No season information available for this TV show.</p>
 											</div>
 										@endif
 					       	 		</div>
@@ -1593,7 +1682,7 @@ function openReviewModal(event) {
     
     modal.innerHTML = `
         <div style="background: #0b1a2a; padding: 30px; border-radius: 10px; max-width: 600px; width: 90%;">
-            <h2 style="color: #dcf836; margin-bottom: 20px;">Write Your Review</h2>
+            <h2 style="color: #e9d736; margin-bottom: 20px;">Write Your Review</h2>
             <p style="color: #fff; margin-bottom: 15px;">Your Rating: ${userRating}/10</p>
             
             <div style="margin-bottom: 20px;">
@@ -1722,7 +1811,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .star-icon {
     cursor: pointer;
     transition: all 0.3s ease;
-    color: #dcf836;
+    color: #e9d736;
 }
 
 .star-icon:hover {

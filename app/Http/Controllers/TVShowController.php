@@ -131,6 +131,19 @@ class TVShowController extends Controller
             $formattedTVShow['homepage'] = $tvShow['homepage'] ?? '';
             $formattedTVShow['genres'] = $tvShow['genres'] ?? [];
 
+            // Fetch detailed season information with episodes
+            $seasonsWithEpisodes = [];
+            if (isset($tvShow['seasons']) && count($tvShow['seasons']) > 0) {
+                foreach ($tvShow['seasons'] as $season) {
+                    if ($season['season_number'] > 0) { // Skip specials (season 0)
+                        $seasonDetails = $this->tvShowService->getTVSeasonDetails($id, $season['season_number']);
+                        if ($seasonDetails) {
+                            $seasonsWithEpisodes[] = $seasonDetails;
+                        }
+                    }
+                }
+            }
+
             // Get random wallpaper
             $randomWallpaper = $this->getRandomTVShowWallpaper();
 
@@ -140,6 +153,7 @@ class TVShowController extends Controller
                 'credits' => $credits,
                 'reviews' => $reviews,
                 'images' => $images,
+                'seasons' => $seasonsWithEpisodes,
                 'similar' => $this->tvShowService->prepareTVShowsData($similar),
                 'recommendations' => $this->tvShowService->prepareTVShowsData($recommendations),
                 'randomWallpaper' => $randomWallpaper,
@@ -155,6 +169,7 @@ class TVShowController extends Controller
                 'credits' => ['cast' => [], 'crew' => []],
                 'reviews' => ['results' => [], 'total_results' => 0],
                 'images' => ['backdrops' => [], 'posters' => []],
+                'seasons' => [],
                 'similar' => [],
                 'recommendations' => [],
                 'randomWallpaper' => $this->getFallbackWallpaper(),
