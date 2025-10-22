@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Services\MovieService;
 use App\Models\User;
 use App\Models\UserFavoriteMovie;
 use App\Models\UserActivity;
+use App\Models\UserFollower;
 
 class CommunityController extends Controller
 {
@@ -247,5 +249,32 @@ class CommunityController extends Controller
             'backdrop_url' => asset('images/cinema_paradiso.png'),
             'overview' => 'Welcome to Cinema Paradiso - Your gateway to the world of movies.'
         ];
+    }
+
+    /**
+     * Check follow status
+     *
+     * @param int $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function followStatus($userId)
+    {
+        try {
+            $currentUser = Auth::user();
+            
+            $isFollowing = UserFollower::where('follower_id', $currentUser->id)
+                                      ->where('following_id', $userId)
+                                      ->exists();
+            
+            return response()->json([
+                'success' => true,
+                'is_following' => $isFollowing
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error checking follow status'
+            ], 500);
+        }
     }
 }
