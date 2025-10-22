@@ -108,11 +108,13 @@ class TVShowController extends Controller
                 abort(404, 'TV Show not found');
             }
 
-            // Get videos (trailers, teasers, etc.)
-            $videos = $this->tvShowService->getTVShowVideos($id);
-            
-            // Get credits (cast and crew)
-            $credits = $this->tvShowService->getTVShowCredits($id);
+            // Get additional data from append_to_response
+            $videos = $tvShow['videos'] ?? ['results' => []];
+            $credits = $tvShow['credits'] ?? ['cast' => [], 'crew' => []];
+            $reviews = $tvShow['reviews'] ?? ['results' => [], 'total_results' => 0];
+            $images = $tvShow['images'] ?? ['backdrops' => [], 'posters' => []];
+            $similar = $tvShow['similar'] ?? ['results' => []];
+            $recommendations = $tvShow['recommendations'] ?? ['results' => []];
 
             // Format the TV show data
             $formattedTVShow = $this->tvShowService->formatTVShowData($tvShow);
@@ -126,17 +128,20 @@ class TVShowController extends Controller
             $formattedTVShow['networks'] = $tvShow['networks'] ?? [];
             $formattedTVShow['created_by'] = $tvShow['created_by'] ?? [];
             $formattedTVShow['last_air_date'] = $tvShow['last_air_date'] ?? '';
+            $formattedTVShow['homepage'] = $tvShow['homepage'] ?? '';
+            $formattedTVShow['genres'] = $tvShow['genres'] ?? [];
 
             // Get random wallpaper
             $randomWallpaper = $this->getRandomTVShowWallpaper();
 
             return view('tv.show', [
                 'tvShow' => $formattedTVShow,
-                'videos' => $videos['results'] ?? [],
-                'cast' => $credits['cast'] ?? [],
-                'crew' => $credits['crew'] ?? [],
-                'similar' => $this->tvShowService->prepareTVShowsData(['results' => $tvShow['similar']['results'] ?? []]),
-                'recommendations' => $this->tvShowService->prepareTVShowsData(['results' => $tvShow['recommendations']['results'] ?? []]),
+                'videos' => $videos,
+                'credits' => $credits,
+                'reviews' => $reviews,
+                'images' => $images,
+                'similar' => $this->tvShowService->prepareTVShowsData($similar),
+                'recommendations' => $this->tvShowService->prepareTVShowsData($recommendations),
                 'randomWallpaper' => $randomWallpaper,
                 'error' => null
             ]);
@@ -146,9 +151,10 @@ class TVShowController extends Controller
             
             return view('tv.show', [
                 'tvShow' => null,
-                'videos' => [],
-                'cast' => [],
-                'crew' => [],
+                'videos' => ['results' => []],
+                'credits' => ['cast' => [], 'crew' => []],
+                'reviews' => ['results' => [], 'total_results' => 0],
+                'images' => ['backdrops' => [], 'posters' => []],
                 'similar' => [],
                 'recommendations' => [],
                 'randomWallpaper' => $this->getFallbackWallpaper(),
@@ -339,5 +345,47 @@ class TVShowController extends Controller
             'backdrop_url' => asset('images/cinema_paradiso.png'),
             'overview' => 'Discover amazing TV shows and series.'
         ];
+    }
+
+    /**
+     * Get TV show credits via API
+     */
+    public function getCredits($id)
+    {
+        try {
+            $credits = $this->tvShowService->getTVShowCredits($id);
+            return response()->json($credits);
+        } catch (\Exception $e) {
+            Log::error('TVShowController@getCredits error: ' . $e->getMessage());
+            return response()->json(['error' => 'Unable to fetch credits'], 500);
+        }
+    }
+
+    /**
+     * Get TV show images via API
+     */
+    public function getImages($id)
+    {
+        try {
+            $images = $this->tvShowService->getTVShowImages($id);
+            return response()->json($images);
+        } catch (\Exception $e) {
+            Log::error('TVShowController@getImages error: ' . $e->getMessage());
+            return response()->json(['error' => 'Unable to fetch images'], 500);
+        }
+    }
+
+    /**
+     * Get TV show videos via API
+     */
+    public function getVideos($id)
+    {
+        try {
+            $videos = $this->tvShowService->getTVShowVideos($id);
+            return response()->json($videos);
+        } catch (\Exception $e) {
+            Log::error('TVShowController@getVideos error: ' . $e->getMessage());
+            return response()->json(['error' => 'Unable to fetch videos'], 500);
+        }
     }
 }

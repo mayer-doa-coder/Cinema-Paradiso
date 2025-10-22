@@ -272,6 +272,61 @@ class TVShowService
     }
 
     /**
+     * Get TV show images
+     */
+    public function getTVShowImages($tvId)
+    {
+        $cacheKey = "tmdb_tv_show_{$tvId}_images";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($tvId) {
+            try {
+                $response = Http::get("{$this->baseUrl}/tv/{$tvId}/images", [
+                    'api_key' => $this->apiKey,
+                    'include_image_language' => 'en,null'
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Get TV show reviews
+     */
+    public function getTVShowReviews($tvId, $page = 1)
+    {
+        $cacheKey = "tmdb_tv_show_{$tvId}_reviews_page_{$page}";
+        
+        return Cache::remember($cacheKey, $this->cacheDuration, function () use ($tvId, $page) {
+            try {
+                $response = Http::get("{$this->baseUrl}/tv/{$tvId}/reviews", [
+                    'api_key' => $this->apiKey,
+                    'page' => $page,
+                    'language' => 'en-US'
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('TMDb API Error: ' . $response->body());
+                return null;
+            } catch (\Exception $e) {
+                Log::error('TMDb API Exception: ' . $e->getMessage());
+                return null;
+            }
+        });
+    }
+
+    /**
      * Get TV genres
      */
     public function getTVGenres()
