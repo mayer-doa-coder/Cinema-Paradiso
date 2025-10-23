@@ -649,7 +649,7 @@ html, body {
 										
 										@if($favoriteMovies->hasPages())
 											<div class="pagination-container" style="text-align: center; margin-top: 30px;">
-												{{ $favoriteMovies->links() }}
+												{{ $favoriteMovies->appends(['movies_page' => request('movies_page'), 'reviews_page' => request('reviews_page')])->links() }}
 											</div>
 										@endif
 									@else
@@ -737,9 +737,9 @@ html, body {
 						        </div>
 						        
 						        <div id="movies" class="tab">
-						            @if($favoriteMovies->count() > 0)
+						            @if($userMovies->count() > 0)
 										<div class="movies-grid">
-											@foreach($favoriteMovies as $movie)
+											@foreach($userMovies as $movie)
 												<div class="movie-item-card">
 													<a href="{{ route('movies.show', $movie->movie_id) }}" class="movie-poster-link">
 														<div class="movie-poster-container">
@@ -757,9 +757,9 @@ html, body {
 																</div>
 															@endif
 															
-															@if($movie->user_rating)
+															@if($movie->rating)
 																<div class="rating-badge">
-																	<i class="ion-star"></i> {{ number_format($movie->user_rating, 1) }}
+																	<i class="ion-star"></i> {{ number_format($movie->rating, 1) }}
 																</div>
 															@endif
 														</div>
@@ -770,16 +770,22 @@ html, body {
 															<a href="{{ route('movies.show', $movie->movie_id) }}">{{ Str::limit($movie->movie_title, 30) }}</a>
 														</h4>
 														
-														@if($movie->watched_at)
+														@if($movie->created_at)
 															<p class="movie-date">
 																<i class="ion-calendar"></i> 
-																{{ $movie->watched_at->format('M d, Y') }}
+																{{ $movie->created_at->format('M d, Y') }}
 															</p>
 														@endif
 													</div>
 												</div>
 											@endforeach
 										</div>
+										
+										@if($userMovies->hasPages())
+											<div class="pagination-container" style="text-align: center; margin-top: 30px;">
+												{{ $userMovies->appends(['favorites_page' => request('favorites_page'), 'reviews_page' => request('reviews_page')])->links() }}
+											</div>
+										@endif
 									@else
 										<div class="no-content-message">
 											<i class="ion-ios-film-outline"></i>
@@ -789,69 +795,69 @@ html, body {
 						        </div>
 						        
 						        <div id="reviews" class="tab">
-						            @php
-										$reviewedMovies = $favoriteMovies->filter(function($movie) {
-											return !empty($movie->user_review);
-										});
-									@endphp
-									
-									@if($reviewedMovies->count() > 0)
-										@foreach($reviewedMovies as $movie)
+									@if($userReviews->count() > 0)
+										@foreach($userReviews as $review)
 											<div class="review-item">
 												<div class="review-header">
 													<div class="review-poster-wrapper">
-														@if($movie->poster_url)
-															<a href="{{ route('movies.show', $movie->movie_id) }}">
-																<img src="{{ $movie->poster_url }}" 
-																     alt="{{ $movie->movie_title }}" 
+														@if($review->poster_url)
+															<a href="{{ route('movies.show', $review->movie_id) }}">
+																<img src="{{ $review->poster_url }}" 
+																     alt="{{ $review->movie_title }}" 
 																     class="review-poster-img"
 																     onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex';">
 															</a>
 															<div class="review-poster-placeholder" style="display: none; width: 80px; height: 120px; background: #405266; align-items: center; justify-content: center; color: #e9d736; font-size: 24px; font-weight: bold; border-radius: 5px;">
-																{{ substr($movie->movie_title, 0, 2) }}
+																{{ substr($review->movie_title, 0, 2) }}
 															</div>
 														@else
 															<div class="review-poster-placeholder" style="width: 80px; height: 120px; background: #405266; display: flex; align-items: center; justify-content: center; color: #e9d736; font-size: 24px; font-weight: bold; border-radius: 5px;">
-																{{ substr($movie->movie_title, 0, 2) }}
+																{{ substr($review->movie_title, 0, 2) }}
 															</div>
 														@endif
 													</div>
 													
 													<div class="review-movie-details">
 														<h4 class="review-movie-title">
-															<a href="{{ route('movies.show', $movie->movie_id) }}">{{ $movie->movie_title }}</a>
+															<a href="{{ route('movies.show', $review->movie_id) }}">{{ $review->movie_title }}</a>
 														</h4>
-														@if($movie->user_rating)
+														@if($review->rating)
 															<div class="review-stars">
 																@for($i = 1; $i <= 10; $i++)
-																	@if($i <= $movie->user_rating)
+																	@if($i <= $review->rating)
 																		<i class="ion-star" style="color: #e9d736;"></i>
 																	@else
 																		<i class="ion-star-outline" style="color: #405266;"></i>
 																	@endif
 																@endfor
-																<span class="rating-value">{{ number_format($movie->user_rating, 1) }}/10</span>
+																<span class="rating-value">{{ number_format($review->rating, 1) }}/10</span>
 															</div>
+														@endif
+														@if($review->watched_before)
+															<span class="watched-badge" style="display: inline-block; background: #405266; padding: 3px 8px; border-radius: 3px; font-size: 11px; margin-top: 5px;">
+																<i class="ion-checkmark"></i> Watched Before
+															</span>
 														@endif
 													</div>
 												</div>
 												
 												<div class="review-body">
-													<p class="review-text">{{ $movie->user_review }}</p>
+													<p class="review-text">{{ $review->review }}</p>
 													
 													<div class="review-footer">
-														@if($movie->watched_at)
-															<span class="review-date">
-																<i class="ion-calendar"></i> Watched {{ $movie->watched_at->format('M d, Y') }}
-															</span>
-														@endif
 														<span class="review-added">
-															<i class="ion-clock"></i> Added {{ $movie->created_at->diffForHumans() }}
+															<i class="ion-clock"></i> Posted {{ $review->created_at->diffForHumans() }}
 														</span>
 													</div>
 												</div>
 											</div>
 										@endforeach
+										
+										@if($userReviews->hasPages())
+											<div class="pagination-container" style="text-align: center; margin-top: 30px;">
+												{{ $userReviews->appends(['favorites_page' => request('favorites_page'), 'movies_page' => request('movies_page')])->links() }}
+											</div>
+										@endif
 									@else
 										<div class="no-content-message">
 											<i class="ion-compose-outline"></i>

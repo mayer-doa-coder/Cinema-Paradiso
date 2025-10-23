@@ -155,9 +155,20 @@ class User extends Authenticatable
                                 ->count();
         $score += $recentActivities * 3;
         
-        $this->update(['popularity_score' => $score]);
+        $this->update([
+            'popularity_score' => $score,
+            'last_active' => now(),
+        ]);
         
         return $score;
+    }
+
+    /**
+     * Update last active timestamp
+     */
+    public function updateLastActive()
+    {
+        $this->update(['last_active' => now()]);
     }
 
     /**
