@@ -5706,7 +5706,7 @@ ul {
 }
 /*movie single hero*/
 .mv-single-hero {
-  background: url('../images/uploads/the-batman-dark-returns-uy.jpg') no-repeat;
+  background: url('../images/uploads/superman-blue-hj.jpg') no-repeat;
   background-position: center center;
   text-align: center;
   background-size: cover;
@@ -7913,6 +7913,11 @@ header .navbar-default .navbar-nav li a {
 header .navbar-default .navbar-nav li a:hover {
   color: #e9d736;
 }
+header .navbar-default .navbar-nav li.active a,
+header .navbar-default .navbar-nav li.active a:hover,
+header .navbar-default .navbar-nav li.active a:focus {
+  color: #e9d736;
+}
 header .navbar-default .navbar-nav li a i {
   float: right;
   right: 0;
@@ -8396,12 +8401,12 @@ footer.full-width-ft .ft-copyright {
 
 .page-header {
 	text-align: center;
-	margin-bottom: 50px;
+	margin-top: 630px;
 	color: #ffffff;
 }
 
 .page-header h1 {
-	color: #3e9fd8;
+	color: #ffffff;
 	font-size: 2.5em;
 	margin-bottom: 15px;
 }
