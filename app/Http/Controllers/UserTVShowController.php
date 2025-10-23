@@ -62,6 +62,12 @@ class UserTVShowController extends Controller
                 'movie_poster' => $posterPath
             ]);
 
+            // Automatically remove from watchlist when a show is rated/added
+            UserWatchlist::where([
+                'user_id' => $user->id,
+                'movie_id' => $request->show_id
+            ])->delete();
+
             // If it's a new show, add it to favorites and track activity
             if ($isNewShow) {
                 // Add to UserFavoriteMovie
@@ -95,7 +101,8 @@ class UserTVShowController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'TV show added to your collection successfully!',
-                'data' => $userShow
+                'data' => $userShow,
+                'removed_from_watchlist' => true
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -357,6 +364,12 @@ class UserTVShowController extends Controller
                 ]
             );
 
+            // Automatically remove from watchlist when review is submitted
+            UserWatchlist::where([
+                'user_id' => $user->id,
+                'movie_id' => $request->show_id
+            ])->delete();
+
             // Track activity for new reviews only
             if ($isNewReview) {
                 UserActivity::create([
@@ -381,13 +394,155 @@ class UserTVShowController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Review submitted successfully!',
-                'data' => $review
+                'message' => $isNewReview ? 'Review submitted successfully!' : 'Review updated successfully!',
+                'data' => $review,
+                'removed_from_watchlist' => true
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to submit review: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get user's review for a TV show
+     */
+    public function getReview($showId)
+    {
+        try {
+            $userId = Auth::id();
+            
+            $review = UserMovieReview::where([
+                'user_id' => $userId,
+                'movie_id' => $showId
+            ])->first();
+
+            if (!$review) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Review not found'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'review' => $review
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get review: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Update an existing TV show review
+     */
+    public function updateReview(Request $request, $showId)
+    {
+        $request->validate([
+            'rating' => 'required|numeric|min:1|max:10',
+            'watched_before' => 'required|boolean',
+            'review' => 'required|string|min:10',
+        ]);
+
+        try {
+            $user = Auth::user();
+            
+            $review = UserMovieReview::where([
+                'user_id' => $user->id,
+                'movie_id' => $showId
+            ])->first();
+
+            if (!$review) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Review not found'
+                ], 404);
+            }
+
+            // Update the review
+            $review->update([
+                'rating' => $request->rating,
+                'watched_before' => $request->watched_before,
+                'review' => $request->review,
+            ]);
+
+            // Update rating in UserMovie
+            UserMovie::where([
+                'user_id' => $user->id,
+                'movie_id' => $showId
+            ])->update(['rating' => $request->rating]);
+
+            // Update rating in UserFavoriteMovie
+            UserFavoriteMovie::where([
+                'user_id' => $user->id,
+                'movie_id' => $showId
+            ])->update([
+                'user_rating' => $request->rating,
+                'user_review' => $request->review
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Review updated successfully!',
+                'data' => $review
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update review: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a TV show review
+     */
+    public function deleteReview($showId)
+    {
+        try {
+            $user = Auth::user();
+            
+            $review = UserMovieReview::where([
+                'user_id' => $user->id,
+                'movie_id' => $showId
+            ])->first();
+
+            if (!$review) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Review not found'
+                ], 404);
+            }
+
+            // Delete the review
+            $review->delete();
+
+            // Update user statistics
+            $user->decrement('total_reviews');
+
+            // Remove activity points
+            UserActivity::where([
+                'user_id' => $user->id,
+                'activity_type' => 'review',
+            ])->whereJsonContains('activity_data->movie_id', (int)$showId)
+              ->whereJsonContains('activity_data->type', 'tv')
+              ->delete();
+
+            $user->updatePopularityScore();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Review deleted successfully!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete review: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -403,7 +558,9 @@ class UserTVShowController extends Controller
                 'in_collection' => false,
                 'liked' => false,
                 'in_watchlist' => false,
-                'user_rating' => 0
+                'user_rating' => 0,
+                'has_review' => false,
+                'review_data' => null
             ]);
         }
 
@@ -425,12 +582,18 @@ class UserTVShowController extends Controller
             ->where('movie_id', $showId)
             ->value('rating') ?? 0;
 
+        $review = UserMovieReview::where('user_id', $userId)
+            ->where('movie_id', $showId)
+            ->first();
+
         return response()->json([
             'success' => true,
             'in_collection' => $inCollection,
             'liked' => $liked,
             'in_watchlist' => $inWatchlist,
-            'user_rating' => $userRating
+            'user_rating' => $userRating,
+            'has_review' => $review ? true : false,
+            'review_data' => $review
         ]);
     }
 }

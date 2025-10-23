@@ -44,6 +44,12 @@ class UserMovieController extends Controller
                 ]
             );
 
+            // Automatically remove from watchlist when a movie is rated/added
+            UserWatchlist::where([
+                'user_id' => $user->id,
+                'movie_id' => $request->movie_id
+            ])->delete();
+
             // If it's a new movie, add it to favorites and track activity
             if ($isNewMovie) {
                 // Add to UserFavoriteMovie
@@ -76,7 +82,8 @@ class UserMovieController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Movie added to your collection successfully!',
-                'data' => $userMovie
+                'data' => $userMovie,
+                'removed_from_watchlist' => true
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -290,6 +297,12 @@ class UserMovieController extends Controller
                 ]
             );
 
+            // Automatically remove from watchlist when review is submitted
+            UserWatchlist::where([
+                'user_id' => $user->id,
+                'movie_id' => $request->movie_id
+            ])->delete();
+
             // Track activity for new reviews only
             if ($isNewReview) {
                 UserActivity::create([
@@ -313,13 +326,153 @@ class UserMovieController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Review submitted and movie added to your collection!',
-                'data' => $movieReview
+                'message' => $isNewReview ? 'Review submitted and movie added to your collection!' : 'Review updated successfully!',
+                'data' => $movieReview,
+                'removed_from_watchlist' => true
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to submit review: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get user's review for a movie
+     */
+    public function getReview($movieId)
+    {
+        try {
+            $userId = Auth::id();
+            
+            $review = UserMovieReview::where([
+                'user_id' => $userId,
+                'movie_id' => $movieId
+            ])->first();
+
+            if (!$review) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Review not found'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'review' => $review
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get review: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Update an existing review
+     */
+    public function updateReview(Request $request, $movieId)
+    {
+        $request->validate([
+            'rating' => 'required|numeric|min:0|max:10',
+            'watched_before' => 'required|boolean',
+            'review' => 'required|string|min:10',
+        ]);
+
+        try {
+            $user = Auth::user();
+            
+            $movieReview = UserMovieReview::where([
+                'user_id' => $user->id,
+                'movie_id' => $movieId
+            ])->first();
+
+            if (!$movieReview) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Review not found'
+                ], 404);
+            }
+
+            // Update the review
+            $movieReview->update([
+                'rating' => $request->rating,
+                'watched_before' => $request->watched_before,
+                'review' => $request->review,
+            ]);
+
+            // Update rating in UserMovie
+            UserMovie::where([
+                'user_id' => $user->id,
+                'movie_id' => $movieId
+            ])->update(['rating' => $request->rating]);
+
+            // Update rating in UserFavoriteMovie
+            UserFavoriteMovie::where([
+                'user_id' => $user->id,
+                'movie_id' => $movieId
+            ])->update([
+                'user_rating' => $request->rating,
+                'user_review' => $request->review
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Review updated successfully!',
+                'data' => $movieReview
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update review: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a review
+     */
+    public function deleteReview($movieId)
+    {
+        try {
+            $user = Auth::user();
+            
+            $movieReview = UserMovieReview::where([
+                'user_id' => $user->id,
+                'movie_id' => $movieId
+            ])->first();
+
+            if (!$movieReview) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Review not found'
+                ], 404);
+            }
+
+            // Delete the review
+            $movieReview->delete();
+
+            // Update user statistics
+            $user->decrement('total_reviews');
+
+            // Remove activity points
+            UserActivity::where([
+                'user_id' => $user->id,
+                'activity_type' => 'review',
+            ])->whereJsonContains('activity_data->movie_id', $movieId)->delete();
+
+            $user->updatePopularityScore();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Review deleted successfully!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete review: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -332,11 +485,14 @@ class UserMovieController extends Controller
         try {
             $userId = Auth::id();
             
+            $review = UserMovieReview::where(['user_id' => $userId, 'movie_id' => $movieId])->first();
+            
             $status = [
                 'in_collection' => UserMovie::where(['user_id' => $userId, 'movie_id' => $movieId])->exists(),
                 'is_liked' => UserMovieLike::where(['user_id' => $userId, 'movie_id' => $movieId])->exists(),
                 'in_watchlist' => UserWatchlist::where(['user_id' => $userId, 'movie_id' => $movieId])->exists(),
-                'has_review' => UserMovieReview::where(['user_id' => $userId, 'movie_id' => $movieId])->exists(),
+                'has_review' => $review ? true : false,
+                'review_data' => $review
             ];
 
             return response()->json([
