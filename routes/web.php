@@ -71,8 +71,8 @@ Route::get('/celebritysingle', function () {
 // Community routes
 Route::get('/community', [CommunityController::class, 'index'])->name('community');
 Route::get('/community/search', [CommunityController::class, 'search'])->name('community.search');
-Route::get('/community/{username}', [CommunityController::class, 'profile'])->name('community.profile');
 Route::middleware('auth')->get('/community/follow-status/{userId}', [CommunityController::class, 'followStatus'])->name('community.follow-status');
+Route::get('/community/{username}', [CommunityController::class, 'profile'])->name('community.profile');
 
 // Blog/News routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
