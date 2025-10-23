@@ -12,6 +12,7 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserMovieController;
 use App\Http\Controllers\UserTVShowController;
+use App\Http\Controllers\ChatController;
 
 // Home route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -123,12 +124,24 @@ Route::prefix('auth')->group(function () {
 
 // You can add other protected routes here
 Route::middleware('auth')->group(function () {
+    // Chat routes
+    Route::get('/messages', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/messages/{user}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/messages/{receiver}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/messages/{user}/fetch', [ChatController::class, 'getMessages'])->name('chat.fetch');
+    Route::post('/chat-request/{receiver}', [ChatController::class, 'sendRequest'])->name('chat.request.send');
+    Route::post('/chat-request/{chatRequest}/accept', [ChatController::class, 'acceptRequest'])->name('chat.request.accept');
+    Route::delete('/chat-request/{chatRequest}', [ChatController::class, 'deleteRequest'])->name('chat.request.delete');
+    
     // User Movie Interactions
     Route::post('/movies/add', [UserMovieController::class, 'addMovie'])->name('movies.add');
     Route::post('/movies/like', [UserMovieController::class, 'toggleLike'])->name('movies.like');
     Route::post('/movies/watchlist', [UserMovieController::class, 'toggleWatchlist'])->name('movies.watchlist');
     Route::post('/movies/review', [UserMovieController::class, 'submitReview'])->name('movies.review');
     Route::get('/movies/{movieId}/status', [UserMovieController::class, 'getMovieStatus'])->name('movies.status');
+    Route::get('/movies/{movieId}/review', [UserMovieController::class, 'getReview'])->name('movies.review.get');
+    Route::put('/movies/{movieId}/review', [UserMovieController::class, 'updateReview'])->name('movies.review.update');
+    Route::delete('/movies/{movieId}/review', [UserMovieController::class, 'deleteReview'])->name('movies.review.delete');
     
     // User TV Show Interactions
     Route::post('/tv/add', [UserTVShowController::class, 'addShow'])->name('tv.add');
@@ -136,6 +149,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/tv/watchlist', [UserTVShowController::class, 'toggleWatchlist'])->name('tv.watchlist');
     Route::post('/tv/review', [UserTVShowController::class, 'submitReview'])->name('tv.review');
     Route::get('/tv/{showId}/status', [UserTVShowController::class, 'getShowStatus'])->name('tv.status');
+    Route::get('/tv/{showId}/review', [UserTVShowController::class, 'getReview'])->name('tv.review.get');
+    Route::put('/tv/{showId}/review', [UserTVShowController::class, 'updateReview'])->name('tv.review.update');
+    Route::delete('/tv/{showId}/review', [UserTVShowController::class, 'deleteReview'])->name('tv.review.delete');
 });
 Route::middleware('auth')->group(function () {
     // Example protected routes
