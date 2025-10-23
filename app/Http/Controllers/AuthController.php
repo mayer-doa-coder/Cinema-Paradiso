@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -94,6 +95,20 @@ class AuthController extends Controller
 
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
+                
+                // Track login activity
+                UserActivity::create([
+                    'user_id' => $user->id,
+                    'activity_type' => 'login',
+                    'activity_data' => [
+                        'login_time' => now()->toDateTimeString(),
+                        'ip_address' => $request->ip(),
+                    ],
+                    'points' => UserActivity::getActivityPoints('login'),
+                ]);
+
+                // Update last active timestamp
+                $user->updateLastActive();
                 
                 return response()->json([
                     'success' => true,

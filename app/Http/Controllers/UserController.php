@@ -13,6 +13,7 @@ use App\Models\UserWatchlist;
 use App\Models\UserMovieReview;
 use App\Models\UserFavoriteMovie;
 use App\Models\UserFollower;
+use App\Models\UserActivity;
 
 class UserController extends Controller
 {
@@ -62,6 +63,18 @@ class UserController extends Controller
         $user->bio = $request->bio;
         
         $user->save();
+
+        // Track profile update activity
+        UserActivity::create([
+            'user_id' => $user->id,
+            'activity_type' => 'profile_update',
+            'activity_data' => [
+                'updated_at' => now()->toDateTimeString(),
+            ],
+            'points' => UserActivity::getActivityPoints('profile_update'),
+        ]);
+
+        $user->updateLastActive();
 
         return back()->with('success', 'Profile updated successfully!');
     }
@@ -126,13 +139,35 @@ class UserController extends Controller
         // Add new favorite movies
         if ($request->has('favorite_movies') && is_array($request->favorite_movies)) {
             foreach ($request->favorite_movies as $index => $movieId) {
+                $movieTitle = $request->movie_titles[$index] ?? '';
+                $moviePoster = $request->movie_posters[$index] ?? null;
+                
+                // Create favorite movie entry
                 UserFavoriteMovie::create([
                     'user_id' => $user->id,
                     'movie_id' => $movieId,
-                    'movie_title' => $request->movie_titles[$index] ?? '',
-                    'movie_poster' => $request->movie_posters[$index] ?? null,
+                    'movie_title' => $movieTitle,
+                    'movie_poster' => $moviePoster,
                 ]);
+
+                // Also add to UserMovie collection if not already there
+                UserMovie::firstOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'movie_id' => $movieId,
+                    ],
+                    [
+                        'movie_title' => $movieTitle,
+                        'movie_poster' => $moviePoster,
+                        'rating' => 0, // Default rating, user can update later
+                        'release_year' => null,
+                    ]
+                );
             }
+            
+            // Update total movies watched count
+            $user->total_movies_watched = UserMovie::where('user_id', $user->id)->count();
+            $user->save();
         }
 
         return redirect()->route('user.profile')->with('success', 'Favorite movies updated successfully!');
@@ -304,6 +339,21 @@ class UserController extends Controller
             'follower_id' => $currentUser->id,
             'following_id' => $userId
         ]);
+
+        // Track activity
+        UserActivity::create([
+            'user_id' => $currentUser->id,
+            'activity_type' => 'follow',
+            'activity_data' => [
+                'followed_user_id' => $userId,
+                'followed_user_name' => $userToFollow->name,
+            ],
+            'points' => UserActivity::getActivityPoints('follow'),
+        ]);
+
+        // Update popularity scores
+        $currentUser->updatePopularityScore();
+        $userToFollow->updatePopularityScore();
         
         return response()->json([
             'success' => true, 

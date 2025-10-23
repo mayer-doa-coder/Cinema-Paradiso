@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\UserFavoriteMovie;
 use App\Models\UserActivity;
 use App\Models\UserFollower;
+use App\Models\UserMovie;
+use App\Models\UserMovieReview;
 
 class CommunityController extends Controller
 {
@@ -97,7 +99,17 @@ class CommunityController extends Controller
                        ->firstOrFail();
             
             // Get user's favorite movies with pagination
-            $favoriteMovies = $user->favoriteMovies()->paginate(12);
+            $favoriteMovies = $user->favoriteMovies()->orderByDesc('created_at')->paginate(12, ['*'], 'favorites_page');
+            
+            // Get all user's movies (for Movies tab)
+            $userMovies = UserMovie::where('user_id', $user->id)
+                                   ->orderByDesc('created_at')
+                                   ->paginate(12, ['*'], 'movies_page');
+            
+            // Get user's reviews (for Reviews tab)
+            $userReviews = UserMovieReview::where('user_id', $user->id)
+                                         ->orderByDesc('created_at')
+                                         ->paginate(12, ['*'], 'reviews_page');
             
             // Get recent activities
             $recentActivities = $user->activities()
@@ -122,6 +134,8 @@ class CommunityController extends Controller
             return view('community.profile', [
                 'user' => $user,
                 'favoriteMovies' => $favoriteMovies,
+                'userMovies' => $userMovies,
+                'userReviews' => $userReviews,
                 'recentActivities' => $recentActivities,
                 'stats' => $stats,
                 'randomWallpaper' => $randomWallpaper,
