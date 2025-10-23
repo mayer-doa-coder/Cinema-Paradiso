@@ -70,7 +70,7 @@
 </header>
 <!-- END | Header -->
 
-<div class="hero common-hero">
+<div class="hero common-hero" style="background: url('{{ asset('images/uploads/spider-man-mcu-tr.jpg') }}') no-repeat center center; background-size: cover; margin-top: 20px;">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
