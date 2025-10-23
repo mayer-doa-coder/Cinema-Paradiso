@@ -609,8 +609,14 @@ html, body {
 												<div class="movie-item-card">
 													<a href="{{ route('movies.show', $movie->movie_id) }}" class="movie-poster-link">
 														<div class="movie-poster-container">
-															@if($movie->movie_poster)
-																<img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" loading="lazy">
+															@if($movie->poster_url)
+																<img src="{{ $movie->poster_url }}" 
+																     alt="{{ $movie->movie_title }}" 
+																     loading="lazy"
+																     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+																<div class="movie-poster-placeholder" style="display: none; width: 100%; height: 100%; background: #405266; align-items: center; justify-content: center; color: #e9d736; font-size: 32px; font-weight: bold;">
+																	{{ substr($movie->movie_title, 0, 2) }}
+																</div>
 															@else
 																<div class="movie-poster-placeholder" style="width: 100%; height: 100%; background: #405266; display: flex; align-items: center; justify-content: center; color: #e9d736; font-size: 32px; font-weight: bold;">
 																	{{ substr($movie->movie_title, 0, 2) }}
@@ -737,8 +743,14 @@ html, body {
 												<div class="movie-item-card">
 													<a href="{{ route('movies.show', $movie->movie_id) }}" class="movie-poster-link">
 														<div class="movie-poster-container">
-															@if($movie->movie_poster)
-																<img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" loading="lazy">
+															@if($movie->poster_url)
+																<img src="{{ $movie->poster_url }}" 
+																     alt="{{ $movie->movie_title }}" 
+																     loading="lazy"
+																     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+																<div class="movie-poster-placeholder" style="display: none; width: 100%; height: 100%; background: #405266; align-items: center; justify-content: center; color: #e9d736; font-size: 32px; font-weight: bold;">
+																	{{ substr($movie->movie_title, 0, 2) }}
+																</div>
 															@else
 																<div class="movie-poster-placeholder" style="width: 100%; height: 100%; background: #405266; display: flex; align-items: center; justify-content: center; color: #e9d736; font-size: 32px; font-weight: bold;">
 																	{{ substr($movie->movie_title, 0, 2) }}
@@ -788,10 +800,16 @@ html, body {
 											<div class="review-item">
 												<div class="review-header">
 													<div class="review-poster-wrapper">
-														@if($movie->movie_poster)
+														@if($movie->poster_url)
 															<a href="{{ route('movies.show', $movie->movie_id) }}">
-																<img src="{{ $movie->poster_url }}" alt="{{ $movie->movie_title }}" class="review-poster-img">
+																<img src="{{ $movie->poster_url }}" 
+																     alt="{{ $movie->movie_title }}" 
+																     class="review-poster-img"
+																     onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex';">
 															</a>
+															<div class="review-poster-placeholder" style="display: none; width: 80px; height: 120px; background: #405266; align-items: center; justify-content: center; color: #e9d736; font-size: 24px; font-weight: bold; border-radius: 5px;">
+																{{ substr($movie->movie_title, 0, 2) }}
+															</div>
 														@else
 															<div class="review-poster-placeholder" style="width: 80px; height: 120px; background: #405266; display: flex; align-items: center; justify-content: center; color: #e9d736; font-size: 24px; font-weight: bold; border-radius: 5px;">
 																{{ substr($movie->movie_title, 0, 2) }}
