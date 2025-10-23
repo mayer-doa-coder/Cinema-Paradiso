@@ -3,6 +3,73 @@
 @section('title', 'Search TV Shows')
 
 @section('content')
+<!-- BEGIN | Header -->
+<header class="ht-header">
+	<div class="container">
+		<nav class="navbar navbar-default navbar-custom">
+				<div class="navbar-header logo">
+				    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					    <span class="sr-only">Toggle navigation</span>
+					    <div id="nav-icon1">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+				    </div>
+				    <a href="{{ route('home') }}"><img class="logo" src="{{ asset('images/cinema_paradiso.png') }}" alt="" width="119" height="58"></a>
+			    </div>
+				<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav flex-child-menu menu-left">
+						<li class="hidden">
+							<a href="#page-top"></a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('home') }}">
+							Home
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('movies.index') }}">
+							Movies
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('celebrities') }}">
+							Celebrities
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('blog') }}">
+							News
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('community') }}">
+							Community
+							</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav flex-child-menu menu-right">               
+						<li><a href="{{ route('help') }}">Help</a></li>
+						@auth
+							<li>
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
+									{{ Auth::user()->name }}
+								</a>
+							</li>
+						@else
+							<li class="loginLink"><a href="#">LOG In</a></li>
+							<li class="btn signupLink"><a href="#">sign up</a></li>
+						@endauth
+					</ul>
+				</div>
+	    </nav>
+	    
+	    @include('partials._search')
+	</div>
+</header>
+<!-- END | Header -->
+
 <div class="hero common-hero">
 	<div class="container">
 		<div class="row">
@@ -34,15 +101,33 @@
 				<div class="flex-wrap-movielist">
 					@forelse($tvShows as $tvShow)
 					<div class="movie-item-style-2 movie-item-style-1">
-						<img src="{{ $tvShow['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" alt="{{ $tvShow['name'] ?? 'TV Show' }}">
+						<img src="{{ $tvShow['poster_url'] ?? asset('images/uploads/movie-placeholder.jpg') }}" 
+						     alt="{{ $tvShow['name'] ?? 'TV Show' }}"
+						     style="width: 170px; height: 250px; object-fit: cover;">
 						<div class="hvr-inner">
 							<a href="{{ route('tv.show', $tvShow['id']) }}">Read more <i class="ion-android-arrow-dropright"></i></a>
 						</div>
 						<div class="mv-item-infor">
 							<h6><a href="{{ route('tv.show', $tvShow['id']) }}">{{ $tvShow['name'] ?? 'TV Show' }}</a></h6>
-							<p class="rate"><i class="ion-android-star"></i><span>{{ number_format($tvShow['vote_average'] ?? 0, 1) }}</span> /10</p>
-							<p class="describe">{{ Str::limit($tvShow['overview'] ?? 'No description available.', 120) }}</p>
-							<p class="run-time">First Air Date: {{ isset($tvShow['first_air_date']) ? \Carbon\Carbon::parse($tvShow['first_air_date'])->format('M d, Y') : 'Unknown' }}</p>
+							<p class="rate">
+								@php
+									$rating = app('App\Services\MovieService')->getRatingStars($tvShow['vote_average'] ?? 0);
+								@endphp
+								@for($i = 1; $i <= 5; $i++)
+									@if($i <= $rating)
+										<i class="ion-android-star"></i>
+									@else
+										<i class="ion-android-star-outline"></i>
+									@endif
+								@endfor
+								<span class="fr">{{ number_format($tvShow['vote_average'] ?? 0, 1) }}/10</span>
+							</p>
+							@if(isset($tvShow['first_air_date']))
+								<p class="time">{{ date('Y', strtotime($tvShow['first_air_date'])) }}</p>
+							@endif
+							@if(isset($tvShow['overview']))
+								<p class="descript">{{ Str::limit($tvShow['overview'], 150) }}</p>
+							@endif
 						</div>
 					</div>
 					@empty
@@ -90,9 +175,6 @@
 								</div>
 							</div>
 						</form>
-					</div>
-					<div class="ads">
-						<img src="{{ asset('images/uploads/ads1.png') }}" alt="" width="336" height="296">
 					</div>
 				</div>
 			</div>

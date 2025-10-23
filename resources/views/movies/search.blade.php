@@ -3,6 +3,73 @@
 @section('title', 'Search Results')
 
 @section('content')
+<!-- BEGIN | Header -->
+<header class="ht-header">
+	<div class="container">
+		<nav class="navbar navbar-default navbar-custom">
+				<div class="navbar-header logo">
+				    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					    <span class="sr-only">Toggle navigation</span>
+					    <div id="nav-icon1">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+				    </div>
+				    <a href="{{ route('home') }}"><img class="logo" src="{{ asset('images/cinema_paradiso.png') }}" alt="" width="119" height="58"></a>
+			    </div>
+				<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav flex-child-menu menu-left">
+						<li class="hidden">
+							<a href="#page-top"></a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('home') }}">
+							Home
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('movies.index') }}">
+							Movies
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('celebrities') }}">
+							Celebrities
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('blog') }}">
+							News
+							</a>
+						</li>
+						<li class="first">
+							<a class="btn btn-default lv1" href="{{ route('community') }}">
+							Community
+							</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav flex-child-menu menu-right">               
+						<li><a href="{{ route('help') }}">Help</a></li>
+						@auth
+							<li>
+								<a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
+									{{ Auth::user()->name }}
+								</a>
+							</li>
+						@else
+							<li class="loginLink"><a href="#">LOG In</a></li>
+							<li class="btn signupLink"><a href="#">sign up</a></li>
+						@endauth
+					</ul>
+				</div>
+	    </nav>
+	    
+	    @include('partials._search')
+	</div>
+</header>
+<!-- END | Header -->
+
 <div class="hero hero3">
     <div class="container">
         <div class="row">
@@ -40,7 +107,8 @@
                         @foreach($movies as $movie)
                             <div class="movie-item-style-2 movie-item-style-1">
                                 <img src="{{ app('App\Services\MovieService')->getImageUrl($movie['poster_path'] ?? null) }}" 
-                                     alt="{{ $movie['title'] ?? 'Movie Poster' }}">
+                                     alt="{{ $movie['title'] ?? 'Movie Poster' }}"
+                                     style="width: 170px; height: 250px; object-fit: cover;">
                                 <div class="hvr-inner">
                                     <a href="{{ route('movies.show', $movie['id']) }}">Read more <i class="ion-android-arrow-dropright"></i></a>
                                 </div>
@@ -120,46 +188,6 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
-
-                    <div class="category-filter">
-                        <h4 class="sb-title">Browse Categories</h4>
-                        <div class="filter-links">
-                            <a href="{{ route('movies.index', ['category' => 'popular']) }}">Popular Movies</a>
-                            <a href="{{ route('movies.index', ['category' => 'top-rated']) }}">Top Rated</a>
-                            <a href="{{ route('movies.index', ['category' => 'trending']) }}">Trending</a>
-                            <a href="{{ route('movies.index', ['category' => 'upcoming']) }}">Upcoming</a>
-                        </div>
-                    </div>
-
-                    <div class="ads">
-                        <img src="{{ asset('images/uploads/ads1.png') }}" alt="">
-                    </div>
-
-                    <div class="celebrities">
-                        <h4 class="sb-title">Popular Celebrities</h4>
-                        <div class="celeb-item">
-                            <a href="{{ route('celebritysingle') }}"><img src="{{ asset('images/uploads/ava1.jpg') }}" alt="" width="70" height="70"></a>
-                            <div class="celeb-author">
-                                <h6><a href="{{ route('celebritysingle') }}">Samuel N. Jack</a></h6>
-                                <span>Actor</span>
-                            </div>
-                        </div>
-                        <div class="celeb-item">
-                            <a href="{{ route('celebritysingle') }}"><img src="{{ asset('images/uploads/ava2.jpg') }}" alt="" width="70" height="70"></a>
-                            <div class="celeb-author">
-                                <h6><a href="{{ route('celebritysingle') }}">Benjamin Carroll</a></h6>
-                                <span>Actor</span>
-                            </div>
-                        </div>
-                        <div class="celeb-item">
-                            <a href="{{ route('celebritysingle') }}"><img src="{{ asset('images/uploads/ava3.jpg') }}" alt="" width="70" height="70"></a>
-                            <div class="celeb-author">
-                                <h6><a href="{{ route('celebritysingle') }}">Beverly Griffin</a></h6>
-                                <span>Actor</span>
-                            </div>
-                        </div>
-                        <a href="{{ route('celebrities') }}" class="btn">See all celebrities<i class="ion-ios-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
