@@ -263,9 +263,9 @@ textarea:focus {
                     <div class="popular-categories">
                         <h4 class="sb-title">Quick Links</h4>
                         <ul class="category-list">
-                            <li><a href="{{ route('celebrities') }}?sort=popularity"><i class="ion-star" style="color: #e9d736; margin-right: 8px;"></i>Most Popular</a></li>
-                            <li><a href="{{ route('movies.index') }}"><i class="ion-ios-film" style="color: #eb70ac; margin-right: 8px;"></i>Browse Movies</a></li>
-                            <li><a href="{{ route('community') }}"><i class="ion-person-stalker" style="color: #4bb4f0; margin-right: 8px;"></i>Join Community</a></li>
+                            <li><a href="{{ route('celebrities') }}?sort=popularity"><i  style="color: #e9d736; margin-right: 8px;"></i>Most Popular</a></li>
+                            <li><a href="{{ route('movies.index') }}"><i  style="color: #eb70ac; margin-right: 8px;"></i>Browse Movies</a></li>
+                            <li><a href="{{ route('community') }}"><i  style="color: #4bb4f0; margin-right: 8px;"></i>Join Community</a></li>
                         </ul>
                     </div>
                 </div>
