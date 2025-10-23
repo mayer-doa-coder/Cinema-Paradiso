@@ -88,6 +88,36 @@ html, body {
     background: #eb70ac;
 }
 
+.movie-single-ct h1.bd-hd .message-btn,
+.movie-single-ct h1.bd-hd .chat-request-btn {
+    font-size: 14px;
+    font-weight: 600;
+    background: #4280bf;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 10px;
+}
+
+.movie-single-ct h1.bd-hd .message-btn:hover,
+.movie-single-ct h1.bd-hd .chat-request-btn:hover {
+    background: #356ba8;
+    transform: translateY(-2px);
+}
+
+.movie-single-ct h1.bd-hd .chat-request-btn {
+    background: #6c757d;
+}
+
+.movie-single-ct h1.bd-hd .chat-request-btn:hover {
+    background: #5a6268;
+}
+
 .movie-img {
     text-align: center;
     margin-bottom: 20px;
@@ -515,6 +545,7 @@ html, body {
                     <ul class="nav navbar-nav flex-child-menu menu-right">               
                         <li><a href="{{ route('help') }}">Help</a></li>
                         @auth
+                            <li><a href="{{ route('chat.index') }}">Messages</a></li>
                             <li>
                                 <a href="{{ route('user.profile') }}" style="color: #e9d736; font-weight: 500;">
                                     {{ Auth::user()->name }}
@@ -575,11 +606,17 @@ html, body {
 				<div class="movie-single-ct main-content">
 					<h1 class="bd-hd">
 						{{ $user->name }} 
-						<span style="color: #abb7c4; font-size: 18px; font-weight: normal;">@{{ $user->username }}</span>
+						<span style="color: #abb7c4; font-size: 18px; font-weight: normal;">{{ $user->username }}</span>
 						@auth
 							@if(Auth::id() !== $user->id)
 								<button class="follow-btn" id="followBtn" data-user-id="{{ $user->id }}" onclick="toggleFollow(event)">
 									Follow
+								</button>
+								<button class="message-btn" id="messageBtn" data-user-id="{{ $user->id }}" style="display: none;">
+									Message
+								</button>
+								<button class="chat-request-btn" id="chatRequestBtn" data-user-id="{{ $user->id }}" style="display: none;">
+									Send Chat Request
 								</button>
 							@endif
 						@else
@@ -891,6 +928,7 @@ $(document).ready(function() {
     @auth
         @if(Auth::id() !== $user->id)
             checkFollowStatus();
+            updateMessageButtonVisibility();
         @endif
     @endauth
 });
@@ -947,11 +985,17 @@ function toggleFollow(event) {
                 // Update followers count
                 const currentCount = parseInt($('#followersCount').text());
                 $('#followersCount').text(currentCount + 1);
+                
+                // Update message button visibility
+                updateMessageButtonVisibility();
             } else {
                 button.text('Follow').removeClass('following');
                 // Update followers count
                 const currentCount = parseInt($('#followersCount').text());
                 $('#followersCount').text(currentCount - 1);
+                
+                // Update message button visibility
+                updateMessageButtonVisibility();
             }
             button.prop('disabled', false);
         } else {
@@ -967,5 +1011,89 @@ function toggleFollow(event) {
         alert('Failed to ' + action + ' user. Please try again.');
     });
 }
+
+// Update message button visibility based on follow status
+function updateMessageButtonVisibility() {
+    const userId = $('#followBtn').data('user-id');
+    const isFollowing = $('#followBtn').hasClass('following');
+    
+    fetch(`/community/follow-status/${userId}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const messageBtn = $('#messageBtn');
+        const chatRequestBtn = $('#chatRequestBtn');
+        
+        // If both users follow each other, show message button
+        if (data.is_following && data.follows_back) {
+            messageBtn.show();
+            chatRequestBtn.hide();
+        } 
+        // If auth user follows but other doesn't follow back, show chat request button
+        else if (data.is_following && !data.follows_back) {
+            messageBtn.hide();
+            chatRequestBtn.show();
+        } 
+        // If auth user doesn't follow, hide both buttons
+        else {
+            messageBtn.hide();
+            chatRequestBtn.hide();
+        }
+    })
+    .catch(error => console.error('Error updating message button:', error));
+}
+
+// Handle message button click
+$('#messageBtn').on('click', function() {
+    const userId = $(this).data('user-id');
+    window.location.href = `/messages/${userId}`;
+});
+
+// Handle chat request button click
+$('#chatRequestBtn').on('click', function() {
+    const userId = $(this).data('user-id');
+    const button = $(this);
+    
+    if (!confirm('Send a chat request to {{ $user->name }}?')) {
+        return;
+    }
+    
+    button.prop('disabled', true);
+    const originalText = button.text();
+    button.text('Sending...');
+    
+    fetch(`/chat-request/${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            button.text('Request Sent');
+            setTimeout(() => {
+                button.hide();
+            }, 1500);
+        } else {
+            alert(data.message || 'Failed to send chat request.');
+            button.prop('disabled', false);
+            button.text(originalText);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to send chat request. Please try again.');
+        button.prop('disabled', false);
+        button.text(originalText);
+    });
+});
 </script>
 @endpush

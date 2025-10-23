@@ -134,6 +134,7 @@
 <script src="{{ asset('js/plugins.js') }}"></script>
 <script src="{{ asset('js/plugins2.js') }}"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
+<script src="{{ asset('js/review-management.js') }}"></script>
 
 @stack('scripts')
 

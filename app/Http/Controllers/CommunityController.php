@@ -280,9 +280,14 @@ class CommunityController extends Controller
                                       ->where('following_id', $userId)
                                       ->exists();
             
+            $followsBack = UserFollower::where('follower_id', $userId)
+                                      ->where('following_id', $currentUser->id)
+                                      ->exists();
+            
             return response()->json([
                 'success' => true,
-                'is_following' => $isFollowing
+                'is_following' => $isFollowing,
+                'follows_back' => $followsBack
             ]);
         } catch (\Exception $e) {
             return response()->json([

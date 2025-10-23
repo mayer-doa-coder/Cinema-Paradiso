@@ -209,4 +209,80 @@ class User extends Authenticatable
     {
         return $query->where('last_active', '>=', now()->subDays(30));
     }
+
+    /**
+     * Get messages sent by this user
+     */
+    public function sentMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'sender_id');
+    }
+
+    /**
+     * Get messages received by this user
+     */
+    public function receivedMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'receiver_id');
+    }
+
+    /**
+     * Get chat requests sent by this user
+     */
+    public function sentChatRequests()
+    {
+        return $this->hasMany(ChatRequest::class, 'sender_id');
+    }
+
+    /**
+     * Get chat requests received by this user
+     */
+    public function receivedChatRequests()
+    {
+        return $this->hasMany(ChatRequest::class, 'receiver_id');
+    }
+
+    /**
+     * Check if this user can message another user
+     * (both must follow each other)
+     */
+    public function canMessageUser(User $user)
+    {
+        return $this->isFollowing($user) && $user->isFollowing($this);
+    }
+
+    /**
+     * Check if there's a pending chat request from this user to another
+     */
+    public function hasSentChatRequestTo(User $user)
+    {
+        return $this->sentChatRequests()
+                    ->where('receiver_id', $user->id)
+                    ->exists();
+    }
+
+    /**
+     * Get conversation with another user
+     */
+    public function getConversationWith(User $user)
+    {
+        return ChatMessage::where(function($query) use ($user) {
+            $query->where('sender_id', $this->id)
+                  ->where('receiver_id', $user->id);
+        })->orWhere(function($query) use ($user) {
+            $query->where('sender_id', $user->id)
+                  ->where('receiver_id', $this->id);
+        })->orderBy('created_at', 'asc')->get();
+    }
+
+    /**
+     * Get unread message count from a specific user
+     */
+    public function getUnreadCountFrom(User $user)
+    {
+        return $this->receivedMessages()
+                    ->where('sender_id', $user->id)
+                    ->whereNull('read_at')
+                    ->count();
+    }
 }
