@@ -361,7 +361,9 @@ body {
 									</div>
 								@endif
 								<a href="{{ route('movies.show', $movie->movie_id) }}" class="poster-link">
-									<img src="{{ $movie->movie_poster ?: asset('images/uploads/mv1.jpg') }}" alt="{{ $movie->movie_title }}">
+									<img src="{{ $movie->poster_url ?: asset('images/uploads/mv1.jpg') }}" 
+									     alt="{{ $movie->movie_title }}"
+									     onerror="this.src='{{ asset('images/uploads/mv1.jpg') }}'">
 								</a>
 								<div class="mv-item-infor">
 									<h6>

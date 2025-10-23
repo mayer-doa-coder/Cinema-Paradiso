@@ -346,7 +346,9 @@ body {
 						@foreach($watchlist as $item)
 							<div class="movie-item-style-2 movie-item-style-1 style-3">
 								<a href="{{ route('movies.show', $item->movie_id) }}" style="display: block; position: relative;">
-									<img src="{{ $item->movie_poster ?: asset('images/uploads/mv1.jpg') }}" alt="{{ $item->movie_title }}">
+									<img src="{{ $item->poster_url ?: asset('images/uploads/mv1.jpg') }}" 
+									     alt="{{ $item->movie_title }}"
+									     onerror="this.src='{{ asset('images/uploads/mv1.jpg') }}'">
 									<div class="mv-item-infor">
 										<h6>
 											<a href="{{ route('movies.show', $item->movie_id) }}">

@@ -390,7 +390,9 @@ body {
 				@if($reviews->count() > 0)
 					@foreach($reviews as $review)
 						<div class="movie-item-style-2 userrate {{ $loop->last ? 'last' : '' }}">
-							<img src="{{ $review->movie_poster ?: asset('images/uploads/mv1.jpg') }}" alt="{{ $review->movie_title }}">
+							<img src="{{ $review->poster_url ?: asset('images/uploads/mv1.jpg') }}" 
+							     alt="{{ $review->movie_title }}"
+							     onerror="this.src='{{ asset('images/uploads/mv1.jpg') }}'">
 							<div class="mv-item-infor">
 								<h6>
 									<a href="{{ route('movies.show', $review->movie_id) }}">
