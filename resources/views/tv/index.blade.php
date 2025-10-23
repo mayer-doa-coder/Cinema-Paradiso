@@ -760,32 +760,36 @@ $(document).ready(function() {
         
         // Make AJAX request to add to watchlist
         $.ajax({
-            url: '{{ route("user.watchlist.add") }}',
+            url: '{{ route("tv.watchlist") }}',
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
-                media_id: showId,
-                media_type: 'tv',
-                title: showName,
-                poster: showPoster,
-                year: showYear
+                show_id: showId,
+                show_name: showName,
+                show_poster: showPoster,
+                first_air_year: showYear
             },
             success: function(response) {
-                button.html('✓');
-                button.css('background', '#4CAF50');
-                
-                // Show success message
-                showNotification('success', showName + ' added to your watchlist!');
-                
-                // Revert button after 2 seconds
-                setTimeout(function() {
-                    button.html(originalHtml);
-                    button.css('background', '#ec6eab');
-                    button.prop('disabled', false);
-                }, 2000);
+                if (response.success) {
+                    if (response.in_watchlist) {
+                        button.html('✓');
+                        button.css('background', '#4CAF50');
+                        showNotification('success', showName + ' added to your watchlist!');
+                    } else {
+                        button.html('+ Watchlist');
+                        showNotification('success', showName + ' removed from watchlist!');
+                    }
+                    
+                    // Revert button after 2 seconds
+                    setTimeout(function() {
+                        button.html(originalHtml);
+                        button.css('background', '#ec6eab');
+                        button.prop('disabled', false);
+                    }, 2000);
+                }
             },
             error: function(xhr) {
-                let errorMsg = 'Failed to add to watchlist';
+                let errorMsg = 'Failed to update watchlist';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMsg = xhr.responseJSON.message;
                 }
