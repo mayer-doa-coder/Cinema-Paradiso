@@ -959,51 +959,22 @@ textarea:focus {
 		<div class="flex-parent-ft">
 			<div class="flex-child-ft item1">
 				 <a href="{{ route('home') }}"><img class="logo" src="{{ asset('images/cinema_paradiso.png') }}" alt=""></a>
-				 <p>KUET,Khulna,<br>
-				Bangladesh</p>
-				<p>Call us: <a href="#">+8801326503869</a></p>
 			</div>
 			<div class="flex-child-ft item2">
-				<h4>Resources</h4>
+				<h4>Navigation</h4>
 				<ul>
-					<li><a href="#">About</a></li> 
-					<li><a href="#">Blockbuster</a></li>
-					<li><a href="#">Contact Us</a></li>
-					<li><a href="#">Forums</a></li>
-					<li><a href="#">Blog</a></li>
-					<li><a href="#">Help Center</a></li>
+					<li><a href="{{ route('home') }}">Home</a></li> 
+					<li><a href="{{ route('movies.index') }}">Movies</a></li>
+					<li><a href="{{ route('celebrities') }}">Celebrities</a></li>
+					<li><a href="{{ route('blog') }}">News</a></li>
+					<li><a href="{{ route('community') }}">Community</a></li>
 				</ul>
-			</div>
-			<div class="flex-child-ft item3">
-				<h4>Legal</h4>
-				<ul>
-					<li><a href="#">Terms of Use</a></li> 
-					<li><a href="#">Privacy Policy</a></li>	
-					<li><a href="#">Security</a></li>
-				</ul>
-			</div>
-			<div class="flex-child-ft item4">
-				<h4>Account</h4>
-				<ul>
-					<li><a href="#">My Account</a></li> 
-					<li><a href="#">Watchlist</a></li>	
-					<li><a href="#">Collections</a></li>
-					<li><a href="#">User Guide</a></li>
-				</ul>
-			</div>
-			<div class="flex-child-ft item5">
-				<h4>Newsletter</h4>
-				<p>Subscribe to our newsletter system now <br> to get latest news from us.</p>
-				<form action="#">
-					<input type="text" placeholder="Enter your email...">
-				</form>
-				<a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
 			</div>
 		</div>
 	</div>
 	<div class="ft-copyright">
 		<div class="ft-left">
-			<p>© 2017 Blockbuster. All Rights Reserved. Designed by leehari.</p>
+			<p>© 2025 Cinema Paradiso. All Rights Reserved. Designed by Tawhidul Hasan.</p>
 		</div>
 		<div class="backtotop">
 			<p><a href="#" id="back-to-top">Back to top  <i class="ion-ios-arrow-thin-up"></i></a></p>
