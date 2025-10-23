@@ -212,7 +212,7 @@ textarea:focus {
                                 <div class="user-favorite-movies-compact">
                                     <div class="favorite-movies-list-compact">
                                         @foreach($user->favoriteMovies->take(5) as $movie)
-                                            @if(!empty($movie->movie_poster) && $movie->poster_url)
+                                            @if($movie->poster_url)
                                                 <a href="{{ route('movies.show', $movie->movie_id) }}" 
                                                    class="favorite-movie-item-compact" 
                                                    title="{{ $movie->movie_title }}"
@@ -222,7 +222,7 @@ textarea:focus {
                                                          width="35"
                                                          height="52"
                                                          loading="lazy"
-                                                         onerror="this.parentElement.style.display='none'">
+                                                         onerror="this.src='{{ asset('images/uploads/poster-placeholder.jpg') }}'; this.onerror=null;">
                                                 </a>
                                             @endif
                                         @endforeach
