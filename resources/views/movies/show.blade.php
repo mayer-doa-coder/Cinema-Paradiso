@@ -1204,8 +1204,10 @@ html, body {
 											@foreach($videos['results'] as $video)
 											<div class="vd-item">
 												<div class="vd-it">
-													<img class="vd-img" src="https://img.youtube.com/vi/{{ $video['key'] }}/mqdefault.jpg" alt="">
-													<a class="fancybox-media" href="https://www.youtube.com/embed/{{ $video['key'] }}"><img src="{{ asset('images/uploads/play-vd.png') }}" alt=""></a>
+													<img class="vd-img" src="https://img.youtube.com/vi/{{ $video['key'] }}/mqdefault.jpg" alt="{{ $video['name'] }}">
+													<a class="fancybox-media hvr-grow" href="https://www.youtube.com/embed/{{ $video['key'] }}">
+														<i class="ion-ios-play"></i>
+													</a>
 												</div>
 												<div class="vd-infor">
 													<h6><a href="#">{{ $video['name'] }}</a></h6>

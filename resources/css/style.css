@@ -6097,6 +6097,19 @@ ul {
 }
 .movie-single .movie-single-ct .mvsingle-item .vd-it {
   position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.movie-single .movie-single-ct .mvsingle-item .vd-it .vd-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: all 0.3s ease;
+}
+.movie-single .movie-single-ct .mvsingle-item .vd-it:hover .vd-img {
+  transform: scale(1.05);
 }
 .movie-single .movie-single-ct .mvsingle-item .vd-it a {
   margin: auto;
@@ -6113,6 +6126,24 @@ ul {
   justify-content: center;
   -webkit-align-items: center;
   -webkit-justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.movie-single .movie-single-ct .mvsingle-item .vd-it a:hover {
+  transform: scale(1.1);
+}
+.movie-single .movie-single-ct .mvsingle-item .vd-it a i {
+  font-size: 60px;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.movie-single .movie-single-ct .mvsingle-item .vd-it a:hover i {
+  opacity: 1;
+  color: #dd003f;
 }
 .movie-single .movie-single-ct .mvsingle-item .vd-it a img {
   width: initial;
