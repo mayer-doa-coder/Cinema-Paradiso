@@ -1047,19 +1047,31 @@ function updateMessageButtonVisibility() {
     .catch(error => console.error('Error updating message button:', error));
 }
 
-// Handle message button click
-$('#messageBtn').on('click', function() {
+// Handle message button click - remove previous handlers to prevent duplicates
+$('#messageBtn').off('click').on('click', function() {
     const userId = $(this).data('user-id');
+    
+    // Prevent duplicate clicks
+    if ($(this).prop('disabled')) {
+        return false;
+    }
+    
+    $(this).prop('disabled', true);
     window.location.href = `/messages/${userId}`;
 });
 
-// Handle chat request button click
-$('#chatRequestBtn').on('click', function() {
+// Handle chat request button click - remove previous handlers to prevent duplicates
+$('#chatRequestBtn').off('click').on('click', function() {
     const userId = $(this).data('user-id');
     const button = $(this);
     
+    // Prevent duplicate submissions
+    if (button.prop('disabled')) {
+        return false;
+    }
+    
     if (!confirm('Send a chat request to {{ $user->name }}?')) {
-        return;
+        return false;
     }
     
     button.prop('disabled', true);

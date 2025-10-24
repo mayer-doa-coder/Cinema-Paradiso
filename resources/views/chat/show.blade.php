@@ -2,21 +2,42 @@
 
 @section('title', 'Chat with ' . $user->name)
 
-@section('content')
+@push('styles')
 <style>
+/* Ensure body and html have dark background */
+html, body {
+    background-color: #020d18 !important;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.ht-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.chat-page-wrapper {
+    background: #020d18 !important;
+    min-height: 100vh;
+    padding: 50px 0 100px;
+}
+
 .chat-page-container {
-    max-width: 900px;
-    margin: 80px auto 40px;
+    max-width: 1200px;
+    margin: 180px auto 0 auto;
     padding: 20px;
 }
 
 .chat-box {
-    background: #020d18;
+    background: #0b1a2a;
     border-radius: 8px;
     border: 1px solid #405266;
     display: flex;
     flex-direction: column;
     height: 600px;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .chat-box-header {
@@ -92,7 +113,7 @@
 }
 
 .message-content {
-    background: #0b1a2a;
+    background: #020d18;
     padding: 12px 16px;
     border-radius: 12px;
     border: 1px solid #405266;
@@ -129,7 +150,7 @@
 
 .chat-input {
     flex: 1;
-    background: #0b1a2a;
+    background: #020d18;
     border: 1px solid #405266;
     color: #fff;
     padding: 12px 16px;
@@ -179,7 +200,7 @@
 }
 
 .chat-messages::-webkit-scrollbar-track {
-    background: #0b1a2a;
+    background: #020d18;
     border-radius: 4px;
 }
 
@@ -192,16 +213,21 @@
     background: #4a5d73;
 }
 </style>
+@endpush
 
-<!-- Header -->
-<header class="ht-header full-width-mr">
+@section('content')
+
+<!-- BEGIN | Header -->
+<header class="ht-header">
     <div class="container">
         @include('partials._header_top')
         @include('partials._search')
     </div>
 </header>
+<!-- END | Header -->
 
-<div class="chat-page-container">
+<div class="chat-page-wrapper">
+    <div class="chat-page-container">
     <div class="chat-box">
         <div class="chat-box-header">
             <button class="back-btn" onclick="window.location.href='{{ route('chat.index') }}'">
@@ -234,9 +260,10 @@
 
         <div class="chat-input-area">
             <input type="text" class="chat-input" id="messageInput" placeholder="Type a message..." maxlength="1000">
-            <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+            <button class="send-btn" id="sendBtn">Send</button>
         </div>
     </div>
+</div>
 </div>
 
 <script>
@@ -250,9 +277,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Focus on input
     document.getElementById('messageInput').focus();
     
-    // Send message on Enter key
+    // Send button click handler
+    document.getElementById('sendBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!isLoading) {
+            sendMessage();
+        }
+    });
+    
+    // Send message on Enter key (prevent duplicate submissions)
     document.getElementById('messageInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !isLoading) {
+            e.preventDefault();
             sendMessage();
         }
     });

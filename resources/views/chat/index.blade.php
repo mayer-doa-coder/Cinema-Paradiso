@@ -2,11 +2,30 @@
 
 @section('title', 'Messages')
 
-@section('content')
+@push('styles')
 <style>
+/* Ensure body and html have dark background */
+html, body {
+    background-color: #020d18 !important;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.ht-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.chat-page-wrapper {
+    background: #020d18 !important;
+    min-height: 100vh;
+    padding: 50px 0 100px;
+}
+
 .chat-container {
-    max-width: 900px;
-    margin: 80px auto 40px;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
 }
 
@@ -22,7 +41,7 @@
 }
 
 .chat-requests-section {
-    background: #020d18;
+    background: #0b1a2a;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
@@ -40,7 +59,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 15px;
-    background: #0b1a2a;
+    background: #020d18;
     border-radius: 5px;
     margin-bottom: 10px;
     border: 1px solid #405266;
@@ -104,8 +123,9 @@
 }
 
 .conversations-section {
-    background: #020d18;
+    background: #0b1a2a;
     border-radius: 8px;
+    margin-top:100px;
     padding: 20px;
     border: 1px solid #405266;
 }
@@ -120,7 +140,7 @@
     display: flex;
     align-items: center;
     padding: 15px;
-    background: #0b1a2a;
+    background: #020d18;
     border-radius: 5px;
     margin-bottom: 10px;
     border: 1px solid #405266;
@@ -129,7 +149,7 @@
 }
 
 .conversation-item:hover {
-    background: #1a2b3c;
+    background: #0d1b2a;
     border-color: #e9d736;
     transform: translateX(5px);
 }
@@ -193,19 +213,21 @@
     color: #405266;
 }
 </style>
+@endpush
 
-<!-- Header -->
-<header class="ht-header full-width-mr">
+@section('content')
+
+<!-- BEGIN | Header -->
+<header class="ht-header">
     <div class="container">
         @include('partials._header_top')
         @include('partials._search')
     </div>
 </header>
+<!-- END | Header -->
 
-<div class="chat-container">
-    <div class="chat-header">
-        <h1>Messages</h1>
-    </div>
+<div class="chat-page-wrapper">
+    <div class="chat-container">
 
     @if($chatRequests->count() > 0)
         <div class="chat-requests-section">
@@ -271,6 +293,7 @@
             </div>
         @endif
     </div>
+</div>
 </div>
 
 <script>

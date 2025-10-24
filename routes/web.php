@@ -18,6 +18,11 @@ use App\Http\Controllers\ChatController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('home.search');
 
+// Test authentication page
+Route::get('/test-auth', function () {
+    return view('test-auth');
+})->name('test.auth');
+
 // Universal search route for all sections
 Route::get('/universal-search', [HomeController::class, 'search'])->name('universal.search');
 
@@ -98,7 +103,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/profile/password', [UserController::class, 'updatePassword'])->name('user.password.update');
     Route::post('/profile/favorites', [UserController::class, 'updateFavorites'])->name('user.favorites.update');
-    Route::post('/profile/avatar', [UserController::class, 'updateAvatar'])->name('user.avatar.update');
+    
+    // Throttle avatar uploads to prevent abuse (3 uploads per minute per user)
+    Route::post('/profile/avatar', [UserController::class, 'updateAvatar'])
+        ->middleware('throttle:3,1')
+        ->name('user.avatar.update');
+    
     Route::delete('/profile/avatar', [UserController::class, 'deleteAvatar'])->name('user.avatar.delete');
     Route::get('/profile/watchlist', [UserController::class, 'watchlist'])->name('user.watchlist');
     Route::get('/profile/reviews', [UserController::class, 'reviews'])->name('user.reviews');
@@ -115,6 +125,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('auth.forgot-password');
     
     // Protected route - requires authentication
     Route::middleware('auth')->group(function () {
@@ -127,9 +138,19 @@ Route::middleware('auth')->group(function () {
     // Chat routes
     Route::get('/messages', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/messages/{user}', [ChatController::class, 'show'])->name('chat.show');
-    Route::post('/messages/{receiver}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    
+    // Throttle message sending to prevent spam (60 messages per minute per user)
+    Route::post('/messages/{receiver}/send', [ChatController::class, 'sendMessage'])
+        ->middleware('throttle:60,1')
+        ->name('chat.send');
+    
     Route::get('/messages/{user}/fetch', [ChatController::class, 'getMessages'])->name('chat.fetch');
-    Route::post('/chat-request/{receiver}', [ChatController::class, 'sendRequest'])->name('chat.request.send');
+    
+    // Throttle chat requests to prevent spam (5 requests per minute per user)
+    Route::post('/chat-request/{receiver}', [ChatController::class, 'sendRequest'])
+        ->middleware('throttle:5,1')
+        ->name('chat.request.send');
+    
     Route::post('/chat-request/{chatRequest}/accept', [ChatController::class, 'acceptRequest'])->name('chat.request.accept');
     Route::delete('/chat-request/{chatRequest}', [ChatController::class, 'deleteRequest'])->name('chat.request.delete');
     

@@ -82,7 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
         avatarInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             
-            if (file && changeAvatarBtn && !changeAvatarBtn.disabled) {
+            // Prevent duplicate submissions
+            if (!file || !changeAvatarBtn || changeAvatarBtn.disabled) {
+                return;
+            }
+            
+            if (file) {
                 // Validate file size (2MB max)
                 if (file.size > 2048 * 1024) {
                     alert('Image size must not exceed 2MB');

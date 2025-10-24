@@ -5858,7 +5858,6 @@ ul {
 }
 .user-information .user-fav {
   border-top: 1px solid #0f2133;
-  padding: 25px 0;
 }
 .user-information .user-fav p {
   padding-left: 25px;
@@ -6872,9 +6871,13 @@ p.ceb-single {
 }
 .overlay .login-content .remember a {
   color: #e1e1e1;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.3s ease;
 }
 .overlay .login-content .remember a:hover {
-  color: #e1e1e1;
+  color: #dd003f;
+  text-decoration: underline;
 }
 .overlay .login-content label {
   font-family: TiemposTextWeb, Georgia, serif, ColorEmoji;
@@ -7762,7 +7765,7 @@ header .navbar-default .navbar-nav li a {
   font-family: TiemposTextWeb, Georgia, serif, ColorEmoji;
   font-size: 16px;
   color: #abb7c4;
-  font-weight: bold;
+  font-weight: bold !important;
   text-transform: uppercase;
   cursor: pointer;
 }
