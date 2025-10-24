@@ -98,6 +98,20 @@ class ChatController extends Controller
             'message' => 'required|string|max:1000'
         ]);
         
+        // Prevent duplicate messages (check for same message sent within last 2 seconds)
+        $recentDuplicate = ChatMessage::where('sender_id', $sender->id)
+            ->where('receiver_id', $receiver->id)
+            ->where('message', $request->message)
+            ->where('created_at', '>', now()->subSeconds(2))
+            ->exists();
+            
+        if ($recentDuplicate) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please wait a moment before sending the same message again.'
+            ], 429);
+        }
+        
         $message = ChatMessage::create([
             'sender_id' => $sender->id,
             'receiver_id' => $receiver->id,

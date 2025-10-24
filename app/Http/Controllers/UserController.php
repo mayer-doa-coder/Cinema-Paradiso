@@ -233,6 +233,11 @@ class UserController extends Controller
         ]);
 
         $user = Auth::user();
+        
+        // Prevent rapid successive uploads (within 3 seconds)
+        if ($user->updated_at && $user->updated_at->diffInSeconds(now()) < 3) {
+            return back()->with('error', 'Please wait a moment before uploading again.');
+        }
 
         // Delete old avatar if exists
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
