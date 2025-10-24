@@ -55,9 +55,9 @@
             <div class="row">
                 <div class="remember">
                     <div>
-                        <input type="checkbox" name="remember" value="Remember me"><span>Remember me</span>
+                        <input type="checkbox" name="remember" id="remember-me" value="1"><span>Remember me</span>
                     </div>
-                    <a href="#">Forget password ?</a>
+                    <a href="#" id="forgot-password-link">Forget password ?</a>
                 </div>
             </div>
            <div class="row">
@@ -128,6 +128,34 @@
 </div>
 <!--end of signup form popup-->
 
+<!--forgot password form popup-->
+<div class="login-wrapper" id="forgot-password-content">
+    <div class="login-content">
+        <a href="#" class="close">x</a>
+        <h3>Forgot Password</h3>
+        <p style="color: #abb7c4; margin-bottom: 20px;">Enter your email address and we'll send you a temporary password.</p>
+        <form method="post" id="forgot-password-form">
+            @csrf
+            <div class="row">
+                 <label for="forgot-email">
+                    Email Address:
+                    <input type="email" name="email" id="forgot-email" placeholder="email@example.com" required="required" />
+                </label>
+            </div>
+           <div class="row">
+             <button type="submit">Send Temporary Password</button>
+           </div>
+           <div class="row">
+               <div class="message" id="forgot-message" style="display: none; margin-top: 10px;"></div>
+           </div>
+           <div class="row" style="text-align: center; margin-top: 15px;">
+               <a href="#" id="back-to-login" style="color: #dd003f; text-decoration: underline;">Back to Login</a>
+           </div>
+        </form>
+    </div>
+</div>
+<!--end of forgot password form popup-->
+
 @yield('content')
 
 <script src="{{ asset('js/jquery.js') }}"></script>
@@ -135,8 +163,6 @@
 <script src="{{ asset('js/plugins2.js') }}"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
 <script src="{{ asset('js/review-management.js') }}"></script>
-
-@stack('scripts')
 
 <script>
 // CSRF token setup for AJAX requests
@@ -239,6 +265,100 @@ async function checkAuthStatus() {
 
 // Check auth status on page load
 document.addEventListener('DOMContentLoaded', checkAuthStatus);
+
+// Wait for DOM to be ready before attaching event listeners
+$(document).ready(function() {
+    // Forgot password link handler
+    $('#forgot-password-link').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Close login popup using the existing system
+        $('#login-content').parents('.overlay').removeClass('openform');
+        
+        // Open forgot password popup
+        setTimeout(function() {
+            $('#forgot-password-content').parents('.overlay').addClass('openform');
+        }, 100);
+    });
+
+    // Back to login link handler
+    $('#back-to-login').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Close forgot password popup
+        $('#forgot-password-content').parents('.overlay').removeClass('openform');
+        
+        // Open login popup
+        setTimeout(function() {
+            $('#login-content').parents('.overlay').addClass('openform');
+        }, 100);
+    });
+});
+
+// Forgot password form handler
+$(document).ready(function() {
+    $('#forgot-password-form').on('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('forgot-message');
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            // Disable button during request
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+            
+            try {
+                const response = await fetch('/auth/forgot-password', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
+                
+                const data = await response.json();
+                
+                messageDiv.style.display = 'block';
+                
+                if (data.success) {
+                    messageDiv.style.color = '#4caf50';
+                    messageDiv.innerHTML = data.message;
+                    
+                    // If temp password is returned (development mode)
+                    if (data.temp_password) {
+                        messageDiv.innerHTML += '<br><strong>Temporary Password: ' + data.temp_password + '</strong>';
+                        messageDiv.innerHTML += '<br><small style="color: #ff9800;">' + data.warning + '</small>';
+                    }
+                    
+                    // Clear form
+                    this.reset();
+                    
+                    // Show success and redirect to login after 5 seconds
+                    setTimeout(function() {
+                        $('#forgot-password-content').parents('.overlay').removeClass('openform');
+                        setTimeout(function() {
+                            $('#login-content').parents('.overlay').addClass('openform');
+                        }, 100);
+                        messageDiv.style.display = 'none';
+                    }, 5000);
+                } else {
+                    messageDiv.style.color = '#f44336';
+                    messageDiv.textContent = data.message || 'Failed to send temporary password';
+                }
+            } catch (error) {
+                messageDiv.style.color = '#f44336';
+                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.style.display = 'block';
+            } finally {
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Send Temporary Password';
+            }
+    });
+});
 
 // Handle password change - show login popup
 @if(session('password_changed'))

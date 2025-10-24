@@ -93,7 +93,10 @@ class AuthController extends Controller
                 'password' => $request->password
             ];
 
-            if (Auth::attempt($credentials)) {
+            // Handle remember me functionality
+            $remember = $request->boolean('remember');
+
+            if (Auth::attempt($credentials, $remember)) {
                 $user = Auth::user();
                 
                 // Track login activity
@@ -190,5 +193,85 @@ class AuthController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Handle forgot password - generate and send temporary password
+     */
+    public function forgotPassword(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email|exists:users,email',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please provide a valid registered email address',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No user found with this email address'
+                ], 404);
+            }
+
+            // Generate a random temporary password
+            $tempPassword = $this->generateTempPassword();
+
+            // Update user's password
+            $user->password = Hash::make($tempPassword);
+            $user->save();
+
+            // Send email with temporary password
+            try {
+                \Mail::to($user->email)->send(new \App\Mail\ForgotPasswordMail($user, $tempPassword));
+            } catch (\Exception $mailException) {
+                // Log the mail error but still return success with password
+                \Log::error('Failed to send forgot password email: ' . $mailException->getMessage());
+                
+                // For development, return the password in response
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Temporary password generated. Email service unavailable.',
+                    'temp_password' => $tempPassword, // Remove in production
+                    'warning' => 'Please configure mail service'
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'A temporary password has been sent to your email address'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to process forgot password request',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Generate a random temporary password
+     */
+    private function generateTempPassword($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%';
+        $password = '';
+        $charactersLength = strlen($characters);
+        
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[rand(0, $charactersLength - 1)];
+        }
+        
+        return $password;
     }
 }
