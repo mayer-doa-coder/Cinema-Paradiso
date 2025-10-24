@@ -44,6 +44,7 @@ html, body {
     background: #0b1a2a;
     border-radius: 8px;
     padding: 20px;
+    margin-top:170px;
     margin-bottom: 30px;
     border: 1px solid #405266;
 }
@@ -105,27 +106,27 @@ html, body {
 }
 
 .accept-btn {
-    background: #4CAF50;
+    background: #e56ea8;
     color: white;
 }
 
 .accept-btn:hover {
-    background: #45a049;
+    background: #e56ea8;
 }
 
 .delete-btn {
-    background: #f44336;
+    background: #e56ea8;
     color: white;
 }
 
 .delete-btn:hover {
-    background: #da190b;
+    background: #e56ea8;
 }
 
 .conversations-section {
     background: #0b1a2a;
     border-radius: 8px;
-    margin-top:100px;
+    margin-top:150px;
     padding: 20px;
     border: 1px solid #405266;
 }

@@ -1281,6 +1281,7 @@ namespace App\Models {
      * @property string|null $state
      * @property string|null $country
      * @property string|null $bio
+     * @property string|null $cover_image
      * @property string|null $avatar
      * @property string $password
      * @property \Illuminate\Support\Carbon|null $email_verified_at
@@ -1315,6 +1316,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEmailVerifiedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereAvatar($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCoverImage($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereBio($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCountry($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereState($value)
