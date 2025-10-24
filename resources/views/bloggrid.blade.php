@@ -78,7 +78,7 @@ textarea:focus {
     font-size: 12px;
 }
 .upvotes {
-    color: #ff4500;
+    color: #0079d3;
 }
 .comments {
     color: #0079d3;
@@ -88,6 +88,192 @@ textarea:focus {
 }
 .search-form {
     margin-bottom: 20px;
+}
+
+/* Fix blog grid layout - ensure equal heights and proper alignment */
+.blog-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.blog-grid-item {
+    padding: 0 15px;
+    margin-bottom: 30px;
+    display: flex;
+}
+
+.blog-item-style-2 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #020d18;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.blog-item-style-2:hover {
+    transform: translateY(-5px);
+}
+
+.blog-item-style-2 > a {
+    display: block;
+    flex-shrink: 0;
+}
+
+.blog-item-style-2 .blog-it-infor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.blog-item-style-2 .blog-it-infor h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 1.4;
+    min-height: 44px;
+    flex-shrink: 0;
+}
+
+.blog-item-style-2 .blog-it-infor .time {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.blog-item-style-2 .blog-it-infor p {
+    flex: 1;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.blog-item-style-2 .blog-meta {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #233a50;
+    flex-shrink: 0;
+}
+
+/* Ensure 4 columns per row on desktop */
+@media (min-width: 992px) {
+    .blog-grid-item {
+        width: 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+/* 2 columns on tablet */
+@media (min-width: 768px) and (max-width: 991px) {
+    .blog-grid-item {
+        width: 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* 1 column on mobile */
+@media (max-width: 767px) {
+    .blog-grid-item {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Community Discussions Grid */
+.discussion-section {
+    margin-top: 40px;
+	margin-bottom: 20px;
+}
+
+.discussion-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.discussion-grid-item {
+    padding: 0 15px;
+    margin-bottom: 30px;
+    display: flex;
+}
+
+.discussion-grid-item .blog-item-style-2 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #020d18;
+    border-radius: 5px;
+    border-left: 3px solid #de68bcff;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.discussion-grid-item .blog-item-style-2:hover {
+    transform: translateY(-5px);
+}
+
+.discussion-grid-item .blog-it-infor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.discussion-grid-item .blog-it-infor h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 15px;
+    line-height: 1.4;
+    min-height: 42px;
+    flex-shrink: 0;
+}
+
+.discussion-grid-item .blog-it-infor .time {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.discussion-grid-item .reddit-meta {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #233a50;
+    flex-shrink: 0;
+}
+
+/* Ensure 4 columns per row on desktop for discussions */
+@media (min-width: 992px) {
+    .discussion-grid-item {
+        width: 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+/* 2 columns on tablet for discussions */
+@media (min-width: 768px) and (max-width: 991px) {
+    .discussion-grid-item {
+        width: 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* 1 column on mobile for discussions */
+@media (max-width: 767px) {
+    .discussion-grid-item {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 </style>
 @endpush
@@ -190,18 +376,20 @@ textarea:focus {
 					</div>
 				@endif
 
-				<div class="row">
+				<div class="blog-grid-container">
 					@forelse($articles as $article)
-						<div class="col-md-3 col-sm-6 col-xs-12">
+						<div class="blog-grid-item">
 							<div class="blog-item-style-2">
-								<a href="{{ route('blogdetail', ['url' => urlencode($article['url']), 'title' => urlencode($article['title'])]) }}">
+								<a href="{{ $article['url'] }}" target="_blank" rel="noopener noreferrer">
 									<img src="{{ $article['image'] }}" 
 										 alt="{{ $article['title'] }}" 
-										 style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+										 style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;"
+										 loading="lazy"
+										 onerror="this.src='{{ asset('images/uploads/blog-it1.jpg') }}'">
 								</a>
 								<div class="blog-it-infor">
 									<h3>
-										<a href="{{ route('blogdetail', ['url' => urlencode($article['url']), 'title' => urlencode($article['title'])]) }}">
+										<a href="{{ $article['url'] }}" target="_blank" rel="noopener noreferrer">
 											{{ Str::limit($article['title'], 60) }}
 										</a>
 									</h3>
@@ -234,33 +422,37 @@ textarea:focus {
 				</div>
 
 				@if($discussions->count() > 0)
-					<div class="row" style="margin-top: 40px;">
-						<div class="col-md-12">
-							<h3>Community Discussions</h3>
-							<p>Popular movie discussions from Reddit</p>
+					<div class="discussion-section">
+						<div class="row" style="margin-bottom: 20px;">
+							<div class="col-md-12" style="margin-bottom: 20px;">
+								<h3 style="color: #ffffff">Community Discussions</h3>
+								<p>Popular movie discussions from Reddit</p>
+							</div>
 						</div>
-						@foreach($discussions->take(8) as $discussion)
-							<div class="col-md-3 col-sm-6 col-xs-12">
-								<div class="blog-item-style-2" style="border-left: 3px solid #ff6b08;">
-									<div class="blog-it-infor">
-										<h4>
-											<a href="{{ $discussion['url'] }}" target="_blank" rel="noopener">
-												{{ Str::limit($discussion['title'], 50) }}
-											</a>
-										</h4>
-										<span class="time">
-											{{ Carbon\Carbon::parse($discussion['created'])->format('d M Y') }}
-											• r/{{ $discussion['subreddit'] }}
-										</span>
-										<div class="reddit-meta">
-											<span class="upvotes">↑ {{ number_format($discussion['score']) }}</span>
-											<span class="comments">💬 {{ $discussion['comments'] }}</span>
-											<small class="author">u/{{ $discussion['author'] }}</small>
+						<div class="discussion-grid-container">
+							@foreach($discussions->take(8) as $discussion)
+								<div class="discussion-grid-item">
+									<div class="blog-item-style-2">
+										<div class="blog-it-infor">
+											<h4>
+												<a href="{{ $discussion['url'] }}" target="_blank" rel="noopener">
+													{{ Str::limit($discussion['title'], 50) }}
+												</a>
+											</h4>
+											<span class="time">
+												{{ Carbon\Carbon::parse($discussion['created'])->format('d M Y') }}
+												• r/{{ $discussion['subreddit'] }}
+											</span>
+											<div class="reddit-meta">
+												<span class="upvotes">↑ {{ number_format($discussion['score']) }}</span>
+												<span class="comments">💬 {{ $discussion['comments'] }}</span>
+												<small class="author">u/{{ $discussion['author'] }}</small>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						@endforeach
+							@endforeach
+						</div>
 					</div>
 				@endif
 

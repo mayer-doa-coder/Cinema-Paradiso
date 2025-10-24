@@ -19,7 +19,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Display the blog grid page with movie news
+     * Display the blog grid page with movie news from external APIs/RSS
      *
      * @return \Illuminate\View\View
      */
@@ -27,9 +27,9 @@ class BlogController extends Controller
     {
         try {
             $page = $request->get('page', 1);
-            $limit = 20; // Increased articles per page for full-width layout
+            $limit = 20; // Articles per page
 
-            // Get movie news with valid images only (service will fetch more to filter)
+            // Get movie news with valid images only (cached for 6 hours)
             $newsData = $this->newsService->getMovieNews($page, $limit);
             
             // Ensure we only show articles with valid images
@@ -39,20 +39,20 @@ class BlogController extends Controller
                        filter_var($article['image'], FILTER_VALIDATE_URL);
             })->values();
             
-            // Get Reddit discussions for additional content
+            // Get Reddit discussions for community section (cached for 6 hours)
             $discussions = $this->newsService->getRedditMovieDiscussions(8);
 
-            // Get random movie wallpaper
+            // Get random movie wallpaper (cached)
             $randomWallpaper = $this->getRandomMovieWallpapers();
 
             return view('bloggrid', [
-                'articles' => $articlesWithImages, // Use filtered articles
-                'discussions' => $discussions,
+                'articles' => $articlesWithImages, // External news articles
+                'discussions' => $discussions, // Reddit discussions
                 'pagination' => [
                     'current_page' => $newsData['current_page'],
                     'last_page' => $newsData['last_page'],
                     'per_page' => $newsData['per_page'],
-                    'total' => $articlesWithImages->count() // Update total
+                    'total' => $articlesWithImages->count()
                 ],
                 'randomWallpaper' => $randomWallpaper,
                 'error' => null
@@ -67,7 +67,7 @@ class BlogController extends Controller
                 'pagination' => [
                     'current_page' => 1,
                     'last_page' => 1,
-                    'per_page' => 12,
+                    'per_page' => 20,
                     'total' => 0
                 ],
                 'randomWallpaper' => [$this->getFallbackWallpaper()],

@@ -11,7 +11,7 @@ class NewsService
 {
     private $newsApiKey;
     private $guardianApiKey;
-    private $cacheDuration = 1800; // 30 minutes
+    private $cacheDuration = 21600; // 6 hours (as requested)
 
     public function __construct()
     {
@@ -179,12 +179,7 @@ class NewsService
 
             // Filter articles to only include those with valid images FIRST
             $articlesWithImages = $articles->filter(function ($article) {
-                return isset($article['image']) && 
-                       !empty($article['image']) && 
-                       $article['image'] !== null &&
-                       filter_var($article['image'], FILTER_VALIDATE_URL) &&
-                       !str_contains(strtolower($article['image']), 'placeholder') &&
-                       !str_contains(strtolower($article['image']), 'default');
+                return $this->isValidImageUrl($article['image'] ?? null);
             });
 
             Log::info("RSS Articles: " . $articles->count() . ", With Images: " . $articlesWithImages->count());
@@ -194,9 +189,7 @@ class NewsService
                 if ($this->newsApiKey) {
                     $newsApiArticles = $this->getNewsAPIContent();
                     $newsApiWithImages = $newsApiArticles->filter(function ($article) {
-                        return isset($article['image']) && 
-                               !empty($article['image']) && 
-                               filter_var($article['image'], FILTER_VALIDATE_URL);
+                        return $this->isValidImageUrl($article['image'] ?? null);
                     });
                     $articlesWithImages = $articlesWithImages->merge($newsApiWithImages);
                 }
@@ -206,9 +199,7 @@ class NewsService
                 if ($this->guardianApiKey) {
                     $guardianArticles = $this->getGuardianMovieNews();
                     $guardianWithImages = $guardianArticles->filter(function ($article) {
-                        return isset($article['image']) && 
-                               !empty($article['image']) && 
-                               filter_var($article['image'], FILTER_VALIDATE_URL);
+                        return $this->isValidImageUrl($article['image'] ?? null);
                     });
                     $articlesWithImages = $articlesWithImages->merge($guardianWithImages);
                 }
@@ -556,17 +547,58 @@ class NewsService
     }
 
     /**
+     * Validate if image URL is accessible and valid
+     */
+    private function isValidImageUrl($url)
+    {
+        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+        
+        // Quick validation - check URL pattern
+        $invalidPatterns = [
+            'placeholder',
+            'default',
+            'thumbs.redditmedia.com',
+            'data:image',
+            'b.thumbs.redditmedia.com'
+        ];
+        
+        foreach ($invalidPatterns as $pattern) {
+            if (stripos($url, $pattern) !== false) {
+                return false;
+            }
+        }
+        
+        // Check if it has an image extension
+        if (!preg_match('/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i', $url)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
      * Clear all news cache
      */
     public function clearCache()
     {
-        $keys = [
-            'movie_news_page_*',
-            'reddit_movie_discussions_*'
+        $patterns = [
+            'movie_news_page_',
+            'reddit_movie_discussions_',
+            'latest_content_with_images_page_',
+            'movie_news_with_images_page_'
         ];
         
-        foreach ($keys as $pattern) {
-            Cache::forget($pattern);
+        // Clear all cached news data
+        foreach ($patterns as $pattern) {
+            for ($i = 1; $i <= 10; $i++) {
+                for ($j = 10; $j <= 50; $j += 10) {
+                    Cache::forget("{$pattern}{$i}_limit_{$j}");
+                }
+            }
         }
+        
+        return true;
     }
 }
