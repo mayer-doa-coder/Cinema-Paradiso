@@ -65,6 +65,114 @@ Cinema Paradiso is a full-featured entertainment platform that integrates with T
 - **The Guardian API**: Quality journalism and reviews
 - **Reddit API**: Community discussions and trending topics
 
+## Project Structure
+
+```
+cinema-paradiso/
+├── app/
+│   ├── Console/
+│   │   └── Commands/              # Custom Artisan commands
+│   ├── Http/
+│   │   ├── Controllers/           # Application controllers
+│   │   │   ├── AuthController.php
+│   │   │   ├── MovieController.php
+│   │   │   ├── TVShowController.php
+│   │   │   ├── CelebrityController.php
+│   │   │   ├── CommunityController.php
+│   │   │   ├── ChatController.php
+│   │   │   ├── UserController.php
+│   │   │   ├── UserMovieController.php
+│   │   │   ├── UserTVShowController.php
+│   │   │   ├── BlogController.php
+│   │   │   └── ContactController.php
+│   │   └── Middleware/            # Custom middleware
+│   ├── Jobs/
+│   │   └── WarmCacheJob.php       # Queue jobs
+│   ├── Mail/
+│   │   ├── ContactNotification.php
+│   │   └── ForgotPasswordMail.php
+│   ├── Models/                    # Eloquent models
+│   │   ├── User.php
+│   │   ├── Movie.php
+│   │   ├── ChatMessage.php
+│   │   ├── ChatRequest.php
+│   │   ├── Contact.php
+│   │   ├── UserActivity.php
+│   │   ├── UserFavoriteMovie.php
+│   │   ├── UserFollower.php
+│   │   ├── UserMovie.php
+│   │   ├── UserMovieLike.php
+│   │   ├── UserMovieReview.php
+│   │   └── UserWatchlist.php
+│   ├── Providers/
+│   │   └── AppServiceProvider.php
+│   └── Services/                  # Business logic services
+│       ├── ApiRateLimiter.php
+│       ├── CacheOptimizationService.php
+│       ├── MovieService.php
+│       ├── NewsService.php
+│       ├── TVShowService.php
+│       └── UserPopularityService.php
+├── bootstrap/
+│   ├── app.php                    # Application bootstrap
+│   ├── providers.php
+│   └── cache/                     # Bootstrap cache
+├── config/                        # Configuration files
+│   ├── app.php
+│   ├── auth.php
+│   ├── cache.php
+│   ├── database.php
+│   ├── mail.php
+│   ├── queue.php
+│   ├── services.php               # Third-party API configuration
+│   └── session.php
+├── database/
+│   ├── factories/
+│   │   └── UserFactory.php
+│   ├── migrations/                # Database migrations
+│   │   ├── 0001_01_01_000000_create_users_table.php
+│   │   ├── 0001_01_01_000001_create_cache_table.php
+│   │   ├── 0001_01_01_000002_create_jobs_table.php
+│   │   ├── 2025_09_30_190326_create_contacts_table.php
+│   │   ├── 2025_10_03_213727_add_community_features_to_users_table.php
+│   │   ├── 2025_10_20_173048_create_user_movies_table.php
+│   │   ├── 2025_10_20_173153_create_user_movie_likes_table.php
+│   │   ├── 2025_10_20_173636_create_user_watchlist_table.php
+│   │   ├── 2025_10_20_181236_create_user_movie_reviews_table.php
+│   │   ├── 2025_10_23_202109_create_chat_messages_table.php
+│   │   └── 2025_10_23_202206_create_chat_requests_table.php
+│   └── seeders/                   # Database seeders
+├── public/                        # Public assets
+│   ├── index.php                  # Application entry point
+│   ├── css/                       # Compiled CSS
+│   ├── js/                        # Compiled JavaScript
+│   ├── images/                    # Static images
+│   └── storage/                   # Public storage link
+├── resources/
+│   ├── css/                       # Source CSS files
+│   ├── fonts/                     # Custom fonts
+│   ├── images/                    # Source images
+│   └── views/                     # Blade templates
+├── routes/
+│   ├── web.php                    # Web routes
+│   └── console.php                # Console routes
+├── storage/
+│   ├── app/                       # Application storage
+│   ├── framework/                 # Framework storage
+│   └── logs/                      # Application logs
+├── tests/
+│   ├── Feature/                   # Feature tests
+│   └── Unit/                      # Unit tests
+├── vendor/                        # Composer dependencies
+├── .env                          # Environment configuration
+├── artisan                       # Artisan CLI
+├── composer.json                 # PHP dependencies
+├── package.json                  # Node dependencies
+├── phpunit.xml                   # PHPUnit configuration
+├── vite.config.js                # Vite configuration
+└── README.md                     # Project documentation
+```
+
 ## Installation
 
 ### Prerequisites
