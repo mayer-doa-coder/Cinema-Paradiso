@@ -71,106 +71,225 @@ Cinema Paradiso is a full-featured entertainment platform that integrates with T
 cinema-paradiso/
 ├── app/
 │   ├── Console/
-│   │   └── Commands/              # Custom Artisan commands
+│   │   ├── Kernel.php
+│   │   └── Commands/
+│   │       ├── CacheStatus.php              # Check cache status
+│   │       ├── FixBrokenPosters.php         # Fix broken poster images
+│   │       ├── InvalidateCache.php          # Invalidate specific caches
+│   │       ├── OptimizeCache.php            # Optimize application cache
+│   │       └── UpdateUserPopularity.php     # Update user popularity scores
+│   │
 │   ├── Http/
-│   │   ├── Controllers/           # Application controllers
-│   │   │   ├── AuthController.php
-│   │   │   ├── MovieController.php
-│   │   │   ├── TVShowController.php
-│   │   │   ├── CelebrityController.php
-│   │   │   ├── CommunityController.php
-│   │   │   ├── ChatController.php
-│   │   │   ├── UserController.php
-│   │   │   ├── UserMovieController.php
-│   │   │   ├── UserTVShowController.php
-│   │   │   ├── BlogController.php
-│   │   │   └── ContactController.php
-│   │   └── Middleware/            # Custom middleware
+│   │   ├── Controllers/
+│   │   │   ├── Controller.php               # Base controller
+│   │   │   ├── AuthController.php           # User authentication
+│   │   │   ├── BlogController.php           # News and blog posts
+│   │   │   ├── CelebrityController.php      # Celebrity information
+│   │   │   ├── ChatController.php           # Messaging system
+│   │   │   ├── CommunityController.php      # Community features
+│   │   │   ├── ContactController.php        # Contact form handling
+│   │   │   ├── HomeController.php           # Homepage and search
+│   │   │   ├── MovieController.php          # Movie browsing and details
+│   │   │   ├── TVShowController.php         # TV show functionality
+│   │   │   ├── UserController.php           # User profile management
+│   │   │   ├── UserMovieController.php      # User-movie interactions
+│   │   │   └── UserTVShowController.php     # User-TV show interactions
+│   │   │
+│   │   └── Middleware/
+│   │       ├── Authenticate.php             # Authentication middleware
+│   │       └── CompressResponse.php         # Response compression
+│   │
 │   ├── Jobs/
-│   │   └── WarmCacheJob.php       # Queue jobs
+│   │   └── WarmCacheJob.php                 # Cache warming background job
+│   │
 │   ├── Mail/
-│   │   ├── ContactNotification.php
-│   │   └── ForgotPasswordMail.php
-│   ├── Models/                    # Eloquent models
-│   │   ├── User.php
-│   │   ├── Movie.php
-│   │   ├── ChatMessage.php
-│   │   ├── ChatRequest.php
-│   │   ├── Contact.php
-│   │   ├── UserActivity.php
-│   │   ├── UserFavoriteMovie.php
-│   │   ├── UserFollower.php
-│   │   ├── UserMovie.php
-│   │   ├── UserMovieLike.php
-│   │   ├── UserMovieReview.php
-│   │   └── UserWatchlist.php
+│   │   ├── ContactNotification.php          # Contact form email
+│   │   └── ForgotPasswordMail.php           # Password reset email
+│   │
+│   ├── Models/
+│   │   ├── User.php                         # User model
+│   │   ├── Movie.php                        # Movie model
+│   │   ├── ChatMessage.php                  # Chat message model
+│   │   ├── ChatRequest.php                  # Chat request model
+│   │   ├── Contact.php                      # Contact submission model
+│   │   ├── UserActivity.php                 # User activity tracking
+│   │   ├── UserFavoriteMovie.php            # User favorite movies
+│   │   ├── UserFollower.php                 # User follow relationships
+│   │   ├── UserMovie.php                    # User movie collection
+│   │   ├── UserMovieLike.php                # Movie likes
+│   │   ├── UserMovieReview.php              # Movie reviews
+│   │   └── UserWatchlist.php                # User watchlist
+│   │
 │   ├── Providers/
-│   │   └── AppServiceProvider.php
-│   └── Services/                  # Business logic services
-│       ├── ApiRateLimiter.php
-│       ├── CacheOptimizationService.php
-│       ├── MovieService.php
-│       ├── NewsService.php
-│       ├── TVShowService.php
-│       └── UserPopularityService.php
+│   │   └── AppServiceProvider.php           # Application service provider
+│   │
+│   └── Services/
+│       ├── ApiRateLimiter.php               # API rate limiting service
+│       ├── CacheOptimizationService.php     # Cache optimization
+│       ├── MovieService.php                 # Movie data service
+│       ├── NewsService.php                  # News aggregation service
+│       ├── TVShowService.php                # TV show data service
+│       └── UserPopularityService.php        # User popularity calculation
+│
 ├── bootstrap/
-│   ├── app.php                    # Application bootstrap
-│   ├── providers.php
-│   └── cache/                     # Bootstrap cache
-├── config/                        # Configuration files
-│   ├── app.php
-│   ├── auth.php
-│   ├── cache.php
-│   ├── database.php
-│   ├── mail.php
-│   ├── queue.php
-│   ├── services.php               # Third-party API configuration
-│   └── session.php
+│   ├── app.php                              # Application bootstrap
+│   ├── providers.php                        # Service providers registration
+│   └── cache/
+│       ├── packages.php                     # Package manifest cache
+│       └── services.php                     # Service manifest cache
+│
+├── config/
+│   ├── app.php                              # Application configuration
+│   ├── auth.php                             # Authentication configuration
+│   ├── cache.php                            # Cache configuration
+│   ├── database.php                         # Database configuration
+│   ├── filesystems.php                      # File storage configuration
+│   ├── logging.php                          # Logging configuration
+│   ├── mail.php                             # Mail configuration
+│   ├── queue.php                            # Queue configuration
+│   ├── services.php                         # Third-party services (TMDb, APIs)
+│   └── session.php                          # Session configuration
+│
 ├── database/
 │   ├── factories/
-│   │   └── UserFactory.php
-│   ├── migrations/                # Database migrations
+│   │   └── UserFactory.php                  # User factory for testing
+│   │
+│   ├── migrations/
 │   │   ├── 0001_01_01_000000_create_users_table.php
 │   │   ├── 0001_01_01_000001_create_cache_table.php
 │   │   ├── 0001_01_01_000002_create_jobs_table.php
 │   │   ├── 2025_09_30_190326_create_contacts_table.php
 │   │   ├── 2025_10_03_213727_add_community_features_to_users_table.php
+│   │   ├── 2025_10_20_161423_add_location_fields_to_users_table.php
 │   │   ├── 2025_10_20_173048_create_user_movies_table.php
 │   │   ├── 2025_10_20_173153_create_user_movie_likes_table.php
 │   │   ├── 2025_10_20_173636_create_user_watchlist_table.php
 │   │   ├── 2025_10_20_181236_create_user_movie_reviews_table.php
+│   │   ├── 2025_10_22_175739_add_media_type_to_user_watchlist_table.php
 │   │   ├── 2025_10_23_202109_create_chat_messages_table.php
 │   │   └── 2025_10_23_202206_create_chat_requests_table.php
-│   └── seeders/                   # Database seeders
-├── public/                        # Public assets
-│   ├── index.php                  # Application entry point
-│   ├── css/                       # Compiled CSS
-│   ├── js/                        # Compiled JavaScript
-│   ├── images/                    # Static images
-│   └── storage/                   # Public storage link
+│   │
+│   └── seeders/
+│       └── DatabaseSeeder.php               # Main database seeder
+│
+├── public/
+│   ├── index.php                            # Application entry point
+│   ├── robots.txt                           # Search engine directives
+│   ├── test-auth.html                       # Authentication test page
+│   ├── test-forgot-link.html                # Password reset test page
+│   ├── css/                                 # Compiled CSS files
+│   ├── js/                                  # Compiled JavaScript files
+│   ├── images/                              # Static images and assets
+│   └── storage/                             # Symbolic link to storage
+│
 ├── resources/
-│   ├── css/                       # Source CSS files
-│   ├── fonts/                     # Custom fonts
-│   ├── images/                    # Source images
-│   └── views/                     # Blade templates
+│   ├── css/
+│   │   └── app.css                          # Main application styles
+│   │
+│   ├── fonts/                               # Custom web fonts
+│   │
+│   ├── images/                              # Source images
+│   │
+│   └── views/
+│       ├── layouts/
+│       │   └── app.blade.php                # Main application layout
+│       │
+│       ├── components/
+│       │   └── tv-card.blade.php            # TV show card component
+│       │
+│       ├── partials/
+│       │   ├── _header_top.blade.php        # Header partial
+│       │   ├── _movieCard.blade.php         # Movie card partial
+│       │   ├── _movieCardSmall.blade.php    # Small movie card
+│       │   └── _search.blade.php            # Search partial
+│       │
+│       ├── movies/
+│       │   ├── index.blade.php              # Movies listing page
+│       │   ├── show.blade.php               # Movie detail page
+│       │   ├── search.blade.php             # Movie search results
+│       │   └── genre.blade.php              # Movies by genre
+│       │
+│       ├── tv/
+│       │   ├── index.blade.php              # TV shows listing
+│       │   ├── show.blade.php               # TV show detail page
+│       │   ├── season.blade.php             # Season detail page
+│       │   ├── search.blade.php             # TV show search
+│       │   └── genre.blade.php              # TV shows by genre
+│       │
+│       ├── celebrities/
+│       │   ├── index.blade.php              # Celebrities listing
+│       │   └── show.blade.php               # Celebrity detail page
+│       │
+│       ├── profile/
+│       │   ├── userprofile.blade.php        # User profile page
+│       │   ├── userlist.blade.php           # User list page
+│       │   ├── usermovies.blade.php         # User movie collection
+│       │   ├── userwatchlist.blade.php      # User watchlist
+│       │   ├── userreviews.blade.php        # User reviews
+│       │   ├── following.blade.php          # Following list
+│       │   ├── followers.blade.php          # Followers list
+│       │   └── partials/                    # Profile partials
+│       │
+│       ├── community/
+│       │   ├── index.blade.php              # Community directory
+│       │   └── profile.blade.php            # Public user profile
+│       │
+│       ├── chat/
+│       │   ├── index.blade.php              # Chat inbox
+│       │   └── show.blade.php               # Chat conversation
+│       │
+│       ├── emails/
+│       │   ├── contact-notification.blade.php
+│       │   └── forgot-password.blade.php
+│       │
+│       ├── welcome.blade.php                # Welcome/landing page
+│       ├── index_main.blade.php             # Main index page
+│       ├── help.blade.php                   # Help page
+│       ├── test-auth.blade.php              # Authentication test view
+│       ├── bloggrid.blade.php               # Blog grid layout
+│       ├── blogdetail.blade.php             # Blog detail page
+│       ├── moviegrid.blade.php              # Movie grid layout
+│       ├── movielist.blade.php              # Movie list layout
+│       ├── celebritygrid01.blade.php        # Celebrity grid (style 1)
+│       ├── celebritygrid02.blade.php        # Celebrity grid (style 2)
+│       ├── celebritylist.blade.php          # Celebrity list layout
+│       └── celebritysingle.blade.php        # Single celebrity page
+│
 ├── routes/
-│   ├── web.php                    # Web routes
-│   └── console.php                # Console routes
+│   ├── web.php                              # Web application routes
+│   └── console.php                          # Artisan console routes
+│
 ├── storage/
-│   ├── app/                       # Application storage
-│   ├── framework/                 # Framework storage
-│   └── logs/                      # Application logs
+│   ├── app/
+│   │   ├── public/                          # Publicly accessible files
+│   │   └── private/                         # Private storage
+│   │
+│   ├── framework/
+│   │   ├── cache/                           # Framework cache files
+│   │   ├── sessions/                        # Session files
+│   │   └── views/                           # Compiled Blade views
+│   │
+│   └── logs/
+│       └── laravel.log                      # Application logs
+│
 ├── tests/
-│   ├── Feature/                   # Feature tests
-│   └── Unit/                      # Unit tests
-├── vendor/                        # Composer dependencies
-├── .env                          # Environment configuration
-├── artisan                       # Artisan CLI
-├── composer.json                 # PHP dependencies
-├── package.json                  # Node dependencies
-├── phpunit.xml                   # PHPUnit configuration
-├── vite.config.js                # Vite configuration
-└── README.md                     # Project documentation
+│   ├── TestCase.php                         # Base test case
+│   ├── Feature/                             # Feature tests
+│   └── Unit/                                # Unit tests
+│
+├── vendor/                                  # Composer dependencies (generated)
+│
+├── .env                                     # Environment configuration (not in VCS)
+├── .env.example                             # Example environment file
+├── .gitignore                               # Git ignore rules
+├── artisan                                  # Artisan CLI executable
+├── composer.json                            # PHP dependencies
+├── composer.lock                            # Locked PHP dependencies
+├── package.json                             # Node.js dependencies
+├── package-lock.json                        # Locked Node dependencies
+├── phpunit.xml                              # PHPUnit configuration
+├── vite.config.js                           # Vite build configuration
+└── README.md                                # Project documentation
 ```
 
 ## Installation
