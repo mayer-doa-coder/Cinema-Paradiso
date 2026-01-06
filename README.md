@@ -1,4 +1,4 @@
-# Cinema Paradiso 🎬
+# Cinema Paradiso
 
 A comprehensive movie and television database web application built with Laravel and modern web technologies. Cinema Paradiso provides users with an extensive platform to discover, track, and discuss movies and TV shows while connecting with a community of film enthusiasts.
 
@@ -11,11 +11,11 @@ Cinema Paradiso is a full-featured entertainment platform that integrates with T
 
 ## Screenshots & Features Overview
 
-### 🏠 Homepage
+###  Homepage
 ![Homepage with Recommendations](screenshots/homepage_recommendations.png)
 Browse curated movie recommendations, trending content, and in-theater releases. Features include movie carousels, celebrity spotlights, and video trailers.
 
-### 🔐 Authentication System
+###  Authentication System
 <div style="display: flex; gap: 10px;">
   <img src="screenshots/login.png" alt="Login Page" width="49%">
   <img src="screenshots/forgot_password.png" alt="Forgot Password" width="49%">
@@ -26,28 +26,28 @@ Browse curated movie recommendations, trending content, and in-theater releases.
 ![Sign Up](screenshots/signup.png)
 **User Registration**: Create new accounts with username, email, password, and optional bio. Password validation ensures minimum 8 characters.
 
-### 👤 User Profile Management
+###  User Profile Management
 ![Profile Details](screenshots/profile_details.png)
 **Profile Customization**: Edit personal information including username, email, name, phone, location (country/state), and bio. Upload custom avatars with real-time preview.
 
 ![Favorite Movies Selection](screenshots/favorite_movies.png)
 **Top 5 Favorite Movies**: Search and select up to 5 favorite movies to display on your public profile. Visual movie posters with easy selection interface.
 
-### 🎬 Movie Discovery & Details
+###  Movie Discovery & Details
 ![Movie Browsing](screenshots/movies_grid.png)
 **Browse Movies**: Filter by year, rating, popularity, and genre. Search by keywords with a comprehensive movie database powered by TMDb API.
 
 ![Movie Detail Page](screenshots/movie_detail.png)
 **Movie Details**: View comprehensive information including synopsis, ratings, release year, cast, crew, and media. Quick actions to add to collection, like, watchlist, write reviews, and share.
 
-### 📝 Reviews & Ratings
+###  Reviews & Ratings
 ![Reviews](screenshots/reviews.png)
 **Community Reviews**: Read detailed reviews from other users with star ratings and timestamps. Filter by newest, oldest, or highest rated.
 
 ![Write Review](screenshots/write_review.png)
 **Write Reviews**: Rate movies with a 10-star system and share your thoughts (minimum 10 characters). Mark if you've watched the movie before.
 
-### 🎭 Cast & Media
+###  Cast & Media
 ![Cast & Crew](screenshots/cast_crew.png)
 **Cast & Crew Information**: Browse complete cast lists, directors, writers, producers, and music composers. Click on any name to view their full filmography.
 
@@ -57,21 +57,21 @@ Browse curated movie recommendations, trending content, and in-theater releases.
 ![Related Movies](screenshots/related_movies.png)
 **Discover Similar Content**: Find movies related to what you're viewing with ratings and quick descriptions.
 
-### 👥 Community Features
+###  Community Features
 ![Community](screenshots/community.png)
 **Community Directory**: Browse all members with activity statistics (followers, following, movies watched). Sort by most popular users and view their favorite movies.
 
-### 🎭 Celebrities Database
+###  Celebrities Database
 ![Celebrities](screenshots/celebrities.png)
 **Celebrity Profiles**: Explore over 4.4 million celebrities with photos, roles, and filmographies. Search by name and sort by popularity.
 
-### 📰 Entertainment News
+###  Entertainment News
 ![News](screenshots/news.png)
 **Latest News**: Stay updated with entertainment news from Variety, Deadline, The Guardian, and other sources. Articles include images, publication dates, and source attribution.
 
 ## Core Features
 
-### 🎥 Content Discovery
+###  Content Discovery
 - **Extensive Movie Database**: Browse and search through millions of movies with detailed information including cast, crew, ratings, and reviews
 - **TV Show Database**: Access comprehensive TV series information with season and episode details
 - **Celebrity Profiles**: View detailed information about actors, directors, and other entertainment industry professionals (4.4M+ celebrities)
@@ -79,7 +79,7 @@ Browse curated movie recommendations, trending content, and in-theater releases.
 - **Genre Filtering**: Browse content by specific genres with year and rating filters
 - **Rich Media**: Access 23+ trailers, teasers, behind-the-scenes content, and promotional materials for each title
 
-### 📚 User Collections & Engagement
+###  User Collections & Engagement
 - **Personal Movie Collection**: Add and organize movies in your personal library with custom lists
 - **Watchlist System**: Maintain a list of movies and TV shows to watch later
 - **Reviews and Ratings**: Write detailed reviews with 10-star rating system (minimum 10 characters)
@@ -87,7 +87,7 @@ Browse curated movie recommendations, trending content, and in-theater releases.
 - **Like System**: Heart your favorite movies and track what resonates with you
 - **User Statistics**: Track viewing habits, collection statistics, and activity points
 
-### 👥 Social & Community Features
+###  Social & Community Features
 - **Customizable User Profiles**: Personalize profiles with avatars, bio, location, and contact information
 - **Avatar Upload**: Upload custom profile pictures with instant preview (JPEG, PNG, GIF up to 2MB)
 - **Follow System**: Follow other users to stay updated with their movie activity and reviews
@@ -96,13 +96,13 @@ Browse curated movie recommendations, trending content, and in-theater releases.
 - **Activity Tracking**: View follower/following lists and user activity streams
 - **Public Profiles**: Share your favorite movies and reviews with the community
 
-### 📰 News & Updates
+###  News & Updates
 - **Entertainment News**: Aggregated news from Variety, Deadline, The Guardian, and NewsAPI
 - **Multiple Sources**: Quality journalism from trusted entertainment industry sources
 - **Reddit Integration**: Access popular movie discussions from Reddit communities
 - **Cached Content**: Optimized news delivery with 6-hour intelligent caching for fast loading
 
-### 🔐 Security & Authentication
+###  Security & Authentication
 - **Secure Login**: Email/username authentication with "Remember Me" functionality
 - **Password Recovery**: Email-based password reset with temporary password generation
 - **User Registration**: Create accounts with validation (8+ character passwords, unique usernames/emails)
